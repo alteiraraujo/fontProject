@@ -1,0 +1,41 @@
+[nz-button] {
+    margin-right: 8px;
+    margin-bottom: 12px;
+  }
+  #botao-novo{
+    position:absolute;
+    top:15%;
+    left:95%;
+    transform: translate(-40%, -50%);
+    
+}
+#tabela{
+  position: relative;
+  top: 5%;
+}
+#input-pesquisar{
+  width: 500px;
+  position:absolute; 
+  top:15%;
+  left:70%;
+  transform: translate(-40%, -50%);
+  
+}
+#select-filtro{
+  width: 500px;
+  position:absolute; 
+  top:15%;
+  left:97%;
+  transform: translate(-40%, -50%);
+}
+#nz-paginacao{
+  position: relative;
+  left:44%;
+}
+#teste{
+  position:relative; 
+  top:15%;
+  left:97%;
+  transform: translate(-40%, -50%);
+}
+

@@ -1,0 +1,47 @@
+<h3 nz-typography>Produtos</h3>
+
+<div id="input-pesquisar">
+  <nz-input-group [nzSuffix]="suffixIconSearch">
+    <input type="text" nz-input placeholder="Buscar Produtos"/>
+  </nz-input-group>
+  <ng-template #suffixIconSearch>
+    <span nz-icon nzType="search"></span>
+  </ng-template>
+</div>
+<div id="select-filtro">
+  <nz-select nzShowSearch nzAllowClear nzPlaceHolder="Filtrar" [(ngModel)]="selectedValue">
+    <nz-option nzLabel="Ativo" nzValue="Ativo"></nz-option>
+    <nz-option nzLabel="Inativo" nzValue="Inativo"></nz-option>
+  </nz-select>
+</div>
+
+<div id="botao-novo">
+  <button nz-button nzType="primary" [nzSize]="'large'" nzShape="circle"><span nz-icon nzType="plus"
+      nzTheme="outline" [routerLink]="['novo']"></span></button>
+</div>
+
+<div id="tabela">
+  <nz-table #basicTable  [nzScroll]="{ x: '1150px', y: '640px' }" >
+    <thead>
+      <tr>
+        <th>Descrição</th>
+        <th>Valor</th>
+        <th>Status</th>
+        <th>Opções</th>
+        <th>Ativo</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let produtos of produtos$ | async; else loading">
+        <td>{{ produtos.cod_produto}}</td>
+        <td>{{ produtos.desc_produto }}</td>
+        <td><span nz-typography nzType="success">{{ produtos.status }}</span></td>
+        <td><button nzSize="small" nz-button nzType="primary" nzGhost>Editar</button></td>
+        <td><nz-switch nzSize="small" [ngModel]="true"></nz-switch></td>
+      </tr>
+    </tbody>
+  </nz-table>
+<!--  <div id="nz-paginacao">
+    <nz-pagination nzResponsive="true" [nzPageIndex]="1" [nzTotal]="2" [nzPageSize]="5"></nz-pagination>
+  </div>-->
+</div>
