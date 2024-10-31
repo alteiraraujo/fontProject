@@ -12,9 +12,6 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { IconsProviderModule } from './icons-provider.module';
 import { NzLayoutModule } from 'ng-zorro-antd/layout';
 import { NzMenuModule } from 'ng-zorro-antd/menu';
-import { LoginComponent } from './basica/componentes/login/login.component';
-import { SingupComponent } from './basica/componentes/singup/singup.component';
-import { SignupClientComponent } from './basica/componentes/signup-client/signup-client.component';
 import { NzFormModule } from 'ng-zorro-antd/form';
 import { NzAffixModule } from 'ng-zorro-antd/affix';
 import { NzAlertModule } from 'ng-zorro-antd/alert';
@@ -24,9 +21,9 @@ import { NzSwitchModule } from 'ng-zorro-antd/switch';
 import { NZ_ICONS } from 'ng-zorro-antd/icon';
 import { IconDefinition } from '@ant-design/icons-angular';
 import * as AllIcons from '@ant-design/icons-angular/icons';
-import { ProdutoForm1Component } from './produto-form1/produto-form1.component';
 import { NzCascaderModule } from 'ng-zorro-antd/cascader';
 import { NzButtonModule } from 'ng-zorro-antd/button';
+import { NzImageModule } from 'ng-zorro-antd/image';
 
 
 
@@ -40,11 +37,7 @@ const icons: IconDefinition[] = Object.keys(antDesignIcons).map(key => antDesign
 
 @NgModule({
   declarations: [
-    AppComponent,
-    LoginComponent,
-    SingupComponent,
-    SignupClientComponent,
-    ProdutoForm1Component
+    AppComponent
   ],
   imports: [
     BrowserModule,
@@ -63,7 +56,8 @@ const icons: IconDefinition[] = Object.keys(antDesignIcons).map(key => antDesign
     NzTableModule,
     NzSwitchModule,
     NzCascaderModule,
-    NzButtonModule
+    NzButtonModule,
+    NzImageModule
   ],
   providers: [
     { provide: NZ_I18N, useValue: pt_BR }, { provide: NZ_ICONS, useValue: icons }

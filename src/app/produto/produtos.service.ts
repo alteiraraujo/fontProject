@@ -15,7 +15,7 @@ export class ProdutosService {
   list(){
     return this.http.get<Produto[]>(this.API)
     .pipe(
-      delay(1000),
+      delay(500),
       tap(console.log)
     );
   }

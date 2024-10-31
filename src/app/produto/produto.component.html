@@ -1,5 +1,4 @@
 <h3 nz-typography>Produtos</h3>
-
 <div id="input-pesquisar">
   <nz-input-group [nzSuffix]="suffixIconSearch">
     <input type="text" nz-input placeholder="Buscar Produtos"/>
@@ -24,15 +23,15 @@
   <nz-table #basicTable  [nzScroll]="{ x: '1150px', y: '640px' }" >
     <thead>
       <tr>
+        <th>Código</th>
         <th>Descrição</th>
-        <th>Valor</th>
         <th>Status</th>
         <th>Opções</th>
         <th>Ativo</th>
       </tr>
     </thead>
     <tbody>
-      <tr *ngFor="let produtos of produtos$ | async; else loading">
+      <tr *ngFor="let produtos of produtos$ | async">
         <td>{{ produtos.cod_produto}}</td>
         <td>{{ produtos.desc_produto }}</td>
         <td><span nz-typography nzType="success">{{ produtos.status }}</span></td>
@@ -41,7 +40,4 @@
       </tr>
     </tbody>
   </nz-table>
-<!--  <div id="nz-paginacao">
-    <nz-pagination nzResponsive="true" [nzPageIndex]="1" [nzTotal]="2" [nzPageSize]="5"></nz-pagination>
-  </div>-->
 </div>

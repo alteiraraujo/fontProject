@@ -2,21 +2,44 @@
   <nz-sider class="menu-sidebar" nzCollapsible nzWidth="256px" nzBreakpoint="md" [(nzCollapsed)]="isCollapsed"
     [nzTrigger]="null">
     <div class="sidebar-logo">
-      <img src="https://ng.ant.design/assets/img/logo.svg" alt="logo">
-      <h1>PetCare</h1>
-
+      <img
+      nz-image
+      nzSrc="https://i.postimg.cc/sgvHYmVP/logo.png"
+      alt="logo"
+    />
     </div>
     <ul nz-menu nzTheme="dark" nzMode="inline" [nzInlineCollapsed]="isCollapsed">
-      <li nz-submenu nzOpen nzTitle="Dashboard" nzIcon="dashboard">
+      <li nz-submenu nzOpen nzTitle="Painel de Controle" nzIcon="dashboard">
         <ul>
           <li nz-menu-item nzMatchRouter>
             <a>Animais</a>
           </li>
           <li nz-menu-item nzMatchRouter>
+            <a>Clientes</a>
+          </li>
+          <li nz-menu-item nzMatchRouter>
+            <a >Colaboradores</a>
+          </li>
+          <li nz-menu-item nzMatchRouter>
             <a routerLink="Produto">Produto</a>
           </li>
           <li nz-menu-item nzMatchRouter>
-            <a routerLink="Cliente">Cliente</a>
+            <a>Categorias</a>
+          </li>
+          <li nz-menu-item nzMatchRouter>
+            <a>Fornecedores</a>
+          </li>
+          <li nz-menu-item nzMatchRouter>
+            <a>Compras</a>
+          </li>
+          <li nz-menu-item nzMatchRouter>
+            <a>Vendas</a>
+          </li>
+          <li nz-menu-item nzMatchRouter>
+            <a>Agendamentos</a>
+          </li>
+          <li nz-menu-item nzMatchRouter>
+            <a>Logout</a>
           </li>
         </ul>
       </li>

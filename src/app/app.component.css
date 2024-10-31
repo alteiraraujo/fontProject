@@ -30,7 +30,7 @@
 
 .sidebar-logo {
   position: relative;
-  height: 64px;
+  height: 90px;
   padding-left: 24px;
   overflow: hidden;
   line-height: 64px;
@@ -40,9 +40,11 @@
 
 .sidebar-logo img {
   display: inline-block;
-  height: 32px;
-  width: 32px;
+  height: 70px;
+  width: 70px;
   vertical-align: middle;
+  margin-top: 10px;
+  margin-left: 60px;
 }
 
 .sidebar-logo h1 {
