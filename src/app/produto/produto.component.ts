@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Observable, Subject, catchError, of, pipe } from 'rxjs';
+import { Observable, Subject, catchError, map, of, pipe } from 'rxjs';
 import { Produto } from './produto';
 import { ProdutosService } from './produtos.service';
 
@@ -10,23 +10,29 @@ import { ProdutosService } from './produtos.service';
   preserveWhitespaces: true,
 })
 export class ProdutoComponent implements OnInit {
-
+  produtos$: Observable<Produto[]>;
+  produtosFiltrados$: Observable<Produto[]>;
   pageIndex = 1;
   pageSize = 10;
-  //produtos = [];
-
-  produtos: Produto[] = [];
-
-  produtos$: Observable<Produto[]>;
 
   constructor(private service: ProdutosService) {}
 
-  selectedValue = null;
-
   ngOnInit() {
-    //this.service.list()
-    //  .subscribe(dados => this.produtos$ = dados);
-
     this.produtos$ = this.service.list();
+
+    this.produtosFiltrados$ = this.produtos$.pipe(
+      map(produtos =>
+        produtos.slice((this.pageIndex - 1) * this.pageSize, this.pageIndex * this.pageSize)
+      )
+    );
+  }
+
+  onPageIndexChange(pageIndex: number): void {
+    this.pageIndex = pageIndex;
+    this.produtosFiltrados$ = this.produtos$.pipe(
+      map(produtos =>
+        produtos.slice((this.pageIndex - 1) * this.pageSize, this.pageIndex * this.pageSize)
+      )
+    );
   }
 }

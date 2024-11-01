@@ -20,7 +20,15 @@
   </div>
 </div>
 <br />
-<nz-table #basicTable [nzData]="">
+<nz-table
+  #basicTable
+  [nzData]="produtosFiltrados$ | async"
+  [nzFrontPagination]="false"
+  [nzPageIndex]="pageIndex"
+  [nzPageSize]="pageSize"
+  [nzTotal]="(produtos$ | async)?.length"
+  (nzPageIndexChange)="onPageIndexChange($event)"
+>
   <thead>
     <tr>
       <th>{{ "Código" }}</th>
@@ -31,10 +39,12 @@
     </tr>
   </thead>
   <tbody>
-    <tr *ngFor="let produtos of produtos$ | async ">
-      <td>{{ produtos.cod_produto }}</td>
-      <td>{{ produtos.desc_produto }}</td>
-      <td><span nz-typography nzType="success">{{ produtos.status }}</span></td>
+    <tr *ngFor="let produto of produtosFiltrados$ | async">
+      <td>{{ produto.cod_produto }}</td>
+      <td>{{ produto.desc_produto }}</td>
+      <td>
+        <span nz-typography nzType="success">{{ produto.status }}</span>
+      </td>
       <td>
         <button nz-button [nzSize]="'small'" nzType="default">Abrir</button>
         <nz-divider nzType="vertical"></nz-divider>
