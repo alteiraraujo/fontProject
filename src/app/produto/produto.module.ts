@@ -13,6 +13,8 @@ import { NzTypographyModule } from 'ng-zorro-antd/typography';
 import { NzPaginationModule } from 'ng-zorro-antd/pagination';
 import { NzFormModule } from 'ng-zorro-antd/form';
 import { NzImageModule } from 'ng-zorro-antd/image';
+import { NzDividerModule } from 'ng-zorro-antd/divider';
+
 
 
 
@@ -34,7 +36,8 @@ import { NzImageModule } from 'ng-zorro-antd/image';
     NzPaginationModule,
     ReactiveFormsModule,
     NzFormModule,
-    NzImageModule
+    NzImageModule,
+    NzDividerModule
   
   ]
 })

@@ -3,20 +3,23 @@ import { Observable, Subject, catchError, of, pipe } from 'rxjs';
 import { Produto } from './produto';
 import { ProdutosService } from './produtos.service';
 
-
 @Component({
   selector: 'app-produto',
   templateUrl: './produto.component.html',
   styleUrls: ['./produto.component.css'],
-  preserveWhitespaces: true
+  preserveWhitespaces: true,
 })
 export class ProdutoComponent implements OnInit {
 
-  //produtos: Produto[] = [];
+  pageIndex = 1;
+  pageSize = 10;
+  //produtos = [];
+
+  produtos: Produto[] = [];
 
   produtos$: Observable<Produto[]>;
 
-  constructor(private service: ProdutosService) { }
+  constructor(private service: ProdutosService) {}
 
   selectedValue = null;
 
@@ -26,10 +29,4 @@ export class ProdutoComponent implements OnInit {
 
     this.produtos$ = this.service.list();
   }
-
-
 }
-
-
-
-

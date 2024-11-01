@@ -7,4 +7,6 @@ export interface Produto {
     id_categoria: number;
     id_fornecedor: number;
     status: string;
+
+    
 }

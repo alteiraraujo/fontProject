@@ -1,4 +1,4 @@
-<h3 nz-typography>Produtos</h3>
+<h3 nz-typography>Clientes</h3>
 <div nz-row>
   <div nz-col nzSpan="12"></div>
   <div nz-col nzSpan="12">
@@ -19,22 +19,25 @@
     </div>
   </div>
 </div>
+
 <br />
 <nz-table #basicTable [nzData]="">
   <thead>
     <tr>
-      <th>{{ "Código" }}</th>
-      <th>{{ "Descrição" }}</th>
+      <th>{{ "Nome" }}</th>
+      <th>{{ "Telefone" }}</th>
+      <th>{{ "Cidade" }}</th>
       <th>{{ "Status" }}</th>
       <th>{{ "Ações" }}</th>
       <th>{{ "Ativo" }}</th>
     </tr>
   </thead>
   <tbody>
-    <tr *ngFor="let produtos of produtos$ | async ">
-      <td>{{ produtos.cod_produto }}</td>
-      <td>{{ produtos.desc_produto }}</td>
-      <td><span nz-typography nzType="success">{{ produtos.status }}</span></td>
+    <tr>
+      <td>{{ "Nome" }}</td>
+      <td>{{ "Telefone" }}</td>
+      <td>{{ "Cidade" }}</td>
+      <td>{{ "status" }}</td>
       <td>
         <button nz-button [nzSize]="'small'" nzType="default">Abrir</button>
         <nz-divider nzType="vertical"></nz-divider>
