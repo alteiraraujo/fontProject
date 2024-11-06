@@ -4,7 +4,13 @@
   <div nz-col nzSpan="12">
     <div style="display: flex; align-items: center">
       <nz-input-group nzSearch [nzAddOnAfter]="suffixIconButton">
-        <input type="text" nz-input placeholder="Buscar cliente" />
+        <input
+          type="text"
+          nz-input
+          placeholder="Buscar Produtos"
+          [(ngModel)]="searchValue"
+          (ngModelChange)="onSearchChange()"
+        />
       </nz-input-group>
       <ng-template #suffixIconButton>
         <button nz-button nzType="primary" nzSearch>
@@ -12,10 +18,17 @@
         </button>
       </ng-template>
 
-      <nz-select style="margin-left: 8px" ngModel="Ativo">
+      <nz-select
+        style="margin-left: 8px"
+        [(ngModel)]="statusFilter"
+        (ngModelChange)="onStatusChange($event)"
+      >
+        <nz-option nzValue="" nzLabel="Todos"></nz-option>
         <nz-option nzValue="Ativo" nzLabel="Ativo"></nz-option>
         <nz-option nzValue="Inativo" nzLabel="Inativo"></nz-option>
       </nz-select>
+
+      <button nz-button nzType="primary" nzShape="circle">+</button>
     </div>
   </div>
 </div>
@@ -33,6 +46,8 @@
     <tr>
       <th>{{ "Código" }}</th>
       <th>{{ "Descrição" }}</th>
+      <th>{{ "Preço Compra" }}</th>
+      <th>{{ "Preço Venda" }}</th>
       <th>{{ "Status" }}</th>
       <th>{{ "Ações" }}</th>
       <th>{{ "Ativo" }}</th>
@@ -42,15 +57,32 @@
     <tr *ngFor="let produto of produtosFiltrados$ | async">
       <td>{{ produto.cod_produto }}</td>
       <td>{{ produto.desc_produto }}</td>
+      <td>{{ produto.valor_compra_produto }}</td>
+      <td>{{ produto.valor_venda_produto }}</td>
       <td>
-        <span nz-typography nzType="success">{{ produto.status }}</span>
+        <span
+          nz-typography
+          [ngClass]="{
+            'status-ativo': produto.status_produto === 'Ativo',
+            'status-inativo': produto.status_produto === 'Inativo'
+          }"
+        >
+          {{ produto.status_produto }}
+        </span>
       </td>
       <td>
         <button nz-button [nzSize]="'small'" nzType="default">Abrir</button>
         <nz-divider nzType="vertical"></nz-divider>
         <button nz-button [nzSize]="'small'" nzType="primary">Editar</button>
       </td>
-      <td><nz-switch nzSize="small" [ngModel]="true"></nz-switch></td>
+      <td>
+        <nz-switch
+          nzSize="small"
+          [ngModel]="produto.status_produto === 'Ativo'"
+          (ngModelChange)="toggleStatus(produto)"
+        ></nz-switch>
+      </td>
+      
     </tr>
   </tbody>
 </nz-table>

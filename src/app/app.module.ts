@@ -12,7 +12,7 @@ import { IconsProviderModule } from './icons-provider.module';
 import { NZ_ICONS } from 'ng-zorro-antd/icon';
 import { IconDefinition } from '@ant-design/icons-angular';
 import * as AllIcons from '@ant-design/icons-angular/icons';
-import { ClienteComponent } from './cliente/cliente.component';
+import { PessoaComponent } from './pessoa/pessoa.component';
 import { NgModule } from '@angular/core';
 import { NzAffixModule } from 'ng-zorro-antd/affix';
 import { NzAlertModule } from 'ng-zorro-antd/alert';
@@ -101,7 +101,7 @@ const icons: IconDefinition[] = Object.keys(antDesignIcons).map(
 );
 
 @NgModule({
-  declarations: [AppComponent, ClienteComponent],
+  declarations: [AppComponent, PessoaComponent],
   imports: [
     BrowserModule,
     AppRoutingModule,

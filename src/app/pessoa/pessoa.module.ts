@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
-import { ClienteRoutingModule } from './cliente-routing.module';
+import { ClienteRoutingModule } from './pessoa-routing.module';
 
 
 
@@ -13,4 +13,4 @@ import { ClienteRoutingModule } from './cliente-routing.module';
 
   ]
 })
-export class ClienteModule { }
+export class PessoaModule { }

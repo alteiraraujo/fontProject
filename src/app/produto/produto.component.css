@@ -1,9 +1,16 @@
 [nz-button] {
-    margin-right: 8px;
-    margin-bottom: 12px;
-  }
-  nz-select {
-    margin: 0 8px 10px 0;
-    width: 120px;
-  }
+  margin-right: 8px;
+  margin-bottom: 12px;
+}
+nz-select {
+  margin: 0 8px 10px 0;
+  width: 120px;
+}
 
+.status-ativo {
+  color: green; /* Cor verde para Ativo */
+}
+
+.status-inativo {
+  color: red; /* Cor vermelha para Inativo */
+}
