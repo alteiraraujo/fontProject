@@ -88,6 +88,7 @@ import { NzCodeEditorModule } from 'ng-zorro-antd/code-editor';
 import { NzGraphModule } from 'ng-zorro-antd/graph';
 import { NzQRCodeModule } from 'ng-zorro-antd/qr-code';
 import { NzWaterMarkModule } from 'ng-zorro-antd/water-mark';
+import { FornecedorModalComponent } from './fornecedor/fornecedor-modal/fornecedor-modal.component';
 
 
 
@@ -101,7 +102,7 @@ const icons: IconDefinition[] = Object.keys(antDesignIcons).map(
 );
 
 @NgModule({
-  declarations: [AppComponent, PessoaComponent],
+  declarations: [AppComponent, PessoaComponent, FornecedorModalComponent],
   imports: [
     BrowserModule,
     AppRoutingModule,
@@ -184,7 +185,8 @@ const icons: IconDefinition[] = Object.keys(antDesignIcons).map(
     NzGraphModule,
     NzQRCodeModule,
     NzWaterMarkModule,
-    NzStepsModule
+    NzStepsModule,
+   ReactiveFormsModule
   ],
   providers: [
     { provide: NZ_I18N, useValue: pt_BR },

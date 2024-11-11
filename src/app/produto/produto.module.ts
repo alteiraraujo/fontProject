@@ -14,13 +14,19 @@ import { NzPaginationModule } from 'ng-zorro-antd/pagination';
 import { NzFormModule } from 'ng-zorro-antd/form';
 import { NzImageModule } from 'ng-zorro-antd/image';
 import { NzDividerModule } from 'ng-zorro-antd/divider';
+import { ProdutoFormComponent } from './produto-form/produto-form.component';
+
+
+
+
 
 
 
 
 @NgModule({
   declarations: [
-    ProdutoComponent
+    ProdutoComponent,
+    ProdutoFormComponent
   ],
   imports: [
     CommonModule,
@@ -37,7 +43,8 @@ import { NzDividerModule } from 'ng-zorro-antd/divider';
     ReactiveFormsModule,
     NzFormModule,
     NzImageModule,
-    NzDividerModule
+    NzDividerModule,
+    ReactiveFormsModule
   
   ]
 })
