@@ -1,0 +1,89 @@
+<h5 nz-typography>Cadastrar Pessoa</h5>
+<br>
+<br>
+<form nz-form [formGroup]="pessoaForm" (ngSubmit)="submitForm()">
+    <!-- Nome Pessoa -->
+    <nz-form-item>
+      <nz-form-label  [nzSm]="6" [nzXs]="24" [nzRequired]="true" nzFor="nome_pessoa">Nome</nz-form-label>
+      <nz-form-control  [nzSm]="14" [nzXs]="24" nzErrorTip="Por favor, insira o nome">
+        <input nz-input formControlName="nome_pessoa" id="nome_pessoa" placeholder="Nome" class="custom-input-width"/>
+      </nz-form-control>
+    </nz-form-item>
+  
+    <!-- CPF Pessoa -->
+    <nz-form-item>
+      <nz-form-label [nzSm]="6" [nzXs]="24" [nzRequired]="true" nzFor="cpf_pessoa">CPF</nz-form-label>
+      <nz-form-control [nzSm]="14" [nzXs]="24" nzErrorTip="CPF inválido">
+        <input nz-input formControlName="cpf_pessoa" id="cpf_pessoa" placeholder="CPF" />
+      </nz-form-control>
+    </nz-form-item>
+  
+    <!-- Data de Nascimento Pessoa -->
+    <nz-form-item>
+      <nz-form-label [nzSm]="6" [nzXs]="24" [nzRequired]="true" nzFor="data_nascimento_pessoa">Data de Nascimento</nz-form-label>
+      <nz-form-control [nzSm]="14" [nzXs]="24" nzErrorTip="Por favor, selecione a data de nascimento">
+        <nz-date-picker formControlName="data_nascimento_pessoa" id="data_nascimento_pessoa"></nz-date-picker>
+      </nz-form-control>
+    </nz-form-item>
+  
+    <!-- Complemento Pessoa -->
+    <nz-form-item>
+      <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="complemento_pessoa">Complemento</nz-form-label>
+      <nz-form-control [nzSm]="14" [nzXs]="24">
+        <input nz-input formControlName="complemento_pessoa" id="complemento_pessoa" placeholder="Complemento" class="custom-input-width" />
+      </nz-form-control>
+    </nz-form-item>
+  
+    <!-- CEP Pessoa -->
+    <nz-form-item>
+      <nz-form-label [nzSm]="6" [nzXs]="24" [nzRequired]="true" nzFor="cep_pessoa">CEP</nz-form-label>
+      <nz-form-control [nzSm]="14" [nzXs]="24" nzErrorTip="Por favor, insira o CEP">
+        <input nz-input formControlName="cep_pessoa" id="cep_pessoa" placeholder="CEP" (blur)="buscarCEP()" />
+      </nz-form-control>
+    </nz-form-item>
+  
+    <!-- Cidade, Estado, Rua, e Bairro (preenchidos automaticamente) -->
+    <nz-form-item>
+      <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="cidade">Cidade</nz-form-label>
+      <nz-form-control [nzSm]="14" [nzXs]="24">
+        <input nz-input formControlName="cidade" id="cidade" placeholder="Cidade" [disabled]="true" class="custom-input-width"/>
+      </nz-form-control>
+    </nz-form-item>
+    
+    <nz-form-item>
+      <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="estado">Estado</nz-form-label>
+      <nz-form-control [nzSm]="14" [nzXs]="24">
+        <input nz-input formControlName="estado" id="estado" placeholder="Estado" [disabled]="true" class="custom-input-width"/>
+      </nz-form-control>
+    </nz-form-item>
+  
+    <nz-form-item>
+      <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="rua">Rua</nz-form-label>
+      <nz-form-control [nzSm]="14" [nzXs]="24">
+        <input nz-input formControlName="rua" id="rua" placeholder="Rua" [disabled]="true" class="custom-input-width"/>
+      </nz-form-control>
+    </nz-form-item>
+  
+    <nz-form-item>
+      <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="bairro">Bairro</nz-form-label>
+      <nz-form-control [nzSm]="14" [nzXs]="24">
+        <input nz-input formControlName="bairro" id="bairro" placeholder="Bairro" [disabled]="true" />
+      </nz-form-control>
+    </nz-form-item>
+  
+    <!-- Gênero Pessoa -->
+    <nz-form-item>
+      <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="genero_pessoa">Gênero</nz-form-label>
+      <nz-form-control [nzSm]="14" [nzXs]="24">
+        <nz-select formControlName="genero_pessoa" id="genero_pessoa" placeholder="Selecione o gênero">
+          <nz-option nzValue="Masculino" nzLabel="Masculino"></nz-option>
+          <nz-option nzValue="Feminino" nzLabel="Feminino"></nz-option>
+          <nz-option nzValue="Outro" nzLabel="Outro"></nz-option>
+        </nz-select>
+      </nz-form-control>
+    </nz-form-item>
+  
+    <!-- Botão de Submit -->
+    <button nz-button [nzType]="'primary'" [disabled]="!pessoaForm.valid">Cadastrar</button>
+  </form>
+  

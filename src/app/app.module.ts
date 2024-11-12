@@ -100,6 +100,8 @@ import { LoginComponent } from './login/login.component';
 
 
 
+
+
 registerLocaleData(pt);
 const antDesignIcons = AllIcons as {
   [key: string]: IconDefinition;
@@ -110,8 +112,10 @@ const icons: IconDefinition[] = Object.keys(antDesignIcons).map(
 );
 
 @NgModule({
-  declarations: [AppComponent, PessoaComponent, FornecedorModalComponent, AnimalComponent, ColaboradorComponent, CategoriaComponent, FornecedorComponent, AgendamentoComponent, ServicoComponent, DiagnosticoComponent, LoginComponent],
+  declarations: [AppComponent, PessoaComponent, FornecedorModalComponent, AnimalComponent, ColaboradorComponent, 
+    CategoriaComponent, FornecedorComponent, AgendamentoComponent, ServicoComponent, DiagnosticoComponent, LoginComponent],
   imports: [
+   
     BrowserModule,
     AppRoutingModule,
     FormsModule,

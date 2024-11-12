@@ -7,7 +7,7 @@ import { ProdutosService } from './produtos.service';
   selector: 'app-produto',
   templateUrl: './produto.component.html',
   styleUrls: ['./produto.component.css'],
-  preserveWhitespaces: true,
+  preserveWhitespaces: true
 })
 export class ProdutoComponent implements OnInit {
   produtos$: Observable<Produto[]>;

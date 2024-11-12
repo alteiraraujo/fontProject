@@ -1,5 +1,5 @@
 export interface Produto {
-    id_produto: number;
+    id_produto?: number;
     cod_produto: number;
     desc_produto: string;
     qtd_proudto: number;

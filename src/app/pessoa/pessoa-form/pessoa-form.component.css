@@ -1,0 +1,10 @@
+[nz-form] {
+    max-width: 600px;
+  }
+
+  .custom-input-width {
+    width: 100%; 
+    max-width: 500px; 
+  }
+
+  
