@@ -89,6 +89,14 @@ import { NzGraphModule } from 'ng-zorro-antd/graph';
 import { NzQRCodeModule } from 'ng-zorro-antd/qr-code';
 import { NzWaterMarkModule } from 'ng-zorro-antd/water-mark';
 import { FornecedorModalComponent } from './fornecedor/fornecedor-modal/fornecedor-modal.component';
+import { AnimalComponent } from './animal/animal.component';
+import { ColaboradorComponent } from './colaborador/colaborador.component';
+import { CategoriaComponent } from './categoria/categoria.component';
+import { FornecedorComponent } from './fornecedor/fornecedor.component';
+import { AgendamentoComponent } from './agendamento/agendamento.component';
+import { ServicoComponent } from './servico/servico.component';
+import { DiagnosticoComponent } from './diagnostico/diagnostico.component';
+import { LoginComponent } from './login/login.component';
 
 
 
@@ -102,7 +110,7 @@ const icons: IconDefinition[] = Object.keys(antDesignIcons).map(
 );
 
 @NgModule({
-  declarations: [AppComponent, PessoaComponent, FornecedorModalComponent],
+  declarations: [AppComponent, PessoaComponent, FornecedorModalComponent, AnimalComponent, ColaboradorComponent, CategoriaComponent, FornecedorComponent, AgendamentoComponent, ServicoComponent, DiagnosticoComponent, LoginComponent],
   imports: [
     BrowserModule,
     AppRoutingModule,
