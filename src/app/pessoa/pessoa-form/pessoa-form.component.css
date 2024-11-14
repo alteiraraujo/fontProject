@@ -7,4 +7,11 @@
     max-width: 500px; 
   }
 
-  
+
+  .ant-select.ant-select-in-form-item.phone-select {
+    width: 80px;
+  }
+
+  .register-area {
+    margin-bottom: 8px;
+  }

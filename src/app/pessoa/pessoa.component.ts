@@ -60,29 +60,6 @@ export class PessoaComponent implements OnInit {
     this.atualizarPessoasFiltradas();
   }
 
-  // Método para alternar o status da pessoa
   toggleStatus(pessoa: Pessoa): void {
-    const novoStatus = pessoa.status_pessoa === 'Ativo' ? 'Inativo' : 'Ativo';
-    const confirmacao = confirm(
-      `Deseja realmente ${
-        novoStatus === 'Ativo' ? 'ativar' : 'desativar'
-      } esta pessoa?`
-    );
-
-    if (confirmacao) {
-      const statusAntigo = pessoa.status_pessoa; // Salva o status antigo
-      pessoa.status_pessoa = novoStatus; // Atualiza imediatamente para feedback visual
-      this.service.updateStatus(pessoa.id_pessoa, novoStatus).subscribe({
-        next: () => {
-          this.atualizarPessoasFiltradas();
-          console.log('Status atualizado com sucesso no backend.');
-        },
-        error: (error) => {
-          pessoa.status_pessoa = statusAntigo; // Reverte em caso de erro
-          console.error('Erro ao atualizar status no backend:', error);
-          alert('Não foi possível atualizar o status no servidor.');
-        },
-      });
-    }
   }
 }

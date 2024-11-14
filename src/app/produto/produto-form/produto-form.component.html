@@ -39,7 +39,7 @@
         <nz-select formControlName="category" id="category" nzPlaceHolder="Selecione uma categoria">
           <nz-option *ngFor="let cat of categories" [nzLabel]="cat.name" [nzValue]="cat.id"></nz-option>
         </nz-select>
-        <button nz-button nzType="link" (click)="showFornecedorModal()">+ Novo Fornecedor</button>
+        <button nz-button nzType="link" >+ Novo Fornecedor</button>
         <!--<app-fornecedor-modal></app-fornecedor-modal>-->
       </nz-form-control>
     </nz-form-item>

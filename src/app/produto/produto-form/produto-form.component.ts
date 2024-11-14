@@ -1,6 +1,5 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { FornecedorModalComponent } from 'src/app/fornecedor/fornecedor-modal/fornecedor-modal.component';
 
 
 @Component({
@@ -49,10 +48,5 @@ export class ProdutoFormComponent {
     // Lógica para adicionar novo fornecedor
   }
 
-  @ViewChild(FornecedorModalComponent) fornecedorModal: FornecedorModalComponent;
-
-  showFornecedorModal(): void {
-    this.fornecedorModal.isVisible = true; // Abre o modal do fornecedor
-  }
 
 }

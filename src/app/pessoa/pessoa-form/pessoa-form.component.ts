@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators, AbstractControl } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-pessoa-form',
@@ -11,24 +12,41 @@ export class PessoaFormComponent {
 
   pessoaForm: FormGroup;
 
-  constructor(private fb: FormBuilder, private http: HttpClient) {
+  constructor(private fb: FormBuilder, private http: HttpClient, private router: Router) {
     this.pessoaForm = this.fb.group({
       nome_pessoa: ['', [Validators.required]],
       cpf_pessoa: ['', [Validators.required, this.validarCPF]],
-      data_nascimento_pessoa: [null, [Validators.required]],
+      data_nascimento_pessoa: [null, [Validators.required, this.validarDataNascimento]],
+      telefone_pessoa: ['', [Validators.required, Validators.pattern(/^\d{10,11}$/)]],
+      phoneNumberPrefix: ['+55'], // Prefixo padrão para o telefone
       complemento_pessoa: [''],
       cep_pessoa: ['', [Validators.required]],
-      cidade: [{ value: '', disabled: true }],
-      estado: [{ value: '', disabled: true }],
-      rua: [{ value: '', disabled: true }],
-      bairro: [{ value: '', disabled: true }],
+      cidade_pessoa: [{ value: '', disabled: true }],
+      estado_pessoa: [{ value: '', disabled: true }],
+      uf_pessoa: [{ value: '', disabled: true }],
+      rua_pessoa: [{ value: '', disabled: true }],
+      bairro_pessoa: [{ value: '', disabled: true }],
+      numero_pessoa: ['', Validators.required],
       genero_pessoa: ['']
     });
   }
 
   submitForm(): void {
     if (this.pessoaForm.valid) {
-      console.log('Dados do formulário:', this.pessoaForm.value);
+      const pessoaData = {
+        ...this.pessoaForm.getRawValue(),
+        status_pessoa: 'Ativo'
+      };
+  
+      this.http.post('http://localhost:8080/pessoas', pessoaData).subscribe(
+        (response) => {
+          console.log('Pessoa cadastrada com sucesso:', response);
+          this.router.navigate(['/pessoas']);
+        },
+        (error) => {
+          console.error('Erro ao cadastrar pessoa:', error);
+        }
+      );
     } else {
       Object.values(this.pessoaForm.controls).forEach(control => {
         if (control.invalid) {
@@ -38,30 +56,42 @@ export class PessoaFormComponent {
       });
     }
   }
-
+  
   buscarCEP(): void {
     const cep = this.pessoaForm.get('cep_pessoa')?.value;
     if (cep) {
       this.http.get(`https://viacep.com.br/ws/${cep}/json/`).subscribe((data: any) => {
-        if (data) {
+        if (data && !data.erro) {
           this.pessoaForm.patchValue({
-            cidade: data.localidade,
-            estado: data.uf,
-            rua: data.logradouro,
-            bairro: data.bairro
+            cidade_pessoa: data.localidade,
+            estado_pessoa: data.estado,
+            rua_pessoa: data.logradouro,
+            bairro_pessoa: data.bairro,
+            uf_pessoa: data.uf
           });
+        } else {
+          alert('CEP não encontrado. Verifique o valor e tente novamente.');
         }
       });
     }
   }
 
-  // Validação de CPF simples
-  validarCPF(control: any) {
+  validarCPF(control: AbstractControl) {
     const cpf = control.value;
     if (!cpf) return null;
-    // Exemplo básico de validação, substitua por uma função completa se necessário
     const cpfValido = cpf.length === 11 && !/^(\d)\1+$/.test(cpf);
     return cpfValido ? null : { cpfInvalido: true };
   }
 
+  validarDataNascimento(control: AbstractControl): { [key: string]: boolean } | null {
+    const dataNascimento = control.value;
+    if (dataNascimento && new Date(dataNascimento) > new Date()) {
+      return { dataInvalida: true };
+    }
+    return null;
+  }
+
+  cancelar(): void {
+    this.router.navigate(['/pessoas']);
+  }
 }

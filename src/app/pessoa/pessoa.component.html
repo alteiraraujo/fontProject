@@ -28,7 +28,9 @@
         <nz-option nzValue="Inativo" nzLabel="Inativo"></nz-option>
       </nz-select>
 
-      <button nz-button nzType="primary" nzShape="circle" routerLink="novo">+</button>
+      <button nz-button nzType="primary" nzShape="circle" routerLink="novo">
+        +
+      </button>
     </div>
   </div>
 </div>
@@ -56,9 +58,9 @@
   <tbody>
     <tr *ngFor="let pessoa of pessoasFiltradas$ | async">
       <td>{{ pessoa.nome_pessoa }}</td>
-      <td>{{ "Telefone" }}</td>
-      <td>{{ "cidade" }}</td>
-      <td>{{ "pessoa.cpf_pessoa"}}</td>
+      <td>{{ pessoa.telefone_pessoa }}</td>
+      <td>{{ pessoa.cidade_pessoa }}</td>
+      <td>{{ pessoa.cpf_pessoa }}</td>
       <td>
         <span
           nz-typography
@@ -67,25 +69,22 @@
             'status-inativo': pessoa.status_pessoa === 'Inativo'
           }"
         >
-          {{ "pessoa.status_pessoa" }}
+          {{ pessoa.status_pessoa }}
         </span>
       </td>
-    
       <td>
         <button nz-button [nzSize]="'small'" nzType="default">Abrir</button>
         <nz-divider nzType="vertical"></nz-divider>
         <button nz-button [nzSize]="'small'" nzType="primary">Editar</button>
       </td>
-      
+
       <td>
         <nz-switch
           nzSize="small"
-          [ngModel]="pessoa.status_pessoa === 'Ativo'"
+          [(ngModel)]="pessoa.status_pessoa"
           (ngModelChange)="toggleStatus(pessoa)"
         ></nz-switch>
       </td>
-      
-      
     </tr>
   </tbody>
 </nz-table>
