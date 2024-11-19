@@ -15,6 +15,7 @@ import { NzPaginationModule } from 'ng-zorro-antd/pagination';
 import { NzFormModule } from 'ng-zorro-antd/form';
 import { NzImageModule } from 'ng-zorro-antd/image';
 import { NzDividerModule } from 'ng-zorro-antd/divider';
+import { NzMessageModule } from 'ng-zorro-antd/message';
 
 
 @NgModule({
@@ -37,6 +38,7 @@ import { NzDividerModule } from 'ng-zorro-antd/divider';
     NzFormModule,
     NzImageModule,
     NzDividerModule,
+    NzMessageModule
     
   ]
 })

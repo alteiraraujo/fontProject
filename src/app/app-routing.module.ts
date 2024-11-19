@@ -4,17 +4,18 @@ import { Routes, RouterModule } from '@angular/router';
 const routes: Routes = [
   //{ path: '', pathMatch: 'full', redirectTo: '/welcome' },
   //{ path: '', pathMatch: 'full', redirectTo: '/login' },
-  { path: 'Produto', loadChildren: () => import('./produto/produto.module').then(m => m.ProdutoModule) },
+  { path: 'produtos', loadChildren: () => import('./produto/produto.module').then(m => m.ProdutoModule) },
   { path: 'pessoas', loadChildren: () => import('./pessoa/pessoa.module').then(m => m.PessoaModule) },
   { path: '', redirectTo: '/pessoas', pathMatch: 'full' },
-  { path: 'Animal', loadChildren: () => import('./animal/animal.module').then(m => m.AnimalModule) },
-  { path: 'Colaborador', loadChildren: () => import('./colaborador/colaborador.module').then(m => m.ColaboradorModule) },
-  { path: 'Categoria', loadChildren: () => import('./categoria/categoria.module').then(m => m.CategoriaModule) },
+  { path: 'animais', loadChildren: () => import('./animal/animal.module').then(m => m.AnimalModule) },
+  { path: 'colaboradores', loadChildren: () => import('./colaborador/colaborador.module').then(m => m.ColaboradorModule) },
+  { path: 'categorias', loadChildren: () => import('./categoria/categoria.module').then(m => m.CategoriaModule) },
   { path: 'fornecedores', loadChildren: () => import('./fornecedor/fornecedor.module').then(m => m.FornecedorModule) },
-  { path: 'Agendamento', loadChildren: () => import('./agendamento/agendamento.module').then(m => m.AgendamentoModule) },
-  { path: 'Servico', loadChildren: () => import('./servico/servico.module').then(m => m.ServicoModule) },
-  { path: 'Diagnostico', loadChildren: () => import('./diagnostico/diagnostico.module').then(m => m.DiagnosticoModule) },
-  { path: 'Login', loadChildren: () => import('./login/login.module').then(m => m.LoginModule) }
+  { path: 'agendamentos', loadChildren: () => import('./agendamento/agendamento.module').then(m => m.AgendamentoModule) },
+  { path: 'servicos', loadChildren: () => import('./servico/servico.module').then(m => m.ServicoModule) },
+  { path: 'diagnosticos', loadChildren: () => import('./diagnostico/diagnostico.module').then(m => m.DiagnosticoModule) },
+  { path: 'login', loadChildren: () => import('./login/login.module').then(m => m.LoginModule) },
+  {path: 'racas', loadChildren: ()=> import('./raca/raca.module').then(m=> m.RacaModule)}
 ];
 
 @NgModule({

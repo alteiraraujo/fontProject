@@ -1,7 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, Output, EventEmitter } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, AbstractControl } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
-import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-pessoa-form',
@@ -9,10 +8,12 @@ import { Router } from '@angular/router';
   styleUrls: ['./pessoa-form.component.css']
 })
 export class PessoaFormComponent {
+  @Output() pessoaCadastrada = new EventEmitter<any>(); // Emite o dado da pessoa cadastrada
+  @Output() cancelado = new EventEmitter<void>(); // Emite o evento de cancelamento
 
   pessoaForm: FormGroup;
 
-  constructor(private fb: FormBuilder, private http: HttpClient, private router: Router) {
+  constructor(private fb: FormBuilder, private http: HttpClient) {
     this.pessoaForm = this.fb.group({
       nome_pessoa: ['', [Validators.required]],
       cpf_pessoa: ['', [Validators.required, this.validarCPF]],
@@ -37,11 +38,11 @@ export class PessoaFormComponent {
         ...this.pessoaForm.getRawValue(),
         status_pessoa: 'Ativo'
       };
-  
+
       this.http.post('http://localhost:8080/pessoas', pessoaData).subscribe(
         (response) => {
           console.log('Pessoa cadastrada com sucesso:', response);
-          this.router.navigate(['/pessoas']);
+          this.pessoaCadastrada.emit(response); // Emite o evento para o componente pai
         },
         (error) => {
           console.error('Erro ao cadastrar pessoa:', error);
@@ -56,7 +57,7 @@ export class PessoaFormComponent {
       });
     }
   }
-  
+
   buscarCEP(): void {
     const cep = this.pessoaForm.get('cep_pessoa')?.value;
     if (cep) {
@@ -92,6 +93,6 @@ export class PessoaFormComponent {
   }
 
   cancelar(): void {
-    this.router.navigate(['/pessoas']);
+    this.cancelado.emit(); // Emite o evento de cancelamento para o componente pai
   }
 }

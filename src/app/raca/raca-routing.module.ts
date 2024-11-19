@@ -1,15 +1,14 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { AgendamentoComponent } from './agendamento.component';
+import { RacaComponent } from './raca.component';
 
 
 const routes: Routes = [
-  {path:'', component: AgendamentoComponent},
-
+  {path:'', component: RacaComponent}
 ];
 
 @NgModule({
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule]
 })
-export class AgendamentoRoutingModule { }
+export class RacaRoutingModule { }

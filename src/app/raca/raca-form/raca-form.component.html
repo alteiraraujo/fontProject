@@ -1,0 +1,38 @@
+<form nz-form [formGroup]="form" (ngSubmit)="submitForm()">
+    <div nz-form-item nz-row>
+      <div nz-form-label nz-col [nzSpan]="6">
+        <label for="nome_raca">Nome da Raça</label>
+      </div>
+      <div nz-form-control nz-col [nzSpan]="18">
+        <input
+          nz-input
+          id="nome_raca"
+          formControlName="nome_raca"
+          placeholder="Digite o nome da raça"
+        />
+      </div>
+    </div>
+  
+    <div nz-form-item nz-row>
+      <div nz-form-label nz-col [nzSpan]="6">
+        <label for="especie_raca">Espécie</label>
+      </div>
+      <div nz-form-control nz-col [nzSpan]="18">
+        <nz-select id="especie_raca" formControlName="especie_raca" placeholder="Selecione a espécie" style="width: 100px" >
+          <nz-option nzValue="Cão" nzLabel="Cão"></nz-option>
+          <nz-option nzValue="Gato" nzLabel="Gato"></nz-option>
+          <nz-option nzValue="Roedor" nzLabel="Roedor"></nz-option>
+          <nz-option nzValue="Passaro" nzLabel="Pássaro"></nz-option>
+        </nz-select>
+      </div>
+    </div>
+  
+    <div nz-form-item nz-row>
+      <div nz-col [nzSpan]="24" style="text-align: right">
+        <button nz-button nzType="primary" [disabled]="form.invalid">
+          Salvar
+        </button>
+      </div>
+    </div>
+  </form>
+  

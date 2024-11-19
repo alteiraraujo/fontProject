@@ -6,7 +6,7 @@
       <nz-select
         nzShowSearch
         nzPlaceHolder="Selecione uma pessoa"
-        [(ngModel)]="selectedPessoaId"
+        formControlName="selectedPessoaId"
         (ngModelChange)="onPessoaChange($event)"
         [nzDropdownRender]="personDropdownRender"
         required

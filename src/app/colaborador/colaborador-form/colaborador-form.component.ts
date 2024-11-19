@@ -4,6 +4,8 @@ import { Observable } from 'rxjs';
 import { ColaboradorService } from '../colaborador.service';
 import { PessoaService } from 'src/app/pessoa/pessoa.service';
 import { Colaborador } from '../colaborador';
+import { NzModalService } from 'ng-zorro-antd/modal';
+import { PessoaFormComponent } from 'src/app/pessoa/pessoa-form/pessoa-form.component';
 
 @Component({
   selector: 'app-colaborador-form',
@@ -18,7 +20,8 @@ export class ColaboradorFormComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private colaboradorService: ColaboradorService,
-    private pessoaService: PessoaService
+    private pessoaService: PessoaService,
+    private modal: NzModalService
   ) {}
 
   ngOnInit(): void {
@@ -26,6 +29,7 @@ export class ColaboradorFormComponent implements OnInit {
 
     this.colaboradorForm = this.fb.group({
       tbl_pessoa_id: [null, Validators.required],
+      selectedPessoaId: [null],
       cargo_colaborador: [null, Validators.required],
       login_colaborador: ['', Validators.required],
       senha_colaborador: ['', Validators.required],
@@ -45,6 +49,7 @@ export class ColaboradorFormComponent implements OnInit {
         next: () => {
           alert('Colaborador cadastrado com sucesso!');
           this.colaboradorForm.reset();
+          this.refreshPessoasList(); // Atualiza a lista de pessoas após o cadastro
         },
         error: () => {
           alert('Erro ao cadastrar colaborador.');
@@ -55,9 +60,32 @@ export class ColaboradorFormComponent implements OnInit {
 
   // Abrir modal para adicionar nova pessoa
   openPessoaModal(): void {
-    // Lógica para abrir o modal de cadastro de nova pessoa
-    // Exemplo: Usar um modal customizado
-    console.log('Abrir modal para adicionar nova pessoa');
+    const modalRef = this.modal.create({
+      nzTitle: 'Cadastrar Pessoa',
+      nzContent: PessoaFormComponent,
+      nzFooter: null,
+      nzWidth: '600px',
+    });
+
+    const instance = modalRef.getContentComponent() as PessoaFormComponent;
+
+    // Escuta o evento de cadastro concluído
+    instance.pessoaCadastrada.subscribe((novaPessoa: any) => {
+      console.log('Pessoa cadastrada:', novaPessoa);
+      modalRef.close(); // Fecha o modal após o cadastro
+      this.refreshPessoasList(); // Atualiza a lista de pessoas disponíveis
+    });
+
+    // Escuta o evento de cancelamento
+    instance.cancelado.subscribe(() => {
+      console.log('Cadastro de pessoa cancelado');
+      modalRef.close(); // Fecha o modal
+    });
+  }
+
+  // Atualizar a lista de pessoas após cadastro
+  refreshPessoasList(): void {
+    this.pessoas$ = this.pessoaService.list();
   }
 
   // Alterar a pessoa selecionada

@@ -1,1 +1,120 @@
-<p>animal-form works!</p>
+<h3 nz-typography>Cadastrar Animal</h3>
+<form nz-form [formGroup]="animalForm" (ngSubmit)="onSubmit()">
+  <!-- Campo Nome do Animal -->
+  <nz-form-item>
+    <nz-form-label [nzRequired]="true" nzFor="nome_animal">Nome do Animal</nz-form-label>
+    <nz-form-control [nzErrorTip]="nomeAnimalError">
+      <input
+        nz-input
+        formControlName="nome_animal"
+        id="nome_animal"
+        placeholder="Digite o nome do animal"
+      />
+    </nz-form-control>
+  </nz-form-item>
+  <ng-template #nomeAnimalError>
+    O nome do animal é obrigatório.
+  </ng-template>
+
+  <!-- Campo Idade do Animal -->
+  <nz-form-item>
+    <nz-form-label [nzRequired]="true" nzFor="idade_animal">Idade do Animal</nz-form-label>
+    <nz-form-control [nzErrorTip]="idadeAnimalError">
+      <input
+        nz-input
+        type="number"
+        formControlName="idade_animal"
+        id="idade_animal"
+        placeholder="Digite a idade do animal"
+      />
+    </nz-form-control>
+  </nz-form-item>
+  <ng-template #idadeAnimalError>
+    A idade do animal é obrigatória.
+  </ng-template>
+
+  <!-- Campo Pessoa (Dono) -->
+  <nz-form-item>
+    <nz-form-label [nzRequired]="true" nzFor="selectedPessoaId">Dono</nz-form-label>
+    <nz-form-control>
+      <nz-select
+        nzShowSearch
+        nzPlaceHolder="Selecione o Dono"
+        formControlName="selectedPessoaId"
+        (ngModelChange)="onPessoaChange($event)"
+        [nzDropdownRender]="personDropdownRender"
+        required
+      >
+        <nz-option
+          *ngFor="let pessoa of pessoas$ | async"
+          [nzValue]="pessoa.id_pessoa"
+          [nzLabel]="pessoa.nome_pessoa"
+        >
+        </nz-option>
+      </nz-select>
+      <ng-template #personDropdownRender>
+        <div style="display: flex; justify-content: space-between; padding: 8px">
+          <button nz-button nzType="link" (click)="openPessoaModal()" type="button">
+            <span nz-icon nzType="plus"></span> Adicionar Dono
+          </button>
+        </div>
+      </ng-template>
+    </nz-form-control>
+  </nz-form-item>
+
+  <!-- Campo Raça -->
+  <nz-form-item>
+    <nz-form-label [nzRequired]="true" nzFor="selectedRacaId">Raça</nz-form-label>
+    <nz-form-control>
+      <nz-select
+        nzShowSearch
+        nzPlaceHolder="Selecione a Raça"
+        formControlName="selectedRacaId"
+        (ngModelChange)="onRacaChange($event)"
+        [nzDropdownRender]="racaDropdownRender"
+        required
+      >
+        <nz-option
+          *ngFor="let raca of racas$ | async"
+          [nzValue]="raca.id_raca"
+          [nzLabel]="raca.nome_raca"
+        >
+        </nz-option>
+      </nz-select>
+      <ng-template #racaDropdownRender>
+        <div style="display: flex; justify-content: space-between; padding: 8px">
+          <button nz-button nzType="link" (click)="openRacaModal()" type="button">
+            <span nz-icon nzType="plus"></span> Adicionar Raça
+          </button>
+        </div>
+      </ng-template>
+    </nz-form-control>
+  </nz-form-item>
+
+  <!-- Campo Status -->
+  <nz-form-item>
+    <nz-form-label [nzRequired]="true" nzFor="status_animal">Status</nz-form-label>
+    <nz-form-control [nzErrorTip]="statusError">
+      <nz-select
+        formControlName="status_animal"
+        id="status_animal"
+        nzPlaceHolder="Selecione o status"
+      >
+        <nz-option nzValue="Ativo" nzLabel="Ativo"></nz-option>
+        <nz-option nzValue="Inativo" nzLabel="Inativo"></nz-option>
+      </nz-select>
+    </nz-form-control>
+  </nz-form-item>
+  <ng-template #statusError>
+    O status é obrigatório.
+  </ng-template>
+
+  <!-- Botão de Submissão -->
+  <nz-form-item>
+    <nz-form-control>
+      <button nz-button nzType="primary" [disabled]="animalForm.invalid" >
+        Salvar
+      </button>
+    </nz-form-control>
+  </nz-form-item>
+</form>

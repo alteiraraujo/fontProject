@@ -4,9 +4,9 @@ import { PessoaComponent } from './pessoa.component';
 import { PessoaFormComponent } from './pessoa-form/pessoa-form.component';
 
 const routes: Routes = [
-  { path: '', component: PessoaComponent },             // Rota principal
-  { path: 'novo', component: PessoaFormComponent },     // Rota para criar nova pessoa
-  { path: 'editar/:id', component: PessoaFormComponent } // Rota para editar uma pessoa
+  { path: '', component: PessoaComponent },             
+  { path: 'novo', component: PessoaFormComponent },     
+  { path: 'editar/:id', component: PessoaFormComponent } 
 ];
 
 @NgModule({

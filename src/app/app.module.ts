@@ -99,6 +99,7 @@ import { ColaboradorFormComponent } from './colaborador/colaborador-form/colabor
 
 
 
+
 registerLocaleData(pt);
 const antDesignIcons = AllIcons as {
   [key: string]: IconDefinition;
@@ -110,7 +111,7 @@ const icons: IconDefinition[] = Object.keys(antDesignIcons).map(
 
 @NgModule({
   declarations: [AppComponent,   AnimalComponent, ColaboradorComponent, 
-    CategoriaComponent,  ServicoComponent, DiagnosticoComponent, LoginComponent, ColaboradorFormComponent, ],
+    CategoriaComponent,  ServicoComponent, DiagnosticoComponent, LoginComponent, ColaboradorFormComponent ],
   imports: [
    
     BrowserModule,
