@@ -12,4 +12,5 @@ export interface Fornecedor {
     estado_fornecedor: string;
     uf_fornecedor: string;
     status_fornecedor: string;
+    telefone_fornecedor: string;
 }

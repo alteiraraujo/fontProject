@@ -1,0 +1,95 @@
+<h3 nz-typography>Cadastrar Colaborador</h3>
+<form nz-form [formGroup]="colaboradorForm" (ngSubmit)="onSubmit()">
+  <nz-form-item>
+    <nz-form-label [nzSpan]="6" nzFor="tbl_pessoa_id">Pessoa</nz-form-label>
+    <nz-form-control [nzSpan]="14">
+      <nz-select
+        nzShowSearch
+        nzPlaceHolder="Selecione uma pessoa"
+        [(ngModel)]="selectedPessoaId"
+        (ngModelChange)="onPessoaChange($event)"
+        [nzDropdownRender]="personDropdownRender"
+        required
+      >
+        <nz-option
+          *ngFor="let pessoa of pessoas$ | async"
+          [nzValue]="pessoa.id_pessoa"
+          [nzLabel]="pessoa.nome_pessoa"
+        >
+        </nz-option>
+      </nz-select>
+      <ng-template #personDropdownRender>
+        <div style="display: flex; justify-content: space-between; padding: 8px;">
+          <button
+            nz-button
+            nzType="link"
+            (click)="openPessoaModal()"
+            type="button"
+          >
+            <span nz-icon nzType="plus"></span> Adicionar Pessoa
+          </button>
+        </div>
+      </ng-template>
+    </nz-form-control>
+  </nz-form-item>
+
+  <nz-form-item>
+    <nz-form-label [nzSpan]="6" nzFor="cargo_colaborador">Cargo</nz-form-label>
+    <nz-form-control [nzSpan]="14">
+      <nz-select
+        formControlName="cargo_colaborador"
+        nzPlaceHolder="Selecione o cargo"
+        required
+      >
+        <nz-option nzValue="Administrador" nzLabel="Administrador"></nz-option>
+        <nz-option nzValue="Recepcionista" nzLabel="Recepcionista"></nz-option>
+        <nz-option nzValue="Veterinario" nzLabel="Veterinário"></nz-option>
+      </nz-select>
+    </nz-form-control>
+  </nz-form-item>
+
+  <nz-form-item>
+    <nz-form-label [nzSpan]="6" nzFor="login_colaborador">Login</nz-form-label>
+    <nz-form-control [nzSpan]="14">
+      <input
+        nz-input
+        formControlName="login_colaborador"
+        placeholder="Digite o login"
+        required
+      />
+    </nz-form-control>
+  </nz-form-item>
+
+  <nz-form-item>
+    <nz-form-label [nzSpan]="6" nzFor="senha_colaborador">Senha</nz-form-label>
+    <nz-form-control [nzSpan]="14">
+      <input
+        nz-input
+        type="password"
+        formControlName="senha_colaborador"
+        placeholder="Digite a senha"
+        required
+      />
+    </nz-form-control>
+  </nz-form-item>
+
+  <nz-form-item>
+    <nz-form-label [nzSpan]="6" nzFor="email_colaborador">Email</nz-form-label>
+    <nz-form-control [nzSpan]="14">
+      <input
+        nz-input
+        formControlName="email_colaborador"
+        placeholder="Digite o email"
+        required
+      />
+    </nz-form-control>
+  </nz-form-item>
+
+  <nz-form-item>
+    <nz-form-control [nzSpan]="14" [nzOffset]="6">
+      <button nz-button nzType="primary" [disabled]="!colaboradorForm.valid">
+        Salvar
+      </button>
+    </nz-form-control>
+  </nz-form-item>
+</form>

@@ -43,8 +43,7 @@ import { ProdutoFormComponent } from './produto-form/produto-form.component';
     ReactiveFormsModule,
     NzFormModule,
     NzImageModule,
-    NzDividerModule,
-    ReactiveFormsModule
+    NzDividerModule
   
   ]
 })

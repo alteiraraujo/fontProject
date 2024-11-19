@@ -1,1 +1,51 @@
-<p>agendamento works!</p>
+<h3 nz-typography>Visualizador de Agendamentos</h3>
+
+<div style="margin-bottom: 16px; display: flex; justify-content: space-between;">
+  <div style="flex: 1; margin-right: 8px;">
+    <nz-input-group nzSearch [nzAddOnAfter]="suffixIconButton">
+      <input
+        type="text"
+        nz-input
+        placeholder="Buscar pelo nome do tutor"
+        [(ngModel)]="searchValue"
+        (ngModelChange)="onSearchChange()"
+      />
+    </nz-input-group>
+    <ng-template #suffixIconButton>
+      <button nz-button nzType="primary" nzSearch>
+        <span nz-icon nzType="search"></span>
+      </button>
+    </ng-template>
+  </div>
+  <button nz-button nzType="primary" (click)="openModal()">Novo Agendamento</button>
+</div>
+
+<nz-calendar
+  [nzMode]="'month'"
+  (nzSelectChange)="onDateSelect($event)"
+  [nzDateCell]="dateCell"
+>
+</nz-calendar>
+
+<ng-template #dateCell let-date>
+  <ul class="events">
+    <li
+      *ngFor="let agendamento of getAgendamentosByDate(date)"
+      [ngClass]="getEventClass(agendamento)"
+      class="event"
+      (click)="openModal(agendamento)"
+    >
+      <strong>{{ agendamento.procedimento_agendamento }}</strong> - {{ agendamento.tutor_animal }}
+    </li>
+  </ul>
+</ng-template>
+
+<!-- Modal de Criação/Edição -->
+<nz-modal
+  [(nzVisible)]="isModalVisible"
+  [nzTitle]="'Teste de Modal'"
+  (nzOnCancel)="closeModal()"
+>
+  <p>Conteúdo de teste</p>
+</nz-modal>
+
