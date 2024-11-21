@@ -7,12 +7,11 @@ export interface Agendamento {
     | 'Vacina';
   status_agendamento: string;
   animal: {
-    id_animal: number; // Ajustado para coincidir com Animal
+    id_animal: number;
     nome_animal?: string;
+    pessoa: {
+      id_pessoa: number;
+      nome_pessoa?: string;
+    };
   };
-  pessoa?: {
-    id_pessoa: number;
-    nome_pessoa: string;
-  };
-  tutor_animal?: string;
 }

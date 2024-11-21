@@ -1,0 +1,13 @@
+<div *ngFor="let agendamento of agendamentos" class="agendamento-detalhes">
+    <p><strong>Procedimento:</strong> {{ agendamento.procedimento_agendamento }}</p>
+    <p><strong>Animal:</strong> {{ agendamento.animal?.nome_animal || 'Não definido' }}</p>
+    <p><strong>Tutor:</strong> {{ agendamento.animal?.pessoa?.nome_pessoa || 'Não definido' }}</p>
+    <p>
+      <strong>Data e Hora:</strong>
+      {{ agendamento.data_hora_agendamento | date: 'dd/MM/yyyy HH:mm' }}
+    </p>
+    <p><strong>Status:</strong> {{ agendamento.status_agendamento }}</p>
+    <button nz-button nzType="link" (click)="onEditar(agendamento)">Editar</button>
+    <hr />
+  </div>
+  

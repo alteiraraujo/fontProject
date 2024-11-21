@@ -33,14 +33,15 @@ export class AgendamentoFormComponent implements OnInit {
       animal: [null, Validators.required],
       status_agendamento: ['Pendente', Validators.required],
     });
-
+  
+    this.carregarTutores();
+  
     if (this.agendamento) {
       this.form.patchValue(this.agendamento);
+      this.preencherCamposEditar();
     }
-
-    this.carregarTutores();
   }
-
+  
   carregarTutores(): void {
     this.pessoaService.list().subscribe({
       next: (pessoas) => {
@@ -48,37 +49,49 @@ export class AgendamentoFormComponent implements OnInit {
           label: pessoa.nome_pessoa,
           value: pessoa.id_pessoa.toString(),
         }));
+  
+        // Seleciona o tutor caso esteja editando
+        if (this.agendamento?.animal?.pessoa) {
+          this.form.get('tutor_animal')?.setValue(this.agendamento.animal.pessoa.id_pessoa.toString());
+          this.onTutorChange(this.agendamento.animal.pessoa.id_pessoa.toString());
+        }
       },
       error: () => {
         console.error('Erro ao carregar tutores');
       },
     });
   }
-
+  
   onTutorChange(tutorId: string): void {
     this.animalService.list().subscribe({
       next: (animais) => {
-        console.log('Lista completa de animais:', animais);
-  
-        // Filtra os animais pelo tutor selecionado
         const animaisDoTutor = animais.filter(
           (animal) => animal.pessoa.id_pessoa.toString() === tutorId
         );
-  
-        console.log('Animais filtrados pelo tutor:', animaisDoTutor);
   
         this.animais = animaisDoTutor.map((animal) => ({
           label: animal.nome_animal,
           value: animal.id_animal,
         }));
   
-        this.form.get('animal')?.reset(); // Reseta o campo animal
+        // Seleciona o animal caso esteja editando
+        if (this.agendamento?.animal) {
+          this.form.get('animal')?.setValue(this.agendamento.animal.id_animal);
+        }
       },
       error: (err) => {
         console.error('Erro ao carregar animais:', err);
       },
     });
   }
+  
+  preencherCamposEditar(): void {
+    if (this.agendamento?.animal?.pessoa) {
+      this.form.get('tutor_animal')?.setValue(this.agendamento.animal.pessoa.id_pessoa.toString());
+      this.onTutorChange(this.agendamento.animal.pessoa.id_pessoa.toString());
+    }
+  }
+  
   
 
   submitForm(): void {
@@ -89,14 +102,14 @@ export class AgendamentoFormComponent implements OnInit {
         data_hora_agendamento: formData.data_hora_agendamento,
         animal: {
           id_animal: formData.animal,
-          nome_animal: this.animais.find((a) => a.value === formData.animal)?.label,
+          nome_animal: this.animais.find((a) => a.value === formData.animal)?.label || '',
+          pessoa: {
+            id_pessoa: formData.tutor_animal,
+            nome_pessoa: this.tutores.find((t) => t.value === formData.tutor_animal)?.label || '',
+          },
         },
         procedimento_agendamento: formData.procedimento_agendamento,
         status_agendamento: 'Pendente',
-        pessoa: {
-          id_pessoa: formData.tutor_animal,
-          nome_pessoa: this.tutores.find((t) => t.value === formData.tutor_animal)?.label || '',
-        },
       };
   
       console.log('Dados para o POST:', agendamento);
@@ -106,6 +119,7 @@ export class AgendamentoFormComponent implements OnInit {
       this.form.markAllAsTouched();
     }
   }
+  
   
   
   

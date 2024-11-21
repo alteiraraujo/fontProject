@@ -5,6 +5,8 @@ import { AgendamentoService } from './agendamento.service';
 import { AgendamentoFormComponent } from './agendamento-form/agendamento-form.component';
 import { PessoaService } from '../pessoa/pessoa.service';
 import { AnimalService } from '../animal/animal.service';
+import { AgendamentoDetalhesComponent } from './agendamento-detalhes/agendamento-detalhes.component';
+import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'app-agendamento',
@@ -23,7 +25,8 @@ export class AgendamentoComponent implements OnInit {
     private modal: NzModalService,
     private agendamentoService: AgendamentoService,
     private pessoaService: PessoaService,
-    private animalService: AnimalService
+    private animalService: AnimalService,
+    private datePipe: DatePipe
   ) {}
 
   ngOnInit(): void {
@@ -52,7 +55,7 @@ export class AgendamentoComponent implements OnInit {
 
   onSearchChange(): void {
     this.agendamentosFiltrados = this.agendamentos.filter((agendamento) =>
-      agendamento.tutor_animal
+      (agendamento.animal.pessoa.nome_pessoa || '')
         .toLowerCase()
         .includes(this.searchValue.toLowerCase())
     );
@@ -87,31 +90,27 @@ export class AgendamentoComponent implements OnInit {
     const agendamentosDoDia = this.getAgendamentosByDate(date);
     console.log(`Agendamentos para ${date.toDateString()}:`, agendamentosDoDia);
   
-    // Exibir detalhes no console para depuração
+    const formattedDate = this.datePipe.transform(date, 'dd/MM/yyyy'); // Formata a data
+
     if (agendamentosDoDia.length) {
-      const detalhes = agendamentosDoDia
-        .map(
-          (agendamento) => `
-            <div>
-              <p><strong>Procedimento:</strong> ${agendamento.procedimento_agendamento}</p>
-              <p><strong>Animal:</strong> ${agendamento.animal?.nome_animal || 'Não definido'}</p>
-              <p><strong>Status:</strong> ${agendamento.status_agendamento}</p>
-              <button nz-button nzType="link" (click)="openModal(${JSON.stringify(
-                agendamento
-              )})">Editar</button>
-            </div>
-            <hr />
-          `
-        )
-        .join('');
-  
       const modalRef = this.modal.create({
-        nzTitle: `Agendamentos em ${date.toDateString()}`,
-        nzContent: `<div>${detalhes}</div>`,
+
+        nzTitle: `Agendamentos em ${formattedDate}`, // Usa a data formatada no cabeçalho
+       
+        nzContent: AgendamentoDetalhesComponent,
+        nzComponentParams: {
+          agendamentos: agendamentosDoDia,
+        },
         nzFooter: null,
+      });
+  
+      // Tratar o evento de edição
+      modalRef.componentInstance?.editar.subscribe((agendamento: Agendamento) => {
+        this.openModal(agendamento); // Abre o modal para edição
       });
     }
   }
+  
   
 
   openModal(agendamento?: Agendamento): void {
@@ -125,7 +124,7 @@ export class AgendamentoComponent implements OnInit {
   
         this.animalService.list().subscribe((animais) => {
           this.animais = animais
-            .filter((animal) => animal.pessoa.id_pessoa === agendamento.pessoa?.id_pessoa)
+            .filter((animal) => animal.pessoa.id_pessoa === animal.pessoa?.id_pessoa)
             .map((animal) => ({
               label: animal.nome_animal,
               value: animal.id_animal,
