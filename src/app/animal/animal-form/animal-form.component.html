@@ -2,7 +2,7 @@
 <form nz-form [formGroup]="animalForm" (ngSubmit)="onSubmit()">
   <!-- Campo Nome do Animal -->
   <nz-form-item>
-    <nz-form-label [nzRequired]="true" nzFor="nome_animal">Nome do Animal</nz-form-label>
+    <nz-form-label [nzSm]="6" [nzXs]="24" [nzRequired]="true" nzFor="nome_animal">Nome do Animal</nz-form-label>
     <nz-form-control [nzErrorTip]="nomeAnimalError">
       <input
         nz-input
@@ -18,7 +18,7 @@
 
   <!-- Campo Idade do Animal -->
   <nz-form-item>
-    <nz-form-label [nzRequired]="true" nzFor="idade_animal">Idade do Animal</nz-form-label>
+    <nz-form-label [nzSm]="6" [nzXs]="24" [nzRequired]="true" nzFor="idade_animal">Idade do Animal</nz-form-label>
     <nz-form-control [nzErrorTip]="idadeAnimalError">
       <input
         nz-input
@@ -35,7 +35,7 @@
 
   <!-- Campo Pessoa (Dono) -->
   <nz-form-item>
-    <nz-form-label [nzRequired]="true" nzFor="selectedPessoaId">Dono</nz-form-label>
+    <nz-form-label [nzSm]="6" [nzXs]="24" [nzRequired]="true" nzFor="selectedPessoaId">Dono</nz-form-label>
     <nz-form-control>
       <nz-select
         nzShowSearch
@@ -64,7 +64,7 @@
 
   <!-- Campo Raça -->
   <nz-form-item>
-    <nz-form-label [nzRequired]="true" nzFor="selectedRacaId">Raça</nz-form-label>
+    <nz-form-label [nzSm]="6" [nzXs]="24" [nzRequired]="true" nzFor="selectedRacaId">Raça</nz-form-label>
     <nz-form-control>
       <nz-select
         nzShowSearch
@@ -90,24 +90,6 @@
       </ng-template>
     </nz-form-control>
   </nz-form-item>
-
-  <!-- Campo Status -->
-  <nz-form-item>
-    <nz-form-label [nzRequired]="true" nzFor="status_animal">Status</nz-form-label>
-    <nz-form-control [nzErrorTip]="statusError">
-      <nz-select
-        formControlName="status_animal"
-        id="status_animal"
-        nzPlaceHolder="Selecione o status"
-      >
-        <nz-option nzValue="Ativo" nzLabel="Ativo"></nz-option>
-        <nz-option nzValue="Inativo" nzLabel="Inativo"></nz-option>
-      </nz-select>
-    </nz-form-control>
-  </nz-form-item>
-  <ng-template #statusError>
-    O status é obrigatório.
-  </ng-template>
 
   <!-- Botão de Submissão -->
   <nz-form-item>

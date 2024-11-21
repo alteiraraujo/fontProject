@@ -10,13 +10,15 @@ import { NzButtonModule } from 'ng-zorro-antd/button';
 
 import { AgendamentoRoutingModule } from './agendamento-routing.module';
 import { AgendamentoComponent } from './agendamento.component';
-
+import { AgendamentoFormComponent } from './agendamento-form/agendamento-form.component';
+import { NzMessageModule } from 'ng-zorro-antd/message';
+import { NzDatePickerModule } from 'ng-zorro-antd/date-picker';
 
 
 
 
 @NgModule({
-  declarations: [AgendamentoComponent],
+  declarations: [AgendamentoComponent, AgendamentoFormComponent],
   imports: [
     CommonModule,
     AgendamentoRoutingModule,
@@ -27,7 +29,9 @@ import { AgendamentoComponent } from './agendamento.component';
     NzSelectModule,
     ReactiveFormsModule,
     FormsModule,
-    NzButtonModule
+    NzButtonModule,
+    NzMessageModule,
+    NzDatePickerModule 
   ],
 })
 export class AgendamentoModule {}

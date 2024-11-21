@@ -46,4 +46,8 @@ export class AnimalService {
       tap(() => console.log(`Animal com ID ${id_animal} removido.`))
     );
   }
+
+  listByTutor(tutorId: string): Observable<any[]> {
+    return this.http.get<any[]>(`/api/animais?tutor=${tutorId}`);
+  }
 }

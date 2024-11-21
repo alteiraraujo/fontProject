@@ -1,48 +1,22 @@
 .events {
   list-style: none;
-  padding: 0;
   margin: 0;
+  padding: 0;
 }
 
 .event {
-  padding: 4px 8px;
-  border-radius: 4px;
-  margin: 2px 0;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+  margin-bottom: 4px;
+  cursor: pointer;
 }
 
 .event-confirmed {
-  background-color: #52c41a;
-  color: white;
+  color: green;
 }
 
 .event-pending {
-  background-color: #faad14;
-  color: white;
+  color: orange;
 }
 
 .event-canceled {
-  background-color: #ff4d4f;
-  color: white;
+  color: red;
 }
-
-.status {
-  font-size: 0.85em;
-  font-style: italic;
-}
-
-nz-form-item {
-  margin-bottom: 16px;
-}
-
-nz-form-label {
-  font-weight: bold;
-}
-
-nz-form-control {
-  width: 100%;
-}
-
-

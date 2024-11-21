@@ -56,8 +56,8 @@
   <tbody>
     <tr *ngFor="let animal of animaisFiltrados$ | async">
       <td>{{ animal.nome_animal }}</td>
-      <td>{{ "animal.tutor_animal" }}</td>
-      <td>{{ "animal.raca_animal" }}</td>
+      <td>{{ animal.pessoa.nome_pessoa }}</td> <!-- Nome do Tutor -->
+      <td>{{ animal.raca.nome_raca }}</td> <!-- Nome da Raça -->
       <td>
         <span
           nz-typography
@@ -81,7 +81,7 @@
           (ngModelChange)="toggleStatus(animal)"
         ></nz-switch>
       </td>
-      
     </tr>
   </tbody>
+  
 </nz-table>

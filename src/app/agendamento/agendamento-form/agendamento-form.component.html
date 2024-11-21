@@ -1,0 +1,80 @@
+<form nz-form [formGroup]="form" (ngSubmit)="submitForm()">
+  <!-- Tutor -->
+  <div nz-form-item nz-row class="form-item">
+    <div nz-form-label [nzSm]="6" [nzXs]="24" nz-col>
+      <label for="tutor_animal">Tutor</label>
+    </div>
+    <div nz-form-control nz-col [nzSpan]="18">
+      <nz-select
+        id="tutor_animal"
+        formControlName="tutor_animal"
+        placeholder="Selecione o tutor"
+        (ngModelChange)="onTutorChange($event)"
+        [nzOptions]="tutores"
+        nzShowSearch
+        style="width: 300px"
+      ></nz-select>
+    </div>
+  </div>
+
+  <!-- Animal -->
+  <div nz-form-item nz-row class="form-item">
+    <div nz-form-label [nzSm]="6" [nzXs]="24" nz-col>
+      <label for="animal">Animal</label>
+    </div>
+    <div nz-form-control nz-col [nzSpan]="18">
+      <nz-select
+        id="animal"
+        formControlName="animal"
+        placeholder="Selecione o animal"
+        [nzOptions]="animais"
+        nzShowSearch
+        style="width: 300px"
+      ></nz-select>
+    </div>
+  </div>
+
+  <!-- Procedimento -->
+  <div nz-form-item nz-row class="form-item">
+    <div nz-form-label [nzSm]="6" [nzXs]="24" nz-col>
+      <label for="procedimento_agendamento">Procedimento</label>
+    </div>
+    <div nz-form-control nz-col [nzSpan]="18">
+      <nz-select
+        id="procedimento_agendamento"
+        formControlName="procedimento_agendamento"
+        placeholder="Selecione o procedimento"
+        style="width: 300px"
+      >
+        <nz-option *ngFor="let procedimento of procedimentos" [nzValue]="procedimento" [nzLabel]="procedimento">
+        </nz-option>
+      </nz-select>
+    </div>
+  </div>
+
+  <!-- Data e Hora -->
+  <div nz-form-item nz-row class="form-item">
+    <div nz-form-label [nzSm]="6" [nzXs]="24" nz-col>
+      <label for="data_hora_agendamento">Data e Hora</label>
+    </div>
+    <div nz-form-control nz-col [nzSpan]="18">
+      <nz-date-picker
+        formControlName="data_hora_agendamento"
+        nzShowTime
+        nzFormat="yyyy-MM-dd HH:mm:ss"
+        placeholder="Selecione a data e hora"
+        style="width: 300px"
+      ></nz-date-picker>
+    </div>
+  </div>
+
+  <!-- Botões -->
+  <div nz-form-item nz-row class="form-actions">
+    <div nz-col [nzSpan]="24" style="text-align: right">
+      <button nz-button nzType="primary" [disabled]="form.invalid" style="margin-right: 8px;">
+        Salvar
+      </button>
+      <button nz-button nzType="default" (click)="cancel()">Cancelar</button>
+    </div>
+  </div>
+</form>

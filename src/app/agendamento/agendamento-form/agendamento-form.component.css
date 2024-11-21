@@ -17,3 +17,22 @@
     font-size: 12px;
   }
   
+  form {
+    margin: 16px;
+  }
+  
+  button {
+    margin-top: 16px;
+  }
+  
+ 
+  .form-item {
+    margin-bottom: 16px; /* Espaçamento entre os campos */
+  }
+  
+  .form-actions {
+    margin-top: 24px; /* Espaçamento acima dos botões */
+  }
+
+  
+  

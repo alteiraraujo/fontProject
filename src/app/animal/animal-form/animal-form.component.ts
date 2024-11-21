@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Observable } from 'rxjs';
 import { PessoaService } from 'src/app/pessoa/pessoa.service';
@@ -58,13 +58,14 @@ export class AnimalFormComponent implements OnInit {
     // Lógica para abrir o modal de raça
   }
 
+
   onSubmit(): void {
     if (this.animalForm.valid) {
       // Cria o JSON no formato correto para o backend
       const novoAnimal: Animal = {
         nome_animal: this.animalForm.value.nome_animal,
         idade_animal: this.animalForm.value.idade_animal,
-        status_animal: this.animalForm.value.status_animal,
+        status_animal: 'Ativo', // Define automaticamente como "Ativo"
         pessoa: { id_pessoa: this.animalForm.value.selectedPessoaId },
         raca: { id_raca: this.animalForm.value.selectedRacaId },
       };

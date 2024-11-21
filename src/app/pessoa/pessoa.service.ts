@@ -26,4 +26,5 @@ export class PessoaService {
       tap(() => console.log(`Status da pessoa com ID ${id_pessoa} atualizado para ${status}`))
     );
   }
+  
 }

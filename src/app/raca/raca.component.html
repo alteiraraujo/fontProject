@@ -2,7 +2,7 @@
 <div nz-row>
   <div nz-col nzSpan="12"></div>
   <div nz-col nzSpan="12">
-    <div style="display: flex; align-items: center">
+    <div style="display: flex; align-items: center; gap: 8px">
       <!-- Campo de Busca -->
       <nz-input-group nzSearch [nzAddOnAfter]="suffixIconButton">
         <input
@@ -21,15 +21,28 @@
 
       <!-- Filtro por Espécie -->
       <nz-select
-        style="margin-left: 8px"
         [(ngModel)]="especieFilter"
         (ngModelChange)="onEspecieChange($event)"
+        placeholder="Espécie"
+        style="width: 120px"
       >
         <nz-option nzValue="" nzLabel="Todas"></nz-option>
         <nz-option nzValue="Cão" nzLabel="Cão"></nz-option>
         <nz-option nzValue="Gato" nzLabel="Gato"></nz-option>
         <nz-option nzValue="Roedor" nzLabel="Roedor"></nz-option>
         <nz-option nzValue="Passaro" nzLabel="Pássaro"></nz-option>
+      </nz-select>
+
+      <!-- Filtro por Status -->
+      <nz-select
+        [(ngModel)]="statusFilter"
+        (ngModelChange)="onStatusChange($event)"
+        placeholder="Status"
+        style="width: 120px"
+      >
+        <nz-option nzValue="" nzLabel="Todos"></nz-option>
+        <nz-option nzValue="Ativo" nzLabel="Ativo"></nz-option>
+        <nz-option nzValue="Inativo" nzLabel="Inativo"></nz-option>
       </nz-select>
 
       <!-- Botão de Novo Cadastro -->

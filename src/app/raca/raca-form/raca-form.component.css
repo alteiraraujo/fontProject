@@ -7,4 +7,11 @@ form {
   }
   
  
+  .form-item {
+    margin-bottom: 20px; /* Espaçamento entre os campos */
+  }
+  
+  .form-actions {
+    margin-top: 30px; /* Espaçamento acima dos botões */
+  }
   

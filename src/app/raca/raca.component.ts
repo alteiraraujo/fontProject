@@ -18,7 +18,7 @@ export class RacaComponent implements OnInit {
   pageSize = 8;
   searchValue: string = '';
   especieFilter: string = '';
-
+  statusFilter: string = '';
 
   constructor(private service: RacaService,
 
@@ -41,9 +41,8 @@ export class RacaComponent implements OnInit {
           .filter(
             (raca) =>
               (this.especieFilter === '' || raca.especie_raca === this.especieFilter) &&
-              raca.nome_raca
-                .toLowerCase()
-                .includes(this.searchValue.toLowerCase())
+              (this.statusFilter === '' || raca.status_raca === this.statusFilter) &&
+              raca.nome_raca.toLowerCase().includes(this.searchValue.toLowerCase())
           )
           .slice(
             (this.pageIndex - 1) * this.pageSize,
@@ -102,5 +101,11 @@ export class RacaComponent implements OnInit {
       alert('Raça cadastrada com sucesso!');
       this.carregarRacas(); // Atualiza a lista de raças após o cadastro
     });
+  }
+
+  onStatusChange(status: string): void {
+    this.statusFilter = status;
+    this.pageIndex = 1;
+    this.atualizarRacasFiltradas();
   }
 }

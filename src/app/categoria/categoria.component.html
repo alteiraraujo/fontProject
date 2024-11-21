@@ -28,11 +28,20 @@
         <nz-option nzValue="Inativo" nzLabel="Inativo"></nz-option>
       </nz-select>
 
-      <button nz-button nzType="primary" nzShape="circle" routerLink="novo">+</button>
+      <button
+        nz-button
+        nzType="primary"
+        nzShape="circle"
+        (click)="abrirModal()"
+      >
+        +
+      </button>
     </div>
   </div>
 </div>
 <br />
+
+<!-- Tabela de Categorias-->
 <nz-table
   #basicTable
   [nzData]="categoriasFiltradas$ | async"
@@ -44,10 +53,10 @@
 >
   <thead>
     <tr>
-      <th>{{ "Nome" }}</th>
-      <th>{{ "Status" }}</th>
-      <th>{{ "Ações" }}</th>
-      <th>{{ "Ativo" }}</th>
+      <th>Nome</th>
+      <th>Status</th>
+      <th>Ações</th>
+      <th>Ativo</th>
     </tr>
   </thead>
   <tbody>
@@ -79,4 +88,3 @@
     </tr>
   </tbody>
 </nz-table>
-

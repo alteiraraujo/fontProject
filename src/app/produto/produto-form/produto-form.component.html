@@ -1,71 +1,148 @@
-<form nz-form [formGroup]="productForm" (ngSubmit)="onSubmit()">
-    <!-- Campo Descrição do Produto -->
-    <nz-form-item>
-      <nz-form-label [nzRequired]="true" nzFor="productDescription">Descrição do Produto</nz-form-label>
-      <nz-form-control [nzErrorTip]="productDescriptionError">
-        <input nz-input formControlName="productDescription" id="productDescription" placeholder="Digite a descrição do produto" />
-      </nz-form-control>
-    </nz-form-item>
-    <ng-template #productDescriptionError>
-      A descrição é obrigatória.
-    </ng-template>
-  
-    <!-- Campo Valor de Compra -->
-    <nz-form-item>
-      <nz-form-label [nzRequired]="true" nzFor="purchasePrice">Valor de Compra</nz-form-label>
-      <nz-form-control [nzErrorTip]="purchasePriceError">
-        <input nz-input type="number" formControlName="purchasePrice" id="purchasePrice" placeholder="Digite o valor de compra" />
-      </nz-form-control>
-    </nz-form-item>
-    <ng-template #purchasePriceError>
-      O valor de compra é obrigatório.
-    </ng-template>
-  
-    <!-- Campo Valor de Venda -->
-    <nz-form-item>
-      <nz-form-label [nzRequired]="true" nzFor="salePrice">Valor de Venda</nz-form-label>
-      <nz-form-control [nzErrorTip]="salePriceError">
-        <input nz-input type="number" formControlName="salePrice" id="salePrice" placeholder="Digite o valor de venda" />
-      </nz-form-control>
-    </nz-form-item>
-    <ng-template #salePriceError>
-      O valor de venda é obrigatório.
-    </ng-template>
-  
-    <!-- Campo Categoria -->
-    <nz-form-item>
-      <nz-form-label [nzRequired]="true" nzFor="category">Categoria</nz-form-label>
-      <nz-form-control [nzErrorTip]="categoryError">
-        <nz-select formControlName="category" id="category" nzPlaceHolder="Selecione uma categoria">
-          <nz-option *ngFor="let cat of categories" [nzLabel]="cat.name" [nzValue]="cat.id"></nz-option>
-        </nz-select>
-        <button nz-button nzType="link" >+ Novo Fornecedor</button>
-        <!--<app-fornecedor-modal></app-fornecedor-modal>-->
-      </nz-form-control>
-    </nz-form-item>
-    <ng-template #categoryError>
-      A categoria é obrigatória.
-    </ng-template>
-  
-    <!-- Campo Fornecedor -->
-    <nz-form-item>
-      <nz-form-label [nzRequired]="true" nzFor="supplier">Fornecedor</nz-form-label>
-      <nz-form-control [nzErrorTip]="supplierError">
-        <nz-select formControlName="supplier" id="supplier" nzPlaceHolder="Selecione um fornecedor">
-          <nz-option *ngFor="let sup of suppliers" [nzLabel]="sup.name" [nzValue]="sup.id"></nz-option>
-        </nz-select>
-        <button nz-button nzType="link" (click)="addNewSupplier()">+ Novo Fornecedor</button>
-      </nz-form-control>
-    </nz-form-item>
-    <ng-template #supplierError>
-      O fornecedor é obrigatório.
-    </ng-template>
-  
-    <!-- Botão de Submissão -->
-    <nz-form-item>
-      <nz-form-control>
-        <button nz-button nzType="primary" [disabled]="productForm.invalid">Salvar</button>
-      </nz-form-control>
-    </nz-form-item>
-  </form>
-  
+<h3 nz-typography>Cadastrar Produto</h3>
+<form nz-form [formGroup]="produtoForm" (ngSubmit)="onSubmit()">
+  <!-- Campo Código do Produto -->
+  <nz-form-item>
+    <nz-form-label [nzSpan]="6" nzFor="cod_produto">Código</nz-form-label>
+    <nz-form-control [nzSpan]="14">
+      <input
+        nz-input
+        type="number"
+        formControlName="cod_produto"
+        placeholder="Digite o código do produto"
+        required
+      />
+    </nz-form-control>
+  </nz-form-item>
+
+  <!-- Campo Descrição do Produto -->
+  <nz-form-item>
+    <nz-form-label [nzSpan]="6" nzFor="desc_produto">Descrição</nz-form-label>
+    <nz-form-control [nzSpan]="14">
+      <input
+        nz-input
+        formControlName="desc_produto"
+        placeholder="Digite a descrição do produto"
+        required
+      />
+    </nz-form-control>
+  </nz-form-item>
+
+  <!-- Campo Quantidade do Produto -->
+  <nz-form-item>
+    <nz-form-label [nzSpan]="6" nzFor="qtd_produto">Quantidade</nz-form-label>
+    <nz-form-control [nzSpan]="14">
+      <input
+        nz-input
+        type="number"
+        formControlName="qtd_produto"
+        placeholder="Digite a quantidade"
+        required
+      />
+    </nz-form-control>
+  </nz-form-item>
+
+  <!-- Campo Valor de Compra -->
+  <nz-form-item>
+    <nz-form-label [nzSpan]="6" nzFor="valor_compra_produto">Valor de Compra</nz-form-label>
+    <nz-form-control [nzSpan]="14">
+      <input
+        nz-input
+        type="number"
+        formControlName="valor_compra_produto"
+        placeholder="Digite o valor de compra"
+        required
+      />
+    </nz-form-control>
+  </nz-form-item>
+
+  <!-- Campo Valor de Venda -->
+  <nz-form-item>
+    <nz-form-label [nzSpan]="6" nzFor="valor_venda_produto">Valor de Venda</nz-form-label>
+    <nz-form-control [nzSpan]="14">
+      <input
+        nz-input
+        type="number"
+        formControlName="valor_venda_produto"
+        placeholder="Digite o valor de venda"
+        required
+      />
+    </nz-form-control>
+  </nz-form-item>
+
+  <!-- Campo Categoria -->
+  <nz-form-item>
+    <nz-form-label [nzSpan]="6" nzFor="categoria_produto">Categoria</nz-form-label>
+    <nz-form-control [nzSpan]="14">
+      <nz-select
+        nzShowSearch
+        nzPlaceHolder="Selecione uma categoria"
+        formControlName="selectedCategoriaId"
+        (ngModelChange)="onCategoriaChange($event)"
+        [nzDropdownRender]="categoriaDropdownRender"
+        required
+      >
+        <nz-option
+          *ngFor="let categoria of categorias$ | async"
+          [nzValue]="categoria.id_categoria"
+          [nzLabel]="categoria.nome_categoria"
+        >
+        </nz-option>
+      </nz-select>
+      <ng-template #categoriaDropdownRender>
+        <div style="display: flex; justify-content: space-between; padding: 8px;">
+          <button
+            nz-button
+            nzType="link"
+            (click)="openCategoriaModal()"
+            type="button"
+          >
+            <span nz-icon nzType="plus"></span> Adicionar Categoria
+          </button>
+        </div>
+      </ng-template>
+    </nz-form-control>
+  </nz-form-item>
+
+  <!-- Campo Fornecedor -->
+  <nz-form-item>
+    <nz-form-label [nzSpan]="6" nzFor="fornecedor_produto">Fornecedor</nz-form-label>
+    <nz-form-control [nzSpan]="14">
+      <nz-select
+        nzShowSearch
+        nzPlaceHolder="Selecione um fornecedor"
+        formControlName="selectedFornecedorId"
+        (ngModelChange)="onFornecedorChange($event)"
+        [nzDropdownRender]="fornecedorDropdownRender"
+        required
+      >
+        <nz-option
+          *ngFor="let fornecedor of fornecedores$ | async"
+          [nzValue]="fornecedor.id_fornecedor"
+          [nzLabel]="fornecedor.nome_fornecedor"
+        >
+        </nz-option>
+      </nz-select>
+      <ng-template #fornecedorDropdownRender>
+        <div style="display: flex; justify-content: space-between; padding: 8px;">
+          <button
+            nz-button
+            nzType="link"
+            (click)="openFornecedorModal()"
+            type="button"
+          >
+            <span nz-icon nzType="plus"></span> Adicionar Fornecedor
+          </button>
+        </div>
+      </ng-template>
+    </nz-form-control>
+  </nz-form-item>
+
+  <!-- Botão de Submissão -->
+  <nz-form-item>
+    <nz-form-control [nzSpan]="14" [nzOffset]="6">
+      <button nz-button nzType="primary" [disabled]="!produtoForm.valid">
+        Salvar
+      </button>
+    </nz-form-control>
+  </nz-form-item>
+</form>

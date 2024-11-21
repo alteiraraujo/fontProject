@@ -1,14 +1,16 @@
 import { Component, OnInit } from '@angular/core';
-import { Observable, map } from 'rxjs';
+import { Observable, map, catchError, of } from 'rxjs';
 import { Categoria } from './categoria';
 import { CategoriaService } from './categoria.service';
+import { NzModalService } from 'ng-zorro-antd/modal';
+import { CategoriaFormComponent } from './categoria-form/categoria-form.component';
+import { NzNotificationService } from 'ng-zorro-antd/notification';
 
 @Component({
   selector: 'app-categoria',
   templateUrl: './categoria.component.html',
   styleUrls: ['./categoria.component.css']
 })
-
 export class CategoriaComponent implements OnInit {
   categorias$: Observable<Categoria[]>;
   categoriasFiltradas$: Observable<Categoria[]>;
@@ -17,14 +19,28 @@ export class CategoriaComponent implements OnInit {
   searchValue: string = '';
   statusFilter: string = 'Ativo';
 
-  constructor(private service: CategoriaService) {}
+  constructor(
+    private service: CategoriaService,
+    private modal: NzModalService,
+    private notification: NzNotificationService
+  ) {}
 
-  ngOnInit() {
-    this.categorias$ = this.service.list();
+  ngOnInit(): void {
+    this.carregarCategorias();
+  }
+
+  carregarCategorias(): void {
+    this.categorias$ = this.service.list().pipe(
+      catchError((error) => {
+        console.error('Erro ao carregar categorias:', error);
+        this.notification.error('Erro', 'Falha ao carregar categorias.');
+        return of([]); // Retorna um array vazio em caso de erro
+      })
+    );
     this.atualizarCategoriasFiltradas();
   }
 
-  atualizarCategoriasFiltradas() {
+  atualizarCategoriasFiltradas(): void {
     this.categoriasFiltradas$ = this.categorias$.pipe(
       map((categorias) =>
         categorias
@@ -55,7 +71,6 @@ export class CategoriaComponent implements OnInit {
     this.atualizarCategoriasFiltradas();
   }
 
-  // Método para alternar o status da categoria
   toggleStatus(categoria: Categoria): void {
     const novoStatus = categoria.status_categoria === 'Ativo' ? 'Inativo' : 'Ativo';
     const confirmacao = confirm(`Deseja realmente ${novoStatus === 'Ativo' ? 'ativar' : 'desativar'} esta categoria?`);
@@ -63,15 +78,53 @@ export class CategoriaComponent implements OnInit {
     if (confirmacao) {
       this.service.updateStatus(categoria.id_categoria!, novoStatus).subscribe({
         next: () => {
-          categoria.status_categoria = novoStatus;
-          this.atualizarCategoriasFiltradas();
-          console.log("Status atualizado com sucesso no backend.");
+          categoria.status_categoria = novoStatus; // Atualiza o status localmente
+          this.notification.success('Sucesso', `Status atualizado para ${novoStatus}`);
+          this.atualizarCategoriasFiltradas(); // Atualiza a lista filtrada
         },
         error: (error) => {
-          console.error("Erro ao atualizar status no backend:", error);
-          alert("Não foi possível atualizar o status no servidor.");
+          console.error('Erro ao atualizar status no backend:', error);
+          this.notification.error('Erro', 'Falha ao atualizar status.');
         }
       });
     }
+  }
+
+  abrirModal(): void {
+    const modalRef = this.modal.create({
+      nzTitle: 'Cadastrar Categoria',
+      nzContent: CategoriaFormComponent,
+      nzFooter: null,
+      nzWidth: '600px',
+    });
+
+    modalRef.afterClose.subscribe((novaCategoria?: Categoria) => {
+      if (novaCategoria) {
+        this.service.create(novaCategoria).subscribe({
+          next: () => {
+            this.notification.success('Sucesso', 'Categoria cadastrada com sucesso!');
+            this.carregarCategorias(); // Atualiza a lista após o cadastro
+          },
+          error: (error) => {
+            console.error('Erro ao cadastrar categoria:', error);
+            this.notification.error('Erro', 'Falha ao cadastrar categoria.');
+          }
+        });
+      }
+    });
+  }
+
+  onNovaCategoria(novaCategoria: Categoria): void {
+    novaCategoria.status_categoria = 'Ativo'; // Define o status como "Ativo"
+    this.service.create(novaCategoria).subscribe({
+      next: () => {
+        this.notification.success('Sucesso', 'Categoria cadastrada com sucesso!');
+        this.carregarCategorias(); // Atualiza a lista após o cadastro
+      },
+      error: (error) => {
+        console.error('Erro ao cadastrar categoria:', error);
+        this.notification.error('Erro', 'Falha ao cadastrar categoria.');
+      }
+    });
   }
 }

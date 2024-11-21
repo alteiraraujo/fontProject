@@ -26,4 +26,8 @@ export class RacaFormComponent implements OnInit {
       this.modalRef.close(this.form.value); // Emite os dados do formulário e fecha o modal
     }
   }
+
+  cancel(): void {
+    this.modalRef.close(); // Fecha o modal sem enviar dados
+  }
 }

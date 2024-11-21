@@ -1,7 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { NzModalService } from 'ng-zorro-antd/modal';
 import { Agendamento } from './agendamento';
 import { AgendamentoService } from './agendamento.service';
+import { AgendamentoFormComponent } from './agendamento-form/agendamento-form.component';
+import { PessoaService } from '../pessoa/pessoa.service';
+import { AnimalService } from '../animal/animal.service';
 
 @Component({
   selector: 'app-agendamento',
@@ -11,30 +14,39 @@ import { AgendamentoService } from './agendamento.service';
 export class AgendamentoComponent implements OnInit {
   agendamentos: Agendamento[] = [];
   agendamentosFiltrados: Agendamento[] = [];
-  isModalVisible: boolean = false;
-  isEditing: boolean = false;
-  agendamentoForm: FormGroup;
-  currentAgendamento: Agendamento | null = null;
   searchValue: string = '';
 
+  tutores: { label: string; value: string }[] = [];
+  animais: { label: string; value: number }[] = [];
+
   constructor(
-    private fb: FormBuilder,
-    private agendamentoService: AgendamentoService
+    private modal: NzModalService,
+    private agendamentoService: AgendamentoService,
+    private pessoaService: PessoaService,
+    private animalService: AnimalService
   ) {}
 
-  
   ngOnInit(): void {
-    this.agendamentoForm = this.fb.group({
-      data_hora_agendamento: [null, Validators.required],
-      procedimento_agendamento: [null, Validators.required],
-      tutor_animal: ['', Validators.required],
-      status_agendamento: ['Pendente', Validators.required],
-    });
-  
+    this.loadAgendamentos();
+  }
 
+  loadAgendamentos(): void {
     this.agendamentoService.list().subscribe((data) => {
-      this.agendamentos = data;
-      this.agendamentosFiltrados = data;
+      console.log('Agendamentos carregados:', data);
+
+      // Transformar `data_hora_agendamento` para Date
+      this.agendamentos = data.map((agendamento) => ({
+        ...agendamento,
+        data_hora_agendamento: new Date(
+          agendamento.data_hora_agendamento[0], // Ano
+          agendamento.data_hora_agendamento[1] - 1, // Mês (0-based)
+          agendamento.data_hora_agendamento[2], // Dia
+          agendamento.data_hora_agendamento[3], // Hora
+          agendamento.data_hora_agendamento[4] // Minuto
+        ),
+      }));
+
+      this.agendamentosFiltrados = [...this.agendamentos];
     });
   }
 
@@ -47,11 +59,14 @@ export class AgendamentoComponent implements OnInit {
   }
 
   getAgendamentosByDate(date: Date): Agendamento[] {
-    return this.agendamentosFiltrados.filter(
-      (agendamento) =>
-        new Date(agendamento.data_hora_agendamento).toDateString() ===
-        date.toDateString()
-    );
+    return this.agendamentosFiltrados.filter((agendamento) => {
+      const agendamentoDate = new Date(agendamento.data_hora_agendamento);
+      return (
+        agendamentoDate.getFullYear() === date.getFullYear() &&
+        agendamentoDate.getMonth() === date.getMonth() &&
+        agendamentoDate.getDate() === date.getDate()
+      );
+    });
   }
 
   getEventClass(agendamento: Agendamento): string {
@@ -67,55 +82,97 @@ export class AgendamentoComponent implements OnInit {
     }
   }
 
+  // Adicione o método onDateSelect
   onDateSelect(date: Date): void {
-    console.log('Data selecionada:', date);
-    // Se necessário, você pode adicionar lógica para manipular eventos específicos nesta data
+    const agendamentosDoDia = this.getAgendamentosByDate(date);
+    console.log(`Agendamentos para ${date.toDateString()}:`, agendamentosDoDia);
+  
+    // Exibir detalhes no console para depuração
+    if (agendamentosDoDia.length) {
+      const detalhes = agendamentosDoDia
+        .map(
+          (agendamento) => `
+            <div>
+              <p><strong>Procedimento:</strong> ${agendamento.procedimento_agendamento}</p>
+              <p><strong>Animal:</strong> ${agendamento.animal?.nome_animal || 'Não definido'}</p>
+              <p><strong>Status:</strong> ${agendamento.status_agendamento}</p>
+              <button nz-button nzType="link" (click)="openModal(${JSON.stringify(
+                agendamento
+              )})">Editar</button>
+            </div>
+            <hr />
+          `
+        )
+        .join('');
+  
+      const modalRef = this.modal.create({
+        nzTitle: `Agendamentos em ${date.toDateString()}`,
+        nzContent: `<div>${detalhes}</div>`,
+        nzFooter: null,
+      });
+    }
   }
+  
 
   openModal(agendamento?: Agendamento): void {
-    console.log('Abrindo modal', agendamento);
-    this.isModalVisible = true;
-    this.isEditing = !!agendamento;
-  
     if (agendamento) {
-      this.agendamentoForm.patchValue(agendamento);
-    } else {
-      this.agendamentoForm.reset({ status_agendamento: 'Pendente' });
-    }
-  }
-
-  closeModal(): void {
-    this.isModalVisible = false;
-    this.isEditing = false;
-    this.currentAgendamento = null;
-  }
-
-  onSubmit(): void {
-    if (this.agendamentoForm.valid) {
-      const formData: Agendamento = this.agendamentoForm.value;
-
-      if (this.isEditing && this.currentAgendamento) {
-        // Atualizar agendamento existente
-        this.agendamentoService
-          .update(this.currentAgendamento.id_agenda!, formData)
-          .subscribe(() => {
-            this.loadAgendamentos();
-            this.closeModal();
+      // Carregar tutores e animais antes de abrir o modal
+      this.pessoaService.list().subscribe((pessoas) => {
+        this.tutores = pessoas.map((pessoa) => ({
+          label: pessoa.nome_pessoa,
+          value: pessoa.id_pessoa.toString(),
+        }));
+  
+        this.animalService.list().subscribe((animais) => {
+          this.animais = animais
+            .filter((animal) => animal.pessoa.id_pessoa === agendamento.pessoa?.id_pessoa)
+            .map((animal) => ({
+              label: animal.nome_animal,
+              value: animal.id_animal,
+            }));
+  
+          // Abrir o modal após carregar os dados necessários
+          const modalRef = this.modal.create({
+            nzTitle: 'Editar Agendamento',
+            nzContent: AgendamentoFormComponent,
+            nzFooter: null,
+            nzWidth: '600px',
+            nzComponentParams: {
+              agendamento: agendamento,
+            },
           });
-      } else {
-        // Criar novo agendamento
-        this.agendamentoService.add(formData).subscribe(() => {
-          this.loadAgendamentos();
-          this.closeModal();
+  
+          modalRef.afterClose.subscribe((result) => {
+            if (result) {
+              this.agendamentoService.update(agendamento.id_agenda!, result).subscribe(() => {
+                this.loadAgendamentos();
+              });
+            }
+          });
         });
-      }
+      });
+    } else {
+      // Abrir o modal para novo agendamento
+      const modalRef = this.modal.create({
+        nzTitle: 'Novo Agendamento',
+        nzContent: AgendamentoFormComponent,
+        nzFooter: null,
+        nzWidth: '600px',
+        nzComponentParams: {
+          agendamento: null,
+        },
+      });
+  
+      modalRef.afterClose.subscribe((result) => {
+        if (result) {
+          this.agendamentoService.add(result).subscribe(() => {
+            this.loadAgendamentos();
+          });
+        }
+      });
     }
   }
-
-  private loadAgendamentos(): void {
-    this.agendamentoService.list().subscribe((data) => {
-      this.agendamentos = data;
-      this.agendamentosFiltrados = data;
-    });
-  }
+  
+  
+  
 }
