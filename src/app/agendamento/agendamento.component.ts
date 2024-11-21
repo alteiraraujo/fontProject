@@ -91,12 +91,10 @@ export class AgendamentoComponent implements OnInit {
     console.log(`Agendamentos para ${date.toDateString()}:`, agendamentosDoDia);
   
     const formattedDate = this.datePipe.transform(date, 'dd/MM/yyyy'); // Formata a data
-
+  
     if (agendamentosDoDia.length) {
       const modalRef = this.modal.create({
-
-        nzTitle: `Agendamentos em ${formattedDate}`, // Usa a data formatada no cabeçalho
-       
+        nzTitle: `Agendamentos em ${formattedDate}`,
         nzContent: AgendamentoDetalhesComponent,
         nzComponentParams: {
           agendamentos: agendamentosDoDia,
@@ -104,11 +102,46 @@ export class AgendamentoComponent implements OnInit {
         nzFooter: null,
       });
   
-      // Tratar o evento de edição
-      modalRef.componentInstance?.editar.subscribe((agendamento: Agendamento) => {
-        this.openModal(agendamento); // Abre o modal para edição
-      });
+      // Tratar os eventos emitidos pelo componente filho
+      const instance = modalRef.getContentComponent();
+      if (instance) {
+        instance.editar.subscribe((agendamento: Agendamento) => {
+          this.openModal(agendamento); // Abre o modal para edição
+        });
+        instance.confirmar.subscribe((agendamento: Agendamento) => {
+          this.confirmarAgendamento(agendamento);
+          modalRef.close(); // Opcional: fecha o modal após a ação
+        });
+        instance.cancelar.subscribe((agendamento: Agendamento) => {
+          this.cancelarAgendamento(agendamento);
+          modalRef.close(); // Opcional: fecha o modal após a ação
+        });
+      }
     }
+  }
+
+  confirmarAgendamento(agendamento: Agendamento): void {
+    this.agendamentoService
+      .update(agendamento.id_agenda!, { status_agendamento: 'Confirmado' }) // Envia apenas o campo status
+      .subscribe({
+        next: () => {
+          this.loadAgendamentos(); // Recarrega os agendamentos para refletir a alteração
+          console.log(`Agendamento ${agendamento.id_agenda} confirmado.`);
+        },
+        error: (err) => console.error('Erro ao confirmar agendamento:', err),
+      });
+  }
+  
+  cancelarAgendamento(agendamento: Agendamento): void {
+    this.agendamentoService
+      .update(agendamento.id_agenda!, { status_agendamento: 'Cancelado' }) // Envia apenas o campo status
+      .subscribe({
+        next: () => {
+          this.loadAgendamentos(); // Recarrega os agendamentos para refletir a alteração
+          console.log(`Agendamento ${agendamento.id_agenda} cancelado.`);
+        },
+        error: (err) => console.error('Erro ao cancelar agendamento:', err),
+      });
   }
   
   

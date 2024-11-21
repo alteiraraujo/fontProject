@@ -19,7 +19,7 @@ export class AgendamentoService {
     return this.http.post<Agendamento>(this.API, agendamento);
   }
 
-  update(id: number, agendamento: Agendamento): Observable<Agendamento> {
-    return this.http.put<Agendamento>(`${this.API}/${id}`, agendamento);
+  update(id_agenda: number, agendamento: Partial<Agendamento>): Observable<Agendamento> {
+    return this.http.put<Agendamento>(`${this.API}/${id_agenda}`, agendamento); // Usando this.API para consistência
   }
 }
