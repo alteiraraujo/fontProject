@@ -35,7 +35,7 @@
 
   <!-- Campo Pessoa (Dono) -->
   <nz-form-item>
-    <nz-form-label [nzSm]="6" [nzXs]="24" [nzRequired]="true" nzFor="selectedPessoaId">Dono</nz-form-label>
+    <nz-form-label [nzSm]="6" [nzXs]="24" [nzRequired]="true" nzFor="selectedPessoaId">Tutor</nz-form-label>
     <nz-form-control>
       <nz-select
         nzShowSearch
@@ -93,10 +93,11 @@
 
   <!-- Botão de Submissão -->
   <nz-form-item>
-    <nz-form-control>
+    <nz-form-control [nzSm]="14" [nzXs]="24" [nzOffset]="6">
       <button nz-button nzType="primary" [disabled]="animalForm.invalid" >
         Salvar
       </button>
+      <button nz-button nzType="default" >Cancelar</button>
     </nz-form-control>
   </nz-form-item>
 </form>

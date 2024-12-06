@@ -14,6 +14,7 @@ import { AgendamentoFormComponent } from './agendamento-form/agendamento-form.co
 import { NzMessageModule } from 'ng-zorro-antd/message';
 import { NzDatePickerModule } from 'ng-zorro-antd/date-picker';
 import { AgendamentoDetalhesComponent } from './agendamento-detalhes/agendamento-detalhes.component';
+import { NzIconModule } from 'ng-zorro-antd/icon';
 
 
 
@@ -32,7 +33,9 @@ import { AgendamentoDetalhesComponent } from './agendamento-detalhes/agendamento
     FormsModule,
     NzButtonModule,
     NzMessageModule,
-    NzDatePickerModule 
+    NzDatePickerModule,
+    NzIconModule
+    
   ],
   providers: [DatePipe],
 })

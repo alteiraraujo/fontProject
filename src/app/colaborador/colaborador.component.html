@@ -47,7 +47,6 @@
       <th>{{ "Código" }}</th>
       <th>{{ "Nome" }}</th>
       <th>{{ "Cargo" }}</th>
-      <th>{{ "Tipo" }}</th>
       <th>{{ "Status" }}</th>
       <th>{{ "Ações" }}</th>
       <th>{{ "Ativo" }}</th>
@@ -56,9 +55,8 @@
   <tbody>
     <tr *ngFor="let colaborador of colaboradoresFiltrados$ | async">
       <td>{{ colaborador.id_colaborador }}</td>
-      <td>{{ colaborador.nome_colaborador }}</td>
+      <td>{{ colaborador.pessoa.nome_pessoa }}</td>
       <td>{{ colaborador.cargo_colaborador }}</td>
-      <td>{{ colaborador.tipo_colaborador }}</td>
       <td>
         <span
           nz-typography

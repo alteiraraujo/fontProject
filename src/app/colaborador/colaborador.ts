@@ -7,5 +7,9 @@ export interface Colaborador {
   email_colaborador: string;
   tbl_pessoa_id: number;
   status_colaborador: string;
-  nome_colaborador: string;
+  nome_colaborador: string; 
+  pessoa: {
+    id_pessoa: number;
+    nome_pessoa?: string;
+  };
 }
