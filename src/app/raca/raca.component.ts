@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Observable, map } from 'rxjs';
+import { Observable, BehaviorSubject, map } from 'rxjs';
 import { Raca } from './raca';
 import { RacaService } from './raca.service';
 import { NzModalService } from 'ng-zorro-antd/modal';
@@ -14,24 +14,26 @@ import { RacaFormComponent } from './raca-form/raca-form.component';
 export class RacaComponent implements OnInit {
   racas$: Observable<Raca[]>;
   racasFiltradas$: Observable<Raca[]>;
+  private racasSubject = new BehaviorSubject<Raca[]>([]);
+
   pageIndex = 1;
   pageSize = 8;
   searchValue: string = '';
   especieFilter: string = '';
   statusFilter: string = '';
 
-  constructor(private service: RacaService,
-
-    private modal: NzModalService
-  ) {}
+  constructor(private service: RacaService, private modal: NzModalService) {}
 
   ngOnInit(): void {
     this.carregarRacas();
   }
 
   carregarRacas(): void {
-    this.racas$ = this.service.list(); // Recarrega a lista de raças
-    this.atualizarRacasFiltradas();
+    this.service.list().subscribe((racas) => {
+      this.racasSubject.next(racas);
+      this.atualizarRacasFiltradas();
+    });
+    this.racas$ = this.racasSubject.asObservable();
   }
 
   atualizarRacasFiltradas(): void {
@@ -68,6 +70,12 @@ export class RacaComponent implements OnInit {
     this.atualizarRacasFiltradas();
   }
 
+  onStatusChange(status: string): void {
+    this.statusFilter = status;
+    this.pageIndex = 1;
+    this.atualizarRacasFiltradas();
+  }
+
   toggleStatus(raca: Raca): void {
     const novoStatus = raca.status_raca === 'Ativo' ? 'Inativo' : 'Ativo';
     this.service.updateStatus(raca.id_raca, novoStatus).subscribe(() => {
@@ -78,34 +86,22 @@ export class RacaComponent implements OnInit {
 
   abrirModal(): void {
     const modalRef = this.modal.create({
-      nzTitle: 'Cadastrar raça',
+      nzTitle: 'Cadastrar Raça',
       nzContent: RacaFormComponent,
       nzFooter: null,
       nzWidth: '600px',
     });
-  
-    // Subscrição no evento afterClose
-    modalRef.afterClose.subscribe((novaRaca?: Raca) => {
-      if (novaRaca) {
-        this.service.create(novaRaca).subscribe(() => {
-          alert('Raça cadastrada com sucesso!');
-          this.carregarRacas(); // Atualiza a lista de raças após o cadastro
-        });
-      }
+
+    const instance = modalRef.getContentComponent() as RacaFormComponent;
+
+    instance.racaCadastrada.subscribe((novaRaca: Raca) => {
+      modalRef.close();
+        this.carregarRacas(); // Atualiza a lista de raças
+      
     });
-  }
 
-
-  onNovaRaca(novaRaca: Raca): void {
-    this.service.create(novaRaca).subscribe(() => {
-      alert('Raça cadastrada com sucesso!');
-      this.carregarRacas(); // Atualiza a lista de raças após o cadastro
+    instance.cancelado.subscribe(() => {
+      modalRef.close();
     });
-  }
-
-  onStatusChange(status: string): void {
-    this.statusFilter = status;
-    this.pageIndex = 1;
-    this.atualizarRacasFiltradas();
   }
 }

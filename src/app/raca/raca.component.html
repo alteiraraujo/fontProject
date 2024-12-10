@@ -75,6 +75,7 @@
       <th>Espécie</th>
       <th>Status</th>
       <th>Ações</th>
+      <th>Ativo</th>
     </tr>
   </thead>
   <tbody>
@@ -97,6 +98,8 @@
         <nz-divider nzType="vertical"></nz-divider>
         <button nz-button [nzSize]="'small'" nzType="primary">Editar</button>
         <nz-divider nzType="vertical"></nz-divider>
+        </td>
+        <td>
         <nz-switch
           nzSize="small"
           [(ngModel)]="raca.status_raca"

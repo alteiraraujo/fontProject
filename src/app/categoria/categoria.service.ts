@@ -22,7 +22,7 @@ export class CategoriaService {
 
   // Atualiza o status de uma categoria
   updateStatus(id_categoria: number, status_categoria: string): Observable<any> {
-    return this.http.put(`${this.API}/${id_categoria}/status`, { status_categoria }).pipe(
+    return this.http.put(`${this.API}/${id_categoria}`, { status_categoria }).pipe(
       tap(() =>
         console.log(`Status da categoria com ID ${id_categoria} atualizado para ${status_categoria}`)
       )

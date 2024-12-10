@@ -28,8 +28,13 @@
         <nz-option nzValue="Inativo" nzLabel="Inativo"></nz-option>
       </nz-select>
 
-      
-      <button nz-button nzType="primary" nzShape="circle" routerLink="novo">+</button>
+       <!-- Botão de Novo Cadastro -->
+      <button
+       nz-button nzType="primary"
+        nzShape="circle" 
+        (click)="abrirModal()"
+        >+
+      </button>
     </div>
   </div>
 </div>

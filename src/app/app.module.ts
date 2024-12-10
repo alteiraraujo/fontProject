@@ -93,7 +93,7 @@ import { ServicoComponent } from './servico/servico.component';
 import { DiagnosticoComponent } from './diagnostico/diagnostico.component';
 import { LoginComponent } from './login/login.component';
 import { ColaboradorComponent } from './colaborador/colaborador.component';
-import { ColaboradorFormComponent } from './colaborador/colaborador-form/colaborador-form.component';
+
 
 
 
@@ -111,7 +111,7 @@ const icons: IconDefinition[] = Object.keys(antDesignIcons).map(
 
 @NgModule({
   declarations: [AppComponent,   AnimalComponent, ColaboradorComponent, 
-    CategoriaComponent,  ServicoComponent, DiagnosticoComponent, LoginComponent, ColaboradorFormComponent ],
+    CategoriaComponent,  ServicoComponent, DiagnosticoComponent, LoginComponent ],
   imports: [
    
     BrowserModule,

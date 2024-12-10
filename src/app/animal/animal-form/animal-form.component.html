@@ -2,7 +2,9 @@
 <form nz-form [formGroup]="animalForm" (ngSubmit)="onSubmit()">
   <!-- Campo Nome do Animal -->
   <nz-form-item>
-    <nz-form-label [nzSm]="6" [nzXs]="24" [nzRequired]="true" nzFor="nome_animal">Nome do Animal</nz-form-label>
+    <nz-form-label [nzSm]="6" [nzXs]="24" [nzRequired]="true" nzFor="nome_animal">
+      Nome do Animal
+    </nz-form-label>
     <nz-form-control [nzErrorTip]="nomeAnimalError">
       <input
         nz-input
@@ -13,12 +15,14 @@
     </nz-form-control>
   </nz-form-item>
   <ng-template #nomeAnimalError>
-    O nome do animal é obrigatório.
+    O nome do animal é obrigatório e deve ter pelo menos 3 caracteres.
   </ng-template>
 
   <!-- Campo Idade do Animal -->
   <nz-form-item>
-    <nz-form-label [nzSm]="6" [nzXs]="24" [nzRequired]="true" nzFor="idade_animal">Idade do Animal</nz-form-label>
+    <nz-form-label [nzSm]="6" [nzXs]="24" [nzRequired]="true" nzFor="idade_animal">
+      Idade do Animal
+    </nz-form-label>
     <nz-form-control [nzErrorTip]="idadeAnimalError">
       <input
         nz-input
@@ -30,16 +34,18 @@
     </nz-form-control>
   </nz-form-item>
   <ng-template #idadeAnimalError>
-    A idade do animal é obrigatória.
+    A idade do animal deve ser um número válido.
   </ng-template>
 
   <!-- Campo Pessoa (Dono) -->
   <nz-form-item>
-    <nz-form-label [nzSm]="6" [nzXs]="24" [nzRequired]="true" nzFor="selectedPessoaId">Tutor</nz-form-label>
+    <nz-form-label [nzSm]="6" [nzXs]="24" [nzRequired]="true" nzFor="selectedPessoaId">
+      Tutor
+    </nz-form-label>
     <nz-form-control>
       <nz-select
         nzShowSearch
-        nzPlaceHolder="Selecione o Dono"
+        nzPlaceHolder="Selecione o tutor"
         formControlName="selectedPessoaId"
         (ngModelChange)="onPessoaChange($event)"
         [nzDropdownRender]="personDropdownRender"
@@ -49,13 +55,12 @@
           *ngFor="let pessoa of pessoas$ | async"
           [nzValue]="pessoa.id_pessoa"
           [nzLabel]="pessoa.nome_pessoa"
-        >
-        </nz-option>
+        ></nz-option>
       </nz-select>
       <ng-template #personDropdownRender>
         <div style="display: flex; justify-content: space-between; padding: 8px">
           <button nz-button nzType="link" (click)="openPessoaModal()" type="button">
-            <span nz-icon nzType="plus"></span> Adicionar Dono
+            <span nz-icon nzType="plus"></span> Adicionar Tutor
           </button>
         </div>
       </ng-template>
@@ -64,11 +69,13 @@
 
   <!-- Campo Raça -->
   <nz-form-item>
-    <nz-form-label [nzSm]="6" [nzXs]="24" [nzRequired]="true" nzFor="selectedRacaId">Raça</nz-form-label>
+    <nz-form-label [nzSm]="6" [nzXs]="24" [nzRequired]="true" nzFor="selectedRacaId">
+      Raça
+    </nz-form-label>
     <nz-form-control>
       <nz-select
         nzShowSearch
-        nzPlaceHolder="Selecione a Raça"
+        nzPlaceHolder="Selecione a raça"
         formControlName="selectedRacaId"
         (ngModelChange)="onRacaChange($event)"
         [nzDropdownRender]="racaDropdownRender"
@@ -78,8 +85,7 @@
           *ngFor="let raca of racas$ | async"
           [nzValue]="raca.id_raca"
           [nzLabel]="raca.nome_raca"
-        >
-        </nz-option>
+        ></nz-option>
       </nz-select>
       <ng-template #racaDropdownRender>
         <div style="display: flex; justify-content: space-between; padding: 8px">
@@ -91,13 +97,15 @@
     </nz-form-control>
   </nz-form-item>
 
-  <!-- Botão de Submissão -->
+  <!-- Botões de Ação -->
   <nz-form-item>
     <nz-form-control [nzSm]="14" [nzXs]="24" [nzOffset]="6">
-      <button nz-button nzType="primary" [disabled]="animalForm.invalid" >
+      <button nz-button nzType="primary" [disabled]="animalForm.invalid">
         Salvar
       </button>
-      <button nz-button nzType="default" >Cancelar</button>
+      <button nz-button nzType="default" (click)="cancel()">
+        Cancelar
+      </button>
     </nz-form-control>
   </nz-form-item>
 </form>

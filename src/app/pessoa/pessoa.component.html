@@ -81,7 +81,7 @@
       <td>
         <nz-switch
           nzSize="small"
-          [(ngModel)]="pessoa.status_pessoa"
+          [ngModel]="pessoa.status_pessoa === 'Ativo'"
           (ngModelChange)="toggleStatus(pessoa)"
         ></nz-switch>
       </td>

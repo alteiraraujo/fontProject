@@ -6,6 +6,7 @@ import { PessoaService } from 'src/app/pessoa/pessoa.service';
 import { Colaborador } from '../colaborador';
 import { NzModalService } from 'ng-zorro-antd/modal';
 import { PessoaFormComponent } from 'src/app/pessoa/pessoa-form/pessoa-form.component';
+import { NzMessageService } from 'ng-zorro-antd/message';
 
 @Component({
   selector: 'app-colaborador-form',
@@ -14,18 +15,19 @@ import { PessoaFormComponent } from 'src/app/pessoa/pessoa-form/pessoa-form.comp
 })
 export class ColaboradorFormComponent implements OnInit {
   colaboradorForm: FormGroup;
-  pessoas$: Observable<any[]>; // Lista de pessoas para buscar
+  pessoas$: Observable<any[]>; // Lista de pessoas
   selectedPessoaId: number | null = null;
 
   constructor(
     private fb: FormBuilder,
     private colaboradorService: ColaboradorService,
     private pessoaService: PessoaService,
-    private modal: NzModalService
+    private modal: NzModalService,
+    private message: NzMessageService // Serviço de mensagens
   ) {}
 
   ngOnInit(): void {
-    this.pessoas$ = this.pessoaService.list(); // Busca pessoas disponíveis
+    this.pessoas$ = this.pessoaService.list();
 
     this.colaboradorForm = this.fb.group({
       tbl_pessoa_id: [null, Validators.required],
@@ -38,27 +40,36 @@ export class ColaboradorFormComponent implements OnInit {
   }
 
   onSubmit(): void {
-    if (this.colaboradorForm.valid) {
-      const colaborador: Colaborador = {
-        ...this.colaboradorForm.value,
-        tbl_pessoa_id:
-          this.selectedPessoaId || this.colaboradorForm.value.tbl_pessoa_id,
-      };
-
-      this.colaboradorService.add(colaborador).subscribe({
-        next: () => {
-          alert('Colaborador cadastrado com sucesso!');
-          this.colaboradorForm.reset();
-          this.refreshPessoasList(); // Atualiza a lista de pessoas após o cadastro
-        },
-        error: () => {
-          alert('Erro ao cadastrar colaborador.');
-        },
+    if (this.colaboradorForm.invalid) {
+      // Marca todos os campos como "tocados" para exibir os erros
+      Object.values(this.colaboradorForm.controls).forEach((control) => {
+        if (control.invalid) {
+          control.markAsTouched();
+          control.updateValueAndValidity();
+        }
       });
+      return;
     }
+  
+    const colaborador: Colaborador = {
+      ...this.colaboradorForm.value,
+      tbl_pessoa_id:
+        this.selectedPessoaId || this.colaboradorForm.value.tbl_pessoa_id,
+    };
+  
+    this.colaboradorService.add(colaborador).subscribe({
+      next: () => {
+        this.message.success('Colaborador cadastrado com sucesso!');
+        this.colaboradorForm.reset();
+        this.refreshPessoasList();
+      },
+      error: () => {
+        this.message.error('Erro ao cadastrar colaborador.');
+      },
+    });
   }
+  
 
-  // Abrir modal para adicionar nova pessoa
   openPessoaModal(): void {
     const modalRef = this.modal.create({
       nzTitle: 'Cadastrar Pessoa',
@@ -69,27 +80,28 @@ export class ColaboradorFormComponent implements OnInit {
 
     const instance = modalRef.getContentComponent() as PessoaFormComponent;
 
-    // Escuta o evento de cadastro concluído
     instance.pessoaCadastrada.subscribe((novaPessoa: any) => {
-      console.log('Pessoa cadastrada:', novaPessoa);
-      modalRef.close(); // Fecha o modal após o cadastro
-      this.refreshPessoasList(); // Atualiza a lista de pessoas disponíveis
+      this.message.success('Pessoa cadastrada com sucesso!');
+      modalRef.close();
+      this.refreshPessoasList();
     });
 
-    // Escuta o evento de cancelamento
     instance.cancelado.subscribe(() => {
-      console.log('Cadastro de pessoa cancelado');
-      modalRef.close(); // Fecha o modal
+      this.message.info('Cadastro de pessoa cancelado.');
+      modalRef.close();
     });
   }
 
-  // Atualizar a lista de pessoas após cadastro
   refreshPessoasList(): void {
     this.pessoas$ = this.pessoaService.list();
   }
 
-  // Alterar a pessoa selecionada
   onPessoaChange(pessoaId: number): void {
     this.selectedPessoaId = pessoaId;
+  }
+
+  cancelar(): void {
+    this.colaboradorForm.reset();
+    this.selectedPessoaId = null;
   }
 }

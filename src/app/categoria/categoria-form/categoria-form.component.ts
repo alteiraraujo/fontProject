@@ -2,22 +2,28 @@ import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NzModalRef } from 'ng-zorro-antd/modal';
 import { Categoria } from '../categoria';
+import { NzMessageService } from 'ng-zorro-antd/message';
 
 @Component({
   selector: 'app-categoria-form',
   templateUrl: './categoria-form.component.html',
-  styleUrls: ['./categoria-form.component.css']
+  styleUrls: ['./categoria-form.component.css'],
 })
 export class CategoriaFormComponent implements OnInit {
   @Output() formSubmit: EventEmitter<Categoria> = new EventEmitter<Categoria>();
   form: FormGroup;
 
-  constructor(private fb: FormBuilder, private modalRef: NzModalRef) {}
+  constructor(
+    private fb: FormBuilder,
+   private modalRef: NzModalRef,
+   private message: NzMessageService
+
+  ) {}
 
   ngOnInit(): void {
     this.form = this.fb.group({
       nome_categoria: ['', [Validators.required, Validators.minLength(3)]],
-      status_categoria: ['Ativo']
+      status_categoria: ['Ativo'],
     });
   }
 

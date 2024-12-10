@@ -1,6 +1,8 @@
 import { Component, Output, EventEmitter } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, AbstractControl } from '@angular/forms';
-import { HttpClient } from '@angular/common/http';
+import { PessoaService } from '../pessoa.service';
+import { Router } from '@angular/router';
+import { NzMessageService } from 'ng-zorro-antd/message';
 
 @Component({
   selector: 'app-pessoa-form',
@@ -8,18 +10,23 @@ import { HttpClient } from '@angular/common/http';
   styleUrls: ['./pessoa-form.component.css']
 })
 export class PessoaFormComponent {
-  @Output() pessoaCadastrada = new EventEmitter<any>(); // Emite o dado da pessoa cadastrada
-  @Output() cancelado = new EventEmitter<void>(); // Emite o evento de cancelamento
+  @Output() pessoaCadastrada = new EventEmitter<any>();
+  @Output() cancelado = new EventEmitter<void>();
 
   pessoaForm: FormGroup;
 
-  constructor(private fb: FormBuilder, private http: HttpClient) {
+  constructor(
+    private fb: FormBuilder,
+    private pessoaService: PessoaService,
+    private router: Router,
+    private message: NzMessageService // Injetar o serviço de mensagens
+  ) {
     this.pessoaForm = this.fb.group({
       nome_pessoa: ['', [Validators.required]],
       cpf_pessoa: ['', [Validators.required, this.validarCPF]],
       data_nascimento_pessoa: [null, [Validators.required, this.validarDataNascimento]],
       telefone_pessoa: ['', [Validators.required, Validators.pattern(/^\d{10,11}$/)]],
-      phoneNumberPrefix: ['+55'], // Prefixo padrão para o telefone
+      phoneNumberPrefix: ['+55'],
       complemento_pessoa: [''],
       cep_pessoa: ['', [Validators.required]],
       cidade_pessoa: [{ value: '', disabled: true }],
@@ -39,29 +46,28 @@ export class PessoaFormComponent {
         status_pessoa: 'Ativo'
       };
 
-      this.http.post('http://localhost:8080/pessoas', pessoaData).subscribe(
-        (response) => {
+      this.pessoaService.cadastrarPessoa(pessoaData).subscribe({
+        next: (response) => {
           console.log('Pessoa cadastrada com sucesso:', response);
-          this.pessoaCadastrada.emit(response); // Emite o evento para o componente pai
+          this.message.success('Pessoa cadastrada com sucesso!'); // Mensagem de sucesso
+          this.pessoaCadastrada.emit(response);
+          this.router.navigate(['pessoas']);
         },
-        (error) => {
+        error: (error) => {
           console.error('Erro ao cadastrar pessoa:', error);
-        }
-      );
-    } else {
-      Object.values(this.pessoaForm.controls).forEach(control => {
-        if (control.invalid) {
-          control.markAsDirty();
-          control.updateValueAndValidity({ onlySelf: true });
+          this.message.error('Erro ao cadastrar pessoa. Tente novamente.'); // Mensagem de erro
         }
       });
+    } else {
+      this.validarFormulario();
+      this.message.error('Por favor, preencha todos os campos obrigatórios.'); // Mensagem de erro para formulário inválido
     }
   }
 
   buscarCEP(): void {
     const cep = this.pessoaForm.get('cep_pessoa')?.value;
     if (cep) {
-      this.http.get(`https://viacep.com.br/ws/${cep}/json/`).subscribe((data: any) => {
+      this.pessoaService.buscarCEP(cep).subscribe((data: any) => {
         if (data && !data.erro) {
           this.pessoaForm.patchValue({
             cidade_pessoa: data.localidade,
@@ -71,7 +77,7 @@ export class PessoaFormComponent {
             uf_pessoa: data.uf
           });
         } else {
-          alert('CEP não encontrado. Verifique o valor e tente novamente.');
+          this.message.warning('CEP não encontrado. Verifique o valor e tente novamente.'); // Mensagem de aviso
         }
       });
     }
@@ -93,6 +99,15 @@ export class PessoaFormComponent {
   }
 
   cancelar(): void {
-    this.cancelado.emit(); // Emite o evento de cancelamento para o componente pai
+    this.cancelado.emit();
+  }
+
+  private validarFormulario(): void {
+    Object.values(this.pessoaForm.controls).forEach(control => {
+      if (control.invalid) {
+        control.markAsDirty();
+        control.updateValueAndValidity({ onlySelf: true });
+      }
+    });
   }
 }

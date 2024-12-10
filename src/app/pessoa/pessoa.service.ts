@@ -26,5 +26,15 @@ export class PessoaService {
       tap(() => console.log(`Status da pessoa com ID ${id_pessoa} atualizado para ${status}`))
     );
   }
+
+  cadastrarPessoa(pessoa: Pessoa): Observable<Pessoa> {
+    return this.http.post<Pessoa>(this.API, pessoa).pipe(
+      tap((response) => console.log('Pessoa cadastrada:', response))
+    );
+  }
+  
+  buscarCEP(cep: string): Observable<any> {
+    return this.http.get(`https://viacep.com.br/ws/${cep}/json/`);
+  }
   
 }

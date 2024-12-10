@@ -73,21 +73,34 @@ export class CategoriaComponent implements OnInit {
 
   toggleStatus(categoria: Categoria): void {
     const novoStatus = categoria.status_categoria === 'Ativo' ? 'Inativo' : 'Ativo';
-    const confirmacao = confirm(`Deseja realmente ${novoStatus === 'Ativo' ? 'ativar' : 'desativar'} esta categoria?`);
+  
+    this.modal.confirm({
+      nzTitle: `Confirmação`,
+      nzContent: `Deseja realmente ${novoStatus === 'Ativo' ? 'ativar' : 'desativar'} esta categoria?`,
+      nzOkText: 'Sim',
+      nzOkType: 'primary',
+      nzOnOk: () =>
+        this.service.updateStatus(categoria.id_categoria!, novoStatus).subscribe({
+          next: () => {
+            categoria.status_categoria = novoStatus; // Atualiza o status localmente
+            this.notification.success(
+              'Sucesso',
+              `Status da categoria atualizado para ${novoStatus}.`
+            );
+            this.atualizarCategoriasFiltradas(); // Atualiza a lista filtrada
+          },
+          error: (error) => {
+            console.error('Erro ao atualizar status no backend:', error);
+            this.notification.error('Erro', 'Falha ao atualizar o status.');
+          }
+        }),
+      nzCancelText: 'Não',
+      nzOnCancel: () => {
+        this.notification.info('Cancelado', 'Ação de alteração de status foi cancelada.');
+      }
+    });
 
-    if (confirmacao) {
-      this.service.updateStatus(categoria.id_categoria!, novoStatus).subscribe({
-        next: () => {
-          categoria.status_categoria = novoStatus; // Atualiza o status localmente
-          this.notification.success('Sucesso', `Status atualizado para ${novoStatus}`);
-          this.atualizarCategoriasFiltradas(); // Atualiza a lista filtrada
-        },
-        error: (error) => {
-          console.error('Erro ao atualizar status no backend:', error);
-          this.notification.error('Erro', 'Falha ao atualizar status.');
-        }
-      });
-    }
+    this.carregarCategorias();
   }
 
   abrirModal(): void {

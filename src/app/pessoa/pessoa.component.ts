@@ -20,21 +20,22 @@ export class PessoaComponent implements OnInit {
   constructor(private service: PessoaService) {}
 
   ngOnInit(): void {
+    this.carregarPessoas();
+  }
+
+  carregarPessoas(): void {
     this.pessoas$ = this.service.list();
     this.atualizarPessoasFiltradas();
   }
 
-  atualizarPessoasFiltradas() {
+  atualizarPessoasFiltradas(): void {
     this.pessoasFiltradas$ = this.pessoas$.pipe(
       map((pessoas) =>
         pessoas
           .filter(
             (pessoa) =>
-              (this.statusFilter === '' ||
-                pessoa.status_pessoa === this.statusFilter) &&
-              pessoa.nome_pessoa
-                .toLowerCase()
-                .includes(this.searchValue.toLowerCase())
+              (this.statusFilter === '' || pessoa.status_pessoa === this.statusFilter) &&
+              pessoa.nome_pessoa.toLowerCase().includes(this.searchValue.toLowerCase())
           )
           .slice(
             (this.pageIndex - 1) * this.pageSize,
@@ -61,5 +62,28 @@ export class PessoaComponent implements OnInit {
   }
 
   toggleStatus(pessoa: Pessoa): void {
+    const novoStatus = pessoa.status_pessoa === 'Ativo' ? 'Inativo' : 'Ativo';
+    const confirmacao = confirm(
+      `Deseja realmente ${novoStatus === 'Ativo' ? 'ativar' : 'desativar'} esta pessoa?`
+    );
+
+    if (confirmacao) {
+      this.service.updateStatus(pessoa.id_pessoa, novoStatus).subscribe({
+        next: () => {
+          pessoa.status_pessoa = novoStatus;
+          this.atualizarPessoasFiltradas();
+          console.log('Status atualizado com sucesso no backend.');
+        },
+        error: (error) => {
+          console.error('Erro ao atualizar status no backend:', error);
+          alert('Não foi possível atualizar o status no servidor.');
+        },
+      });
+    }
+  }
+
+  onPessoaCadastrada(novaPessoa: Pessoa): void {
+    console.log('Nova pessoa cadastrada:', novaPessoa);
+    this.carregarPessoas(); // Recarrega a lista para incluir a nova pessoa
   }
 }
