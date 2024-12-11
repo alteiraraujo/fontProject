@@ -21,3 +21,9 @@
 .event-canceled {
   color: red;
 }
+
+@media (max-width: 768px) {
+  nz-calendar {
+    width: 100%;
+  }
+}

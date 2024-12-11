@@ -28,7 +28,7 @@
         <nz-option nzValue="Inativo" nzLabel="Inativo"></nz-option>
       </nz-select>
 
-      <button nz-button nzType="primary" nzShape="circle" routerLink="novo">+</button>
+      <button nz-button nzType="primary" nzShape="circle" (click)="abrirModal('cadastrar')">+</button>
     </div>
   </div>
 </div>
@@ -71,9 +71,9 @@
         </span>
       </td>
       <td>
-        <button nz-button [nzSize]="'small'" nzType="default">Abrir</button>
+        <button nz-button [nzSize]="'small'" nzType="default" (click)="abrirModal('abrir', fornecedor)">Abrir</button>
         <nz-divider nzType="vertical"></nz-divider>
-        <button nz-button [nzSize]="'small'" nzType="primary">Editar</button>
+        <button nz-button [nzSize]="'small'" nzType="primary" (click)="abrirModal('editar', fornecedor)">Editar</button>
       </td>
       <td>
         <nz-switch

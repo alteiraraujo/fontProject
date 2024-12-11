@@ -1,7 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import { Observable, map } from 'rxjs';
+import { Observable, catchError, map, of } from 'rxjs';
 import { Fornecedor } from './fornecedor';
 import { FornecedorService } from './fornecedor.service';
+import { NzModalService } from 'ng-zorro-antd/modal';
+import { FornecedorFormComponent } from './fornecedor-form/fornecedor-form.component';
+import { NzNotificationService } from 'ng-zorro-antd/notification';
 
 @Component({
   selector: 'app-fornecedor',
@@ -17,7 +20,11 @@ export class FornecedorComponent implements OnInit {
   searchValue: string = '';
   statusFilter: string = 'Ativo';
 
-  constructor(private service: FornecedorService) {}
+  constructor(
+    private service: FornecedorService,
+    private modal: NzModalService,
+    private notification: NzNotificationService
+  ) {}
 
   ngOnInit() {
     this.fornecedores$ = this.service.list();
@@ -39,6 +46,16 @@ export class FornecedorComponent implements OnInit {
     );
   }
 
+  carregarFornecedores(): void {
+    this.fornecedores$ = this.service.list().pipe(
+      catchError((error) => {
+        console.error('Erro ao carregar fornecedores:', error);
+        this.notification.error('Erro', 'Falha ao carregar fornecedores.');
+        return of([]);
+      })
+    );
+    this.atualizarFornecedoresFiltrados();
+  }
   onPageIndexChange(pageIndex: number): void {
     this.pageIndex = pageIndex;
     this.atualizarFornecedoresFiltrados();
@@ -74,4 +91,58 @@ export class FornecedorComponent implements OnInit {
       });
     }
   }
+  abrirModal(modo: 'cadastrar' | 'editar' | 'abrir', fornecedor?: Fornecedor): void {
+    if (modo === 'editar') {
+      this.modal.confirm({
+        nzTitle: 'Confirmação',
+        nzContent: 'Tem certeza que deseja editar este fornecedor?',
+        nzOkText: 'Sim',
+        nzCancelText: 'Não',
+        nzOnOk: () => this.abrirFormularioModal(modo, fornecedor),
+      });
+    } else {
+      this.abrirFormularioModal(modo, fornecedor);
+    }
+  }
+
+  private abrirFormularioModal(modo: 'cadastrar' | 'editar' | 'abrir', fornecedor?: Fornecedor): void {
+    const modalRef = this.modal.create({
+      nzTitle:
+        modo === 'cadastrar'
+          ? 'Cadastrar Fornecedor'
+          : modo === 'editar'
+          ? 'Editar Fornecedor'
+          : 'Detalhes do Fornecedor',
+      nzContent: FornecedorFormComponent,
+      nzComponentParams: {
+        fornecedor: fornecedor ? { ...fornecedor } : undefined,
+        modo: modo,
+      },
+      nzFooter: modo === 'abrir' ? [{ label: 'Ok', onClick: () => modalRef.close() }] : null,
+      nzWidth: '600px',
+    });
+
+    modalRef.afterClose.subscribe((resultado?: Fornecedor) => {
+      if (resultado && modo === 'editar') {
+        this.carregarFornecedores(); // Atualiza a lista
+      } else if (resultado && modo === 'cadastrar') {
+        this.onNovoFornecedor(resultado);
+      }
+    });
+  }
+
+  onNovoFornecedor(novoFornecedor: Fornecedor): void {
+    this.service.create(novoFornecedor).subscribe({
+      next: () => {
+        this.notification.success('Sucesso', 'Fornecedor cadastrado com sucesso!');
+        this.carregarFornecedores();
+      },
+      error: (error) => {
+        console.error('Erro ao cadastrar fornecedor:', error);
+        this.notification.error('Erro', 'Falha ao cadastrar fornecedor.');
+      },
+    });
+  }
+
+
 }

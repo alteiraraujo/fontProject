@@ -2,7 +2,7 @@
 <br />
 <form nz-form [formGroup]="fornecedorForm" (ngSubmit)="submitForm()">
   <!-- Nome do Fornecedor -->
-  <nz-form-item>
+  <nz-form-item class="compact-form-item">
     <nz-form-label [nzSm]="6" [nzXs]="24" [nzRequired]="true" nzFor="nome_fornecedor">Nome</nz-form-label>
     <nz-form-control [nzSm]="14" [nzXs]="24" nzErrorTip="Por favor, insira o nome do fornecedor">
       <input nz-input formControlName="nome_fornecedor" id="nome_fornecedor" placeholder="Nome do Fornecedor" />
@@ -10,7 +10,7 @@
   </nz-form-item>
 
   <!-- CNPJ do Fornecedor -->
-  <nz-form-item>
+  <nz-form-item class="compact-form-item">
     <nz-form-label [nzSm]="6" [nzXs]="24" [nzRequired]="true" nzFor="cnpj_fornecedor">CNPJ</nz-form-label>
     <nz-form-control [nzSm]="14" [nzXs]="24" nzErrorTip="Por favor, insira um CNPJ válido">
       <input nz-input formControlName="cnpj_fornecedor" id="cnpj_fornecedor" placeholder="CNPJ" />
@@ -18,7 +18,7 @@
   </nz-form-item>
 
   <!-- Inscrição Estadual do Fornecedor -->
-  <nz-form-item>
+  <nz-form-item class="compact-form-item">
     <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="ie_fornecedor">Inscrição Estadual</nz-form-label>
     <nz-form-control [nzSm]="14" [nzXs]="24">
       <input nz-input formControlName="ie_fornecedor" id="ie_fornecedor" placeholder="Inscrição Estadual" />
@@ -26,7 +26,7 @@
   </nz-form-item>
 
   <!-- CEP do Fornecedor -->
-  <nz-form-item>
+  <nz-form-item class="compact-form-item">
     <nz-form-label [nzSm]="6" [nzXs]="24" [nzRequired]="true" nzFor="cep_fornecedor">CEP</nz-form-label>
     <nz-form-control [nzSm]="14" [nzXs]="24" nzErrorTip="Por favor, insira o CEP">
       <input nz-input formControlName="cep_fornecedor" id="cep_fornecedor" placeholder="CEP" (blur)="buscarCEP()" />
@@ -34,7 +34,7 @@
   </nz-form-item>
 
   <!-- Rua do Fornecedor -->
-  <nz-form-item>
+  <nz-form-item class="compact-form-item">
     <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="rua_fornecedor">Rua</nz-form-label>
     <nz-form-control [nzSm]="14" [nzXs]="24">
       <input nz-input formControlName="rua_fornecedor" id="rua_fornecedor" placeholder="Rua" [disabled]="true" />
@@ -42,7 +42,7 @@
   </nz-form-item>
 
   <!-- Número do Fornecedor -->
-  <nz-form-item>
+  <nz-form-item class="compact-form-item">
     <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="numero_fornecedor">Número</nz-form-label>
     <nz-form-control [nzSm]="14" [nzXs]="24">
       <input nz-input formControlName="numero_fornecedor" id="numero_fornecedor" placeholder="Número" />
@@ -50,7 +50,7 @@
   </nz-form-item>
 
   <!-- Complemento do Fornecedor -->
-  <nz-form-item>
+  <nz-form-item class="compact-form-item">
     <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="complemento_fornecedor">Complemento</nz-form-label>
     <nz-form-control [nzSm]="14" [nzXs]="24">
       <input nz-input formControlName="complemento_fornecedor" id="complemento_fornecedor" placeholder="Complemento" />
@@ -58,7 +58,7 @@
   </nz-form-item>
 
   <!-- Bairro do Fornecedor -->
-  <nz-form-item>
+  <nz-form-item class="compact-form-item">
     <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="bairro_fornecedor">Bairro</nz-form-label>
     <nz-form-control [nzSm]="14" [nzXs]="24">
       <input nz-input formControlName="bairro_fornecedor" id="bairro_fornecedor" placeholder="Bairro" [disabled]="true" />
@@ -66,7 +66,7 @@
   </nz-form-item>
 
   <!-- Cidade do Fornecedor -->
-  <nz-form-item>
+  <nz-form-item class="compact-form-item">
     <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="cidade_fornecedor">Cidade</nz-form-label>
     <nz-form-control [nzSm]="14" [nzXs]="24">
       <input nz-input formControlName="cidade_fornecedor" id="cidade_fornecedor" placeholder="Cidade" [disabled]="true" />
@@ -74,7 +74,7 @@
   </nz-form-item>
 
   <!-- Estado do Fornecedor -->
-  <nz-form-item>
+  <nz-form-item class="compact-form-item">
     <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="estado_fornecedor">Estado</nz-form-label>
     <nz-form-control [nzSm]="14" [nzXs]="24">
       <input nz-input formControlName="estado_fornecedor" id="estado_fornecedor" placeholder="Estado" [disabled]="true" />
@@ -82,7 +82,7 @@
   </nz-form-item>
 
   <!-- UF do Fornecedor -->
-  <nz-form-item>
+  <nz-form-item class="compact-form-item">
     <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="uf_fornecedor">UF</nz-form-label>
     <nz-form-control [nzSm]="14" [nzXs]="24">
       <input nz-input formControlName="uf_fornecedor" id="uf_fornecedor" placeholder="UF" [disabled]="true" />
@@ -90,7 +90,7 @@
   </nz-form-item>
 
   <!-- Status do Fornecedor -->
-  <nz-form-item>
+  <nz-form-item class="compact-form-item">
     <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="status_fornecedor">Status</nz-form-label>
     <nz-form-control [nzSm]="14" [nzXs]="24">
       <nz-select formControlName="status_fornecedor" id="status_fornecedor" placeholder="Selecione o status">
@@ -101,7 +101,7 @@
   </nz-form-item>
 
   <!-- Botão de Submit -->
-  <nz-form-item>
+  <nz-form-item class="compact-form-item">
     <nz-form-control [nzSm]="14" [nzXs]="24" [nzOffset]="6">
       <button nz-button [nzType]="'primary'" [disabled]="!fornecedorForm.valid">
         Cadastrar

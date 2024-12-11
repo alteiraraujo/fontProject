@@ -1,6 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
+import { Fornecedor } from '../fornecedor';
 
 @Component({
   selector: 'app-fornecedor-form',
@@ -10,6 +11,9 @@ import { HttpClient } from '@angular/common/http';
 export class FornecedorFormComponent {
 
   fornecedorForm: FormGroup;
+
+  @Input() fornecedor?: Fornecedor;
+  @Input() modo!: 'cadastrar' | 'editar' | 'abrir';
 
   constructor(private fb: FormBuilder, private http: HttpClient) {
     this.fornecedorForm = this.fb.group({

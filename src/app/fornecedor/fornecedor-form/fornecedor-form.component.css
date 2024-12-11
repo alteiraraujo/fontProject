@@ -15,3 +15,20 @@
   .register-area {
     margin-bottom: 8px;
   }
+
+  /* Reduz o espaçamento entre os itens do formulário */
+.compact-form-item {
+  margin-bottom: 8px;
+}
+
+/* Ajusta a altura e padding dos campos de entrada */
+.custom-input-width {
+  height: 32px;
+  padding: 4px;
+}
+
+/* Ajusta o botão para não ocupar muito espaço */
+button {
+  height: 36px;
+  line-height: 20px;
+}
