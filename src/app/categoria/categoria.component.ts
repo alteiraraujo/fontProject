@@ -6,6 +6,7 @@ import { NzModalService } from 'ng-zorro-antd/modal';
 import { CategoriaFormComponent } from './categoria-form/categoria-form.component';
 import { NzNotificationService } from 'ng-zorro-antd/notification';
 
+
 @Component({
   selector: 'app-categoria',
   templateUrl: './categoria.component.html',
@@ -75,7 +76,7 @@ export class CategoriaComponent implements OnInit {
     const novoStatus = categoria.status_categoria === 'Ativo' ? 'Inativo' : 'Ativo';
   
     this.modal.confirm({
-      nzTitle: `Confirmação`,
+      nzTitle: 'Confirmação',
       nzContent: `Deseja realmente ${novoStatus === 'Ativo' ? 'ativar' : 'desativar'} esta categoria?`,
       nzOkText: 'Sim',
       nzOkType: 'primary',
@@ -91,7 +92,7 @@ export class CategoriaComponent implements OnInit {
           },
           error: (error) => {
             console.error('Erro ao atualizar status no backend:', error);
-            this.notification.error('Erro', 'Falha ao atualizar o status.');
+            this.notification.error('Erro', "Erro ao tentar atualizar");
           }
         }),
       nzCancelText: 'Não',
@@ -102,30 +103,50 @@ export class CategoriaComponent implements OnInit {
 
     this.carregarCategorias();
   }
-
-  abrirModal(): void {
+  abrirModal(modo: 'cadastrar' | 'editar' | 'abrir', categoria?: Categoria): void {
+    if (modo === 'editar') {
+      this.modal.confirm({
+        nzTitle: 'Confirmação',
+        nzContent: 'Tem certeza que deseja editar esta categoria?',
+        nzOkText: 'Sim',
+        nzCancelText: 'Não',
+        nzOnOk: () => this.abrirFormularioModal(modo, categoria), // Confirmação para abrir o modal de edição
+      });
+    } else {
+      this.abrirFormularioModal(modo, categoria);
+    }
+  }
+  
+  private abrirFormularioModal(modo: 'cadastrar' | 'editar' | 'abrir', categoria?: Categoria): void {
     const modalRef = this.modal.create({
-      nzTitle: 'Cadastrar Categoria',
+      nzTitle: modo === 'cadastrar' ? 'Cadastrar Categoria' : modo === 'editar' ? 'Editar Categoria' : 'Detalhes da Categoria',
       nzContent: CategoriaFormComponent,
-      nzFooter: null,
+      nzComponentParams: {
+        categoria: categoria ? { ...categoria } : undefined,
+        modo: modo,
+      },
+      nzFooter: modo === 'abrir' ? [{ label: 'Ok', onClick: () => modalRef.close() }] : null,
       nzWidth: '600px',
     });
-
-    modalRef.afterClose.subscribe((novaCategoria?: Categoria) => {
-      if (novaCategoria) {
-        this.service.create(novaCategoria).subscribe({
+  
+    modalRef.afterClose.subscribe((resultado?: Categoria) => {
+      if (resultado && modo === 'editar') {
+        this.service.update(resultado.id_categoria!, resultado).subscribe({
           next: () => {
-            this.notification.success('Sucesso', 'Categoria cadastrada com sucesso!');
-            this.carregarCategorias(); // Atualiza a lista após o cadastro
+            this.notification.success('Sucesso', 'Categoria atualizada com sucesso!');
+            this.carregarCategorias();
           },
           error: (error) => {
-            console.error('Erro ao cadastrar categoria:', error);
-            this.notification.error('Erro', 'Falha ao cadastrar categoria.');
-          }
+            console.error('Erro ao atualizar categoria:', error);
+            this.notification.error('Erro', 'Falha ao atualizar categoria.');
+          },
         });
+      } else if (resultado && modo === 'cadastrar') {
+        this.onNovaCategoria(resultado);
       }
     });
   }
+  
 
   onNovaCategoria(novaCategoria: Categoria): void {
     novaCategoria.status_categoria = 'Ativo'; // Define o status como "Ativo"

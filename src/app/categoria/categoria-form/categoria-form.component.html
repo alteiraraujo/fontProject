@@ -4,11 +4,13 @@
     <div class="form-item">
       <label for="nome_categoria">Nome da Categoria:</label>
       <input
-        id="nome_categoria"
-        formControlName="nome_categoria"
-        nz-input
-        placeholder="Digite o nome da categoria"
-      />
+      id="nome_categoria"
+      formControlName="nome_categoria"
+      nz-input
+      [ngClass]="{'invalid-field': form.get('nome_categoria')?.invalid && form.get('nome_categoria')?.touched}"
+      [placeholder]="modo === 'abrir' ? 'Visualizar nome da categoria' : 'Digite o nome da categoria'"
+      [disabled]="modo === 'abrir'"
+    />
       <div *ngIf="form.get('nome_categoria')?.touched && form.get('nome_categoria')?.invalid" class="error">
         <span *ngIf="form.get('nome_categoria')?.errors?.['required']">Nome é obrigatório.</span>
         <span *ngIf="form.get('nome_categoria')?.errors?.['minlength']">
@@ -19,7 +21,7 @@
   </div>
 
   <!-- Botões -->
-  <div class="form-actions">
+  <div class="form-actions" *ngIf="modo !== 'abrir'">
     <button nz-button nzType="primary" [disabled]="form.invalid">Salvar</button>
     <button nz-button nzType="default" (click)="cancel()">Cancelar</button>
   </div>

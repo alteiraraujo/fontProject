@@ -32,7 +32,7 @@
         nz-button
         nzType="primary"
         nzShape="circle"
-        (click)="abrirModal()"
+        (click)="abrirModal('cadastrar')"
       >
         +
       </button>
@@ -74,9 +74,9 @@
         </span>
       </td>
       <td>
-        <button nz-button [nzSize]="'small'" nzType="default">Abrir</button>
+        <button nz-button [nzSize]="'small'" nzType="default" (click)="abrirModal('abrir', categoria)" >Abrir</button>
         <nz-divider nzType="vertical"></nz-divider>
-        <button nz-button [nzSize]="'small'" nzType="primary">Editar</button>
+        <button nz-button [nzSize]="'small'" nzType="primary" (click)="abrirModal('editar', categoria)" >Editar</button>
       </td>
       <td>
         <nz-switch
