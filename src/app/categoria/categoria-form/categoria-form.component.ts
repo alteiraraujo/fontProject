@@ -31,7 +31,7 @@ export class CategoriaFormComponent implements OnInit {
       id_categoria: [this.categoria?.id_categoria || null],
       nome_categoria: [
         this.categoria?.nome_categoria || '',
-        [Validators.required, Validators.minLength(3)],
+        [Validators.required, Validators.minLength(3), Validators.maxLength(30)],
       ],
       status_categoria: [
         this.categoria?.status_categoria || 'Ativo',

@@ -16,6 +16,9 @@
         <span *ngIf="form.get('nome_categoria')?.errors?.['minlength']">
           Nome deve ter pelo menos 3 caracteres.
         </span>
+        <span *ngIf="form.get('nome_categoria')?.errors?.['maxlength']">
+          Nome não pode ter mais de 30 caracteres.
+        </span>
       </div>
     </div>
   </div>
@@ -26,3 +29,4 @@
     <button nz-button nzType="default" (click)="cancel()">Cancelar</button>
   </div>
 </form>
+ 

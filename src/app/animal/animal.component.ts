@@ -4,6 +4,7 @@ import { Animal } from './animal';
 import { AnimalService } from './animal.service';
 import { NzModalService } from 'ng-zorro-antd/modal';
 import { AnimalFormComponent } from './animal-form/animal-form.component';
+import { NzMessageService } from 'ng-zorro-antd/message';
 
 @Component({
   selector: 'app-animal',
@@ -21,7 +22,7 @@ export class AnimalComponent implements OnInit {
   searchValue: string = '';
   statusFilter: string = 'Ativo';
 
-  constructor(private service: AnimalService, private modal: NzModalService) {}
+  constructor(private service: AnimalService, private modal: NzModalService,  private message: NzMessageService,) {}
 
   ngOnInit() {
     this.carregarAnimais();
@@ -73,49 +74,101 @@ export class AnimalComponent implements OnInit {
 
   toggleStatus(animal: Animal): void {
     const novoStatus = animal.status_animal === 'Ativo' ? 'Inativo' : 'Ativo';
-    const confirmacao = confirm(
-      `Deseja realmente ${
-        novoStatus === 'Ativo' ? 'ativar' : 'desativar'
-      } este animal?`
-    );
-
-    if (confirmacao) {
-      this.service.updateStatus(animal.id_animal, novoStatus).subscribe({
-        next: () => {
-          animal.status_animal = novoStatus;
-          this.carregarAnimais(); // Recarrega a lista após a alteração de status
-          console.log('Status atualizado com sucesso no backend.');
-        },
-        error: (error) => {
-          console.error('Erro ao atualizar status no backend:', error);
-          alert('Não foi possível atualizar o status no servidor.');
-        },
-      });
-    }
+  
+    this.modal.confirm({
+      nzTitle: 'Confirmação',
+      nzContent: `Deseja realmente ${novoStatus === 'Ativo' ? 'ativar' : 'desativar'} este animal?`,
+      nzOkText: 'Sim',
+      nzOkType: 'primary',
+      nzOnOk: () =>
+        this.service.updateStatus(animal.id_animal, novoStatus).subscribe({
+          next: () => {
+            this.carregarAnimais(); // Atualiza os dados da tabela após a alteração
+            this.message.success(
+              `Status do animal atualizado para ${novoStatus}.`
+            );
+          },
+          error: (error) => {
+            console.error('Erro ao atualizar status no backend:', error);
+            this.message.error('Erro ao tentar atualizar o status do animal.');
+          },
+        }),
+      nzCancelText: 'Não',
+      nzOnCancel: () => {
+        this.message.info('Ação de alteração de status foi cancelada.');
+      },
+    });
   }
+  
+  
 
   fecharModal(): void {
     this.modal.closeAll(); // Fecha o modal
   }
 
-  abrirModal(): void {
+  abrirModal(modo: 'cadastrar' | 'editar' | 'abrir', animal?: Animal): void {
+    if (modo === 'editar') {
+      this.modal.confirm({
+        nzTitle: 'Confirmação',
+        nzContent: 'Tem certeza que deseja editar este animal?',
+        nzOkText: 'Sim',
+        nzCancelText: 'Não',
+        nzOnOk: () => this.abrirFormularioModal(modo, animal), // Confirmação para abrir o modal de edição
+      });
+    } else {
+      this.abrirFormularioModal(modo, animal);
+    }
+  }
+  
+  private abrirFormularioModal(modo: 'cadastrar' | 'editar' | 'abrir', animal?: Animal): void {
     const modalRef = this.modal.create({
-      nzTitle: 'Cadastrar Animal',
+      nzTitle:
+        modo === 'cadastrar'
+          ? 'Cadastrar Animal'
+          : modo === 'editar'
+          ? 'Editar Animal'
+          : 'Detalhes do Animal',
       nzContent: AnimalFormComponent,
-      nzFooter: null,
+      nzComponentParams: {
+        animal: animal ? { ...animal } : undefined, // Garante que os dados do animal sejam passados
+        modo: modo,
+      },
+      nzFooter: modo === 'abrir' ? [{ label: 'Ok', onClick: () => modalRef.close() }] : null,
       nzWidth: '600px',
     });
   
-    const instance = modalRef.getContentComponent() as AnimalFormComponent;
-  
-    instance.animalCadastrado.subscribe((novoAnimal: Animal) => {
-      this.carregarAnimais(); // Atualiza a tabela de animais
-      modalRef.close();
-    });
-  
-    instance.cancelado.subscribe(() => {
-      modalRef.close(); // Fecha o modal ao cancelar
+    modalRef.afterClose.subscribe((resultado?: Animal) => {
+      if (resultado) {
+        if (modo === 'editar') {
+          this.service.update(resultado.id_animal!, resultado).subscribe({
+            next: () => {
+              this.carregarAnimais(); // Atualiza a lista após edição
+            },
+            error: (error) => {
+              console.error('Erro ao atualizar animal:', error);
+              this.message.error('Erro ao atualizar o animal.');
+            },
+          });
+        } else if (modo === 'cadastrar') {
+          this.onNovoAnimal(resultado); // Lida com o cadastro de novos animais
+        }
+      }
     });
   }
+  
+  
+  onNovoAnimal(novoAnimal: Animal): void {
+    novoAnimal.status_animal = 'Ativo';
+    this.service.create(novoAnimal).subscribe({
+      next: () => {
+        alert('Animal cadastrado com sucesso!');
+        this.carregarAnimais();
+      },
+      error: (error) => {
+        console.error('Erro ao cadastrar animal:', error);
+        alert('Erro ao cadastrar o animal.');
+      },
+    });
+  }  
   
 }

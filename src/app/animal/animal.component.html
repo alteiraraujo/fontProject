@@ -28,12 +28,14 @@
         <nz-option nzValue="Inativo" nzLabel="Inativo"></nz-option>
       </nz-select>
 
-       <!-- Botão de Novo Cadastro -->
+      <!-- Botão de Novo Cadastro -->
       <button
-       nz-button nzType="primary"
-        nzShape="circle" 
-        (click)="abrirModal()"
-        >+
+        nz-button
+        nzType="primary"
+        nzShape="circle"
+        (click)="abrirModal('cadastrar')"
+      >
+        +
       </button>
     </div>
   </div>
@@ -61,8 +63,10 @@
   <tbody>
     <tr *ngFor="let animal of animaisFiltrados$ | async">
       <td>{{ animal.nome_animal }}</td>
-      <td>{{ animal.pessoa.nome_pessoa }}</td> <!-- Nome do Tutor -->
-      <td>{{ animal.raca.nome_raca }}</td> <!-- Nome da Raça -->
+      <td>{{ animal.pessoa.nome_pessoa }}</td>
+      <!-- Nome do Tutor -->
+      <td>{{ animal.raca.nome_raca }}</td>
+      <!-- Nome da Raça -->
       <td>
         <span
           nz-typography
@@ -75,9 +79,9 @@
         </span>
       </td>
       <td>
-        <button nz-button [nzSize]="'small'" nzType="default">Abrir</button>
+        <button nz-button [nzSize]="'small'" nzType="default" (click)="abrirModal('abrir', animal)" >Abrir</button>
         <nz-divider nzType="vertical"></nz-divider>
-        <button nz-button [nzSize]="'small'" nzType="primary">Editar</button>
+        <button nz-button [nzSize]="'small'" nzType="primary" (click)="abrirModal('editar', animal)">Editar</button>
       </td>
       <td>
         <nz-switch
@@ -88,5 +92,4 @@
       </td>
     </tr>
   </tbody>
-  
 </nz-table>

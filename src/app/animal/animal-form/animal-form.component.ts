@@ -1,4 +1,4 @@
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Observable } from 'rxjs';
 import { PessoaService } from 'src/app/pessoa/pessoa.service';
@@ -9,7 +9,9 @@ import { NzMessageService } from 'ng-zorro-antd/message';
 import { NzModalRef, NzModalService } from 'ng-zorro-antd/modal';
 import { PessoaFormComponent } from 'src/app/pessoa/pessoa-form/pessoa-form.component';
 import { RacaFormComponent } from 'src/app/raca/raca-form/raca-form.component';
-import { Router } from '@angular/router';
+import { ModoFormulario } from 'src/app/enuns/modo-formulario.enum';
+import { MensagensInfo } from 'src/app/enuns/mensagens-info.enum';
+
 
 @Component({
   selector: 'app-animal-form',
@@ -24,6 +26,23 @@ export class AnimalFormComponent implements OnInit {
   pessoas$: Observable<any[]>;
   racas$: Observable<any[]>;
 
+  @Input() animal?: {
+    id_animal?: number;
+    nome_animal: string;
+    idade_animal: number;
+    status_animal: string;
+    pessoa: {
+      id_pessoa: number;
+      nome_pessoa?: string;
+    };
+    raca: {
+      id_raca: number;
+      nome_raca?: string;
+    };
+  };
+  
+  @Input() modo!: 'cadastrar' | 'editar' | 'abrir';
+
   constructor(
     private fb: FormBuilder,
     private pessoaService: PessoaService,
@@ -36,14 +55,32 @@ export class AnimalFormComponent implements OnInit {
 
   ngOnInit(): void {
     this.animalForm = this.fb.group({
-      nome_animal: ['', [Validators.required, Validators.minLength(3)]],
-      idade_animal: ['', [Validators.required, Validators.min(0)]],
-      selectedPessoaId: ['', Validators.required],
-      selectedRacaId: ['', Validators.required],
-      status_animal: ['Ativo', Validators.required],
+      nome_animal: [
+        this.animal?.nome_animal || '',
+        [Validators.required, Validators.minLength(2), Validators.maxLength(30)],
+      ],
+      idade_animal: [
+        this.animal?.idade_animal || '',
+        [Validators.required, Validators.min(0), Validators.maxLength(2)],
+      ],
+      selectedPessoaId: [
+        this.animal?.pessoa?.id_pessoa || '',
+        Validators.required,
+      ],
+      selectedRacaId: [
+        this.animal?.raca?.id_raca || '',
+        Validators.required,
+      ],
+      status_animal: [
+        this.animal?.status_animal || 'Ativo',
+        Validators.required,
+      ],
     });
-
-    // Carregar listas de pessoas e raças
+  
+    if (this.modo === 'abrir') {
+      this.animalForm.disable(); // Desabilita o formulário no modo "abrir"
+    }
+  
     this.refreshPessoasList();
     this.refreshRacasList();
   }
@@ -97,7 +134,7 @@ export class AnimalFormComponent implements OnInit {
     const instance = modalRef.getContentComponent() as RacaFormComponent;
 
     instance.racaCadastrada.subscribe((novaRaca: any) => {
-      this.message.success('Raça cadastrada com sucesso!');
+      //this.message.success('Raça cadastrada com sucesso!');
       modalRef.close();
       this.refreshRacasList();
     });
@@ -110,33 +147,62 @@ export class AnimalFormComponent implements OnInit {
 
   onSubmit(): void {
     if (this.animalForm.valid) {
-      const novoAnimal: Animal = {
+      const animalData: Animal = {
+        id_animal: this.animal?.id_animal, // Inclui o ID do animal, se existir
         nome_animal: this.animalForm.value.nome_animal,
         idade_animal: this.animalForm.value.idade_animal,
-        status_animal: 'Ativo',
+        status_animal: this.animalForm.value.status_animal,
         pessoa: { id_pessoa: this.animalForm.value.selectedPessoaId },
         raca: { id_raca: this.animalForm.value.selectedRacaId },
       };
-
-      this.animalService.create(novoAnimal).subscribe({
-        next: (response) => {
-          this.message.success('Animal cadastrado com sucesso!');
-          this.animalCadastrado.emit(response); // Emite o evento com o novo animal
-          this.modalRef.close(); // Fecha o modal
-        },
-        error: (error) => {
-          this.message.error(
-            error.error || 'Erro ao cadastrar o animal. Tente novamente.'
-          );
-        },
-      });
+  
+      if (this.modo === 'editar' && this.animal?.id_animal) {
+        // Atualizar animal existente
+        this.animalService.update(this.animal.id_animal, animalData).subscribe({
+          next: () => {
+            this.message.success('Animal atualizado com sucesso!');
+            this.modalRef.close(animalData); // Retorna o animal atualizado para o componente pai
+          },
+          error: () => {
+            this.message.error('Erro ao atualizar o animal. Tente novamente.');
+          },
+        });
+      } else if (this.modo === 'cadastrar') {
+        // Criar novo animal
+        this.animalService.create(animalData).subscribe({
+          next: (response) => {
+            this.message.success('Animal cadastrado com sucesso!');
+            this.animalCadastrado.emit(response); // Emite o evento para o componente pai
+            this.modalRef.close(); // Fecha o modal
+          },
+          error: () => {
+            this.message.error('Erro ao cadastrar o animal. Tente novamente.');
+          },
+        });
+      }
     } else {
       this.message.error('Por favor, preencha todos os campos obrigatórios.');
     }
   }
-
+  
+  
   cancel(): void {
-    this.cancelado.emit(); // Emite o evento para o componente pai
-    this.modalRef.close(); // Fecha o modal diretamente
+    if (this.modo === ModoFormulario.CADASTRAR) {
+      this.message.info(MensagensInfo.CADASTRO_CANCELADO);
+    } else if (this.modo === ModoFormulario.EDITAR) {
+      this.message.info(MensagensInfo.EDICAO_CANCELADA);
+    }
+    this.modalRef.close();
+  }
+  closeModal(resultado?: any): void {
+    this.modalRef.destroy(resultado);
+  }
+
+  getTitulo(): string {
+    return this.modo === 'cadastrar'
+      ? 'Cadastrar Animal'
+      : this.modo === 'editar'
+      ? 'Editar Animal'
+      : 'Detalhes do Animal';
   }
 }
