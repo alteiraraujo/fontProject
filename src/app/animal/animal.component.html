@@ -53,8 +53,8 @@
   <thead>
     <tr>
       <th>{{ "Nome" }}</th>
-      <th>{{ "Tutor" }}</th>
       <th>{{ "Raça" }}</th>
+      <th>{{ "Tutor" }}</th>
       <th>{{ "Status" }}</th>
       <th>{{ "Ações" }}</th>
       <th>{{ "Ativo" }}</th>
@@ -63,10 +63,8 @@
   <tbody>
     <tr *ngFor="let animal of animaisFiltrados$ | async">
       <td>{{ animal.nome_animal }}</td>
-      <td>{{ animal.pessoa.nome_pessoa }}</td>
-      <!-- Nome do Tutor -->
       <td>{{ animal.raca.nome_raca }}</td>
-      <!-- Nome da Raça -->
+      <td>{{ animal.pessoa.nome_pessoa }}</td>
       <td>
         <span
           nz-typography

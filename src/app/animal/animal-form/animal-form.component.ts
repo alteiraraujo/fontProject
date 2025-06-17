@@ -54,28 +54,29 @@ export class AnimalFormComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.animalForm = this.fb.group({
-      nome_animal: [
-        this.animal?.nome_animal || '',
-        [Validators.required, Validators.minLength(2), Validators.maxLength(30)],
-      ],
-      idade_animal: [
-        this.animal?.idade_animal || '',
-        [Validators.required, Validators.min(0), Validators.maxLength(2)],
-      ],
-      selectedPessoaId: [
-        this.animal?.pessoa?.id_pessoa || '',
-        Validators.required,
-      ],
-      selectedRacaId: [
-        this.animal?.raca?.id_raca || '',
-        Validators.required,
-      ],
-      status_animal: [
-        this.animal?.status_animal || 'Ativo',
-        Validators.required,
-      ],
-    });
+   this.animalForm = this.fb.group({
+  nome_animal: [
+    this.animal?.nome_animal || '',
+    [Validators.required, Validators.minLength(2), Validators.maxLength(30)],
+  ],
+  idade_animal: [
+    this.animal?.idade_animal || null,
+    [Validators.required],
+  ],
+  selectedPessoaId: [
+    this.animal?.pessoa?.id_pessoa || '',
+    Validators.required,
+  ],
+  selectedRacaId: [
+    this.animal?.raca?.id_raca || '',
+    Validators.required,
+  ],
+  status_animal: [
+    this.animal?.status_animal || 'Ativo',
+    Validators.required,
+  ],
+});
+
   
     if (this.modo === 'abrir') {
       this.animalForm.disable(); // Desabilita o formulário no modo "abrir"

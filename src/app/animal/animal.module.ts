@@ -16,6 +16,7 @@ import { NzFormModule } from 'ng-zorro-antd/form';
 import { NzImageModule } from 'ng-zorro-antd/image';
 import { NzDividerModule } from 'ng-zorro-antd/divider';
 import { NzMessageModule } from 'ng-zorro-antd/message';
+import { NzDatePickerModule } from 'ng-zorro-antd/date-picker';
 
 
 @NgModule({
@@ -38,7 +39,8 @@ import { NzMessageModule } from 'ng-zorro-antd/message';
     NzFormModule,
     NzImageModule,
     NzDividerModule,
-    NzMessageModule
+    NzMessageModule,
+    NzDatePickerModule
     
   ]
 })

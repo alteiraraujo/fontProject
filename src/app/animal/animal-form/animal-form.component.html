@@ -26,22 +26,28 @@
     </span>
   </ng-template>
 
-  <!-- Campo Idade do Animal -->
-  <nz-form-item>
-    <nz-form-label [nzSm]="6" [nzXs]="24" [nzRequired]="true" nzFor="idade_animal">
-      Idade do Animal
-    </nz-form-label>
-    <nz-form-control [nzErrorTip]="idadeAnimalError">
-      <input
-        nz-input
-        type="number"
-        formControlName="idade_animal"
-        id="idade_animal"
-        placeholder="Digite a idade do animal"
-        [disabled]="modo === 'abrir'"
-      />
-    </nz-form-control>
-  </nz-form-item>
+<!-- Campo Data de Nascimento do Animal -->
+<nz-form-item>
+  <nz-form-label [nzSm]="6" [nzXs]="24" [nzRequired]="true" nzFor="idade_animal">
+    Data de Nascimento
+  </nz-form-label>
+  <nz-form-control [nzErrorTip]="dataNascimentoError">
+    <nz-date-picker
+      formControlName="idade_animal"
+      id="idade_animal"
+      nzFormat="dd/MM/yyyy"
+      nzPlaceHolder="Selecione a data de nascimento"
+      [disabled]="modo === 'abrir'"
+    ></nz-date-picker>
+  </nz-form-control>
+</nz-form-item>
+
+<ng-template #dataNascimentoError>
+  <span *ngIf="animalForm.get('idade_animal')?.hasError('required')">
+    A data de nascimento é obrigatória.
+  </span>
+</ng-template>
+
   <ng-template #idadeAnimalError>
     <span *ngIf="animalForm.get('idade_animal')?.hasError('required')">
       A idade do animal é obrigatória.
