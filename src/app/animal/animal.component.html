@@ -1,93 +1,109 @@
 <h3 nz-typography>Animais</h3>
-<div nz-row>
-  <div nz-col nzSpan="12"></div>
-  <div nz-col nzSpan="12">
-    <div style="display: flex; align-items: center">
-      <nz-input-group nzSearch [nzAddOnAfter]="suffixIconButton">
-        <input
-          type="text"
-          nz-input
-          placeholder="Buscar Animais"
-          [(ngModel)]="searchValue"
-          (ngModelChange)="onSearchChange()"
-        />
-      </nz-input-group>
-      <ng-template #suffixIconButton>
-        <button nz-button nzType="primary" nzSearch>
-          <span nz-icon nzType="search"></span>
+<nz-spin [nzSpinning]="carregando" nzTip="Carregando...">
+  <div nz-row>
+    <div nz-col nzSpan="12"></div>
+    <div nz-col nzSpan="12">
+      <div style="display: flex; align-items: center">
+        <nz-input-group nzSearch [nzAddOnAfter]="suffixIconButton">
+          <input
+            type="text"
+            nz-input
+            placeholder="Buscar Animais"
+            [(ngModel)]="searchValue"
+            (ngModelChange)="onSearchChange()"
+          />
+        </nz-input-group>
+        <ng-template #suffixIconButton>
+          <button nz-button nzType="primary" nzSearch>
+            <span nz-icon nzType="search"></span>
+          </button>
+        </ng-template>
+
+        <nz-select
+          style="margin-left: 8px"
+          [(ngModel)]="statusFilter"
+          (ngModelChange)="onStatusChange($event)"
+        >
+          <nz-option nzValue="" nzLabel="Todos"></nz-option>
+          <nz-option nzValue="Ativo" nzLabel="Ativo"></nz-option>
+          <nz-option nzValue="Inativo" nzLabel="Inativo"></nz-option>
+        </nz-select>
+
+        <!-- Botão de Novo Cadastro -->
+        <button
+          nz-button
+          nzType="primary"
+          nzShape="circle"
+          (click)="abrirModal('cadastrar')"
+        >
+          +
         </button>
-      </ng-template>
-
-      <nz-select
-        style="margin-left: 8px"
-        [(ngModel)]="statusFilter"
-        (ngModelChange)="onStatusChange($event)"
-      >
-        <nz-option nzValue="" nzLabel="Todos"></nz-option>
-        <nz-option nzValue="Ativo" nzLabel="Ativo"></nz-option>
-        <nz-option nzValue="Inativo" nzLabel="Inativo"></nz-option>
-      </nz-select>
-
-      <!-- Botão de Novo Cadastro -->
-      <button
-        nz-button
-        nzType="primary"
-        nzShape="circle"
-        (click)="abrirModal('cadastrar')"
-      >
-        +
-      </button>
+      </div>
     </div>
   </div>
-</div>
-<br />
-<nz-table
-  #basicTable
-  [nzData]="animaisFiltrados$ | async"
-  [nzFrontPagination]="false"
-  [nzPageIndex]="pageIndex"
-  [nzPageSize]="pageSize"
-  [nzTotal]="(animais$ | async)?.length"
-  (nzPageIndexChange)="onPageIndexChange($event)"
->
-  <thead>
-    <tr>
-      <th>{{ "Nome" }}</th>
-      <th>{{ "Raça" }}</th>
-      <th>{{ "Tutor" }}</th>
-      <th>{{ "Status" }}</th>
-      <th>{{ "Ações" }}</th>
-      <th>{{ "Ativo" }}</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr *ngFor="let animal of animaisFiltrados$ | async">
-      <td>{{ animal.nome_animal }}</td>
-      <td>{{ animal.raca.nome_raca }}</td>
-      <td>{{ animal.pessoa.nome_pessoa }}</td>
-      <td>
-        <span
-          nz-typography
-          [ngClass]="{
-            'status-ativo': animal.status_animal === 'Ativo',
-            'status-inativo': animal.status_animal === 'Inativo'
-          }"
-        >
-          {{ animal.status_animal }}
-        </span>
-      </td>
-      <td>
-        <button nz-button [nzSize]="'small'" nzType="default" (click)="abrirModal('abrir', animal)" >Abrir</button>
-        <nz-divider nzType="vertical"></nz-divider>
-        <button nz-button [nzSize]="'small'" nzType="primary" (click)="abrirModal('editar', animal)">Editar</button>
-      </td>
-      <td>
-        <nz-switch
-          nzSize="small"
-          [ngModel]="animal.status_animal === 'Ativo'"
-          (ngModelChange)="toggleStatus(animal)"
-        ></nz-switch>
-      </td>
-    </tr>
-  </tbody>
-</nz-table>
+  <br />
+  <nz-table
+    #basicTable
+    [nzData]="animaisFiltrados$ | async"
+    [nzFrontPagination]="false"
+    [nzPageIndex]="pageIndex"
+    [nzPageSize]="pageSize"
+    [nzTotal]="(animais$ | async)?.length"
+    (nzPageIndexChange)="onPageIndexChange($event)"
+  >
+    <thead>
+      <tr>
+        <th>{{ "Nome" }}</th>
+        <th>{{ "Raça" }}</th>
+        <th>{{ "Tutor" }}</th>
+        <th>{{ "Status" }}</th>
+        <th>{{ "Ações" }}</th>
+        <th>{{ "Ativo" }}</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let animal of animaisFiltrados$ | async">
+        <td>{{ animal.nome_animal }}</td>
+        <td>{{ animal.raca.nome_raca }}</td>
+        <td>{{ animal.pessoa.nome_pessoa }}</td>
+        <td>
+          <span
+            nz-typography
+            [ngClass]="{
+              'status-ativo': animal.status_animal === 'Ativo',
+              'status-inativo': animal.status_animal === 'Inativo'
+            }"
+          >
+            {{ animal.status_animal }}
+          </span>
+        </td>
+        <td>
+          <button
+            nz-button
+            [nzSize]="'small'"
+            nzType="default"
+            (click)="abrirModal('abrir', animal)"
+          >
+            Abrir
+          </button>
+          <nz-divider nzType="vertical"></nz-divider>
+          <button
+            nz-button
+            [nzSize]="'small'"
+            nzType="primary"
+            (click)="abrirModal('editar', animal)"
+          >
+            Editar
+          </button>
+        </td>
+        <td>
+          <nz-switch
+            nzSize="small"
+            [ngModel]="animal.status_animal === 'Ativo'"
+            (ngModelChange)="toggleStatus(animal)"
+          ></nz-switch>
+        </td>
+      </tr>
+    </tbody>
+  </nz-table>
+</nz-spin>

@@ -3,7 +3,13 @@
 <form nz-form [formGroup]="colaboradorForm" (ngSubmit)="onSubmit()">
   <!-- Pessoa -->
   <nz-form-item>
-    <nz-form-label [nzSm]="6" [nzXs]="24" [nzRequired]="true" nzFor="tbl_pessoa_id">Pessoa</nz-form-label>
+    <nz-form-label
+      [nzSm]="6"
+      [nzXs]="24"
+      [nzRequired]="true"
+      nzFor="tbl_pessoa_id"
+      >Pessoa</nz-form-label
+    >
     <nz-form-control
       [nzSm]="14"
       [nzXs]="24"
@@ -24,8 +30,15 @@
         ></nz-option>
       </nz-select>
       <ng-template #personDropdownRender>
-        <div style="display: flex; justify-content: space-between; padding: 8px;">
-          <button nz-button nzType="link" (click)="openPessoaModal()" type="button">
+        <div
+          style="display: flex; justify-content: space-between; padding: 8px"
+        >
+          <button
+            nz-button
+            nzType="link"
+            (click)="openPessoaModal()"
+            type="button"
+          >
             <span nz-icon nzType="plus"></span> Adicionar Pessoa
           </button>
         </div>
@@ -35,7 +48,13 @@
 
   <!-- Cargo -->
   <nz-form-item>
-    <nz-form-label [nzSm]="6" [nzXs]="24" [nzRequired]="true" nzFor="cargo_colaborador">Cargo</nz-form-label>
+    <nz-form-label
+      [nzSm]="6"
+      [nzXs]="24"
+      [nzRequired]="true"
+      nzFor="cargo_colaborador"
+      >Cargo</nz-form-label
+    >
     <nz-form-control
       [nzSm]="14"
       [nzXs]="24"
@@ -55,7 +74,13 @@
 
   <!-- Login -->
   <nz-form-item>
-    <nz-form-label [nzSm]="6" [nzXs]="24" [nzRequired]="true" nzFor="login_colaborador">Login</nz-form-label>
+    <nz-form-label
+      [nzSm]="6"
+      [nzXs]="24"
+      [nzRequired]="true"
+      nzFor="login_colaborador"
+      >Login</nz-form-label
+    >
     <nz-form-control
       [nzSm]="14"
       [nzXs]="24"
@@ -72,7 +97,13 @@
 
   <!-- Senha -->
   <nz-form-item>
-    <nz-form-label [nzSm]="6" [nzXs]="24" [nzRequired]="true" nzFor="senha_colaborador">Senha</nz-form-label>
+    <nz-form-label
+      [nzSm]="6"
+      [nzXs]="24"
+      [nzRequired]="true"
+      nzFor="senha_colaborador"
+      >Senha</nz-form-label
+    >
     <nz-form-control
       [nzSm]="14"
       [nzXs]="24"
@@ -90,7 +121,13 @@
 
   <!-- Email -->
   <nz-form-item>
-    <nz-form-label [nzSm]="6" [nzXs]="24" [nzRequired]="true" nzFor="email_colaborador">Email</nz-form-label>
+    <nz-form-label
+      [nzSm]="6"
+      [nzXs]="24"
+      [nzRequired]="true"
+      nzFor="email_colaborador"
+      >Email</nz-form-label
+    >
     <nz-form-control
       [nzSm]="14"
       [nzXs]="24"
@@ -108,10 +145,14 @@
   <!-- Botões -->
   <nz-form-item>
     <nz-form-control [nzSpan]="14" [nzOffset]="6">
-      <button nz-button nzType="primary" [disabled]="!colaboradorForm.valid">
-        Salvar
-      </button>
-      <button nz-button nzType="default" (click)="cancelar()">Cancelar</button>
+      <ng-container *ngIf="modo !== 'abrir'">
+        <button nz-button nzType="primary" [disabled]="!colaboradorForm.valid">
+          {{ modo === "editar" ? "Salvar" : "Cadastrar" }}
+        </button>
+        <button nz-button nzType="default" (click)="cancelar()">
+          Cancelar
+        </button>
+      </ng-container>
     </nz-form-control>
   </nz-form-item>
 </form>

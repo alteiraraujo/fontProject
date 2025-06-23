@@ -1,0 +1,62 @@
+<form nz-form [formGroup]="form" (ngSubmit)="submitForm()">
+
+  <!-- Animal -->
+  <nz-form-item>
+    <nz-form-label [nzSpan]="6" nzRequired nzFor="id_animal">Animal</nz-form-label>
+    <nz-form-control [nzSpan]="12">
+      <nz-select
+        formControlName="id_animal"
+        nzPlaceHolder="Selecione o animal"
+        [disabled]="modo === 'abrir'"
+      >
+        <nz-option *ngFor="let animal of animais$ | async"
+          [nzValue]="animal.id_animal"
+          [nzLabel]="animal.nome_animal"
+        ></nz-option>
+      </nz-select>
+    </nz-form-control>
+  </nz-form-item>
+
+  <!-- Data do Diagnóstico -->
+  <nz-form-item>
+    <nz-form-label [nzSpan]="6" nzFor="data_diagnostico" nzRequired>Data</nz-form-label>
+    <nz-form-control [nzSpan]="12">
+      <nz-date-picker
+        formControlName="data_diagnostico"
+        id="data_diagnostico"
+        nzFormat="dd/MM/yyyy"
+        nzPlaceHolder="Data do diagnóstico"
+        [disabled]="modo === 'abrir'"
+      ></nz-date-picker>
+    </nz-form-control>
+  </nz-form-item>
+
+  <!-- Descrição -->
+  <nz-form-item>
+    <nz-form-label [nzSpan]="6" nzFor="descricao_diagnostico" nzRequired>Descrição</nz-form-label>
+    <nz-form-control [nzSpan]="12">
+      <input
+        nz-input
+        formControlName="descricao_diagnostico"
+        id="descricao_diagnostico"
+        nzPlaceHolder="Descrição do diagnóstico"
+        [disabled]="modo === 'abrir'"
+        maxlength="255"
+      />
+    </nz-form-control>
+  </nz-form-item>
+
+  <!-- Botões -->
+  <nz-form-item>
+    <nz-form-control [nzSpan]="14" [nzOffset]="6">
+      <ng-container *ngIf="modo !== 'abrir'">
+        <button nz-button nzType="primary" [disabled]="form.invalid">
+          {{ modo === "editar" ? "Salvar" : "Cadastrar" }}
+        </button>
+        <button nz-button nzType="default" (click)="cancelar()">
+          Cancelar
+        </button>
+      </ng-container>
+    </nz-form-control>
+  </nz-form-item>
+</form>

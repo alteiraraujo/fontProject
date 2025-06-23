@@ -1,90 +1,106 @@
 <h3 nz-typography>Categorias</h3>
-<div nz-row>
-  <div nz-col nzSpan="12"></div>
-  <div nz-col nzSpan="12">
-    <div style="display: flex; align-items: center">
-      <nz-input-group nzSearch [nzAddOnAfter]="suffixIconButton">
-        <input
-          type="text"
-          nz-input
-          placeholder="Buscar Categorias"
-          [(ngModel)]="searchValue"
-          (ngModelChange)="onSearchChange()"
-        />
-      </nz-input-group>
-      <ng-template #suffixIconButton>
-        <button nz-button nzType="primary" nzSearch>
-          <span nz-icon nzType="search"></span>
+<nz-spin [nzSpinning]="carregando" nzTip="Carregando...">
+  <div nz-row>
+    <div nz-col nzSpan="12"></div>
+    <div nz-col nzSpan="12">
+      <div style="display: flex; align-items: center">
+        <nz-input-group nzSearch [nzAddOnAfter]="suffixIconButton">
+          <input
+            type="text"
+            nz-input
+            placeholder="Buscar Categorias"
+            [(ngModel)]="searchValue"
+            (ngModelChange)="onSearchChange()"
+          />
+        </nz-input-group>
+        <ng-template #suffixIconButton>
+          <button nz-button nzType="primary" nzSearch>
+            <span nz-icon nzType="search"></span>
+          </button>
+        </ng-template>
+
+        <nz-select
+          style="margin-left: 8px"
+          [(ngModel)]="statusFilter"
+          (ngModelChange)="onStatusChange($event)"
+        >
+          <nz-option nzValue="" nzLabel="Todos"></nz-option>
+          <nz-option nzValue="Ativo" nzLabel="Ativo"></nz-option>
+          <nz-option nzValue="Inativo" nzLabel="Inativo"></nz-option>
+        </nz-select>
+
+        <button
+          nz-button
+          nzType="primary"
+          nzShape="circle"
+          (click)="abrirModal('cadastrar')"
+        >
+          +
         </button>
-      </ng-template>
-
-      <nz-select
-        style="margin-left: 8px"
-        [(ngModel)]="statusFilter"
-        (ngModelChange)="onStatusChange($event)"
-      >
-        <nz-option nzValue="" nzLabel="Todos"></nz-option>
-        <nz-option nzValue="Ativo" nzLabel="Ativo"></nz-option>
-        <nz-option nzValue="Inativo" nzLabel="Inativo"></nz-option>
-      </nz-select>
-
-      <button
-        nz-button
-        nzType="primary"
-        nzShape="circle"
-        (click)="abrirModal('cadastrar')"
-      >
-        +
-      </button>
+      </div>
     </div>
   </div>
-</div>
-<br />
+  <br />
 
-<!-- Tabela de Categorias-->
-<nz-table
-  #basicTable
-  [nzData]="categoriasFiltradas$ | async"
-  [nzFrontPagination]="false"
-  [nzPageIndex]="pageIndex"
-  [nzPageSize]="pageSize"
-  [nzTotal]="(categorias$ | async)?.length"
-  (nzPageIndexChange)="onPageIndexChange($event)"
->
-  <thead>
-    <tr>
-      <th>Nome</th>
-      <th>Status</th>
-      <th>Ações</th>
-      <th>Ativo</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr *ngFor="let categoria of categoriasFiltradas$ | async">
-      <td>{{ categoria.nome_categoria }}</td>
-      <td>
-        <span
-          nz-typography
-          [ngClass]="{
-            'status-ativo': categoria.status_categoria === 'Ativo',
-            'status-inativo': categoria.status_categoria === 'Inativo'
-          }"
-        >
-          {{ categoria.status_categoria }}
-        </span>
-      </td>
-      <td>
-        <button nz-button [nzSize]="'small'" nzType="default" (click)="abrirModal('abrir', categoria)" >Abrir</button>
-        <nz-divider nzType="vertical"></nz-divider>
-        <button nz-button [nzSize]="'small'" nzType="primary" (click)="abrirModal('editar', categoria)" >Editar</button>
-      </td>
-      <td>
-        <nz-switch
-          nzSize="small"
-          [ngModel]="categoria.status_categoria === 'Ativo'"
-          (ngModelChange)="toggleStatus(categoria)"
-        ></nz-switch>
-      </td>
-    </tr>
-  </tbody>
-</nz-table>
+  <!-- Tabela de Categorias-->
+  <nz-table
+    #basicTable
+    [nzData]="categoriasFiltradas$ | async"
+    [nzFrontPagination]="false"
+    [nzPageIndex]="pageIndex"
+    [nzPageSize]="pageSize"
+    [nzTotal]="(categorias$ | async)?.length"
+    (nzPageIndexChange)="onPageIndexChange($event)"
+  >
+    <thead>
+      <tr>
+        <th>Nome</th>
+        <th>Status</th>
+        <th>Ações</th>
+        <th>Ativo</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let categoria of categoriasFiltradas$ | async">
+        <td>{{ categoria.nome_categoria }}</td>
+        <td>
+          <span
+            nz-typography
+            [ngClass]="{
+              'status-ativo': categoria.status_categoria === 'Ativo',
+              'status-inativo': categoria.status_categoria === 'Inativo'
+            }"
+          >
+            {{ categoria.status_categoria }}
+          </span>
+        </td>
+        <td>
+          <button
+            nz-button
+            [nzSize]="'small'"
+            nzType="default"
+            (click)="abrirModal('abrir', categoria)"
+          >
+            Abrir
+          </button>
+          <nz-divider nzType="vertical"></nz-divider>
+          <button
+            nz-button
+            [nzSize]="'small'"
+            nzType="primary"
+            (click)="abrirModal('editar', categoria)"
+          >
+            Editar
+          </button>
+        </td>
+        <td>
+          <nz-switch
+            nzSize="small"
+            [ngModel]="categoria.status_categoria === 'Ativo'"
+            (ngModelChange)="toggleStatus(categoria)"
+          ></nz-switch>
+        </td>
+      </tr>
+    </tbody>
+  </nz-table>
+</nz-spin>

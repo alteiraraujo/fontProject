@@ -12,7 +12,6 @@ import { RacaFormComponent } from 'src/app/raca/raca-form/raca-form.component';
 import { ModoFormulario } from 'src/app/enuns/modo-formulario.enum';
 import { MensagensInfo } from 'src/app/enuns/mensagens-info.enum';
 
-
 @Component({
   selector: 'app-animal-form',
   templateUrl: './animal-form.component.html',
@@ -29,7 +28,7 @@ export class AnimalFormComponent implements OnInit {
   @Input() animal?: {
     id_animal?: number;
     nome_animal: string;
-    idade_animal: number;
+    data_nascimento: string | Date;
     status_animal: string;
     pessoa: {
       id_pessoa: number;
@@ -40,7 +39,7 @@ export class AnimalFormComponent implements OnInit {
       nome_raca?: string;
     };
   };
-  
+
   @Input() modo!: 'cadastrar' | 'editar' | 'abrir';
 
   constructor(
@@ -54,34 +53,33 @@ export class AnimalFormComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-   this.animalForm = this.fb.group({
-  nome_animal: [
-    this.animal?.nome_animal || '',
-    [Validators.required, Validators.minLength(2), Validators.maxLength(30)],
-  ],
-  idade_animal: [
-    this.animal?.idade_animal || null,
-    [Validators.required],
-  ],
-  selectedPessoaId: [
-    this.animal?.pessoa?.id_pessoa || '',
-    Validators.required,
-  ],
-  selectedRacaId: [
-    this.animal?.raca?.id_raca || '',
-    Validators.required,
-  ],
-  status_animal: [
-    this.animal?.status_animal || 'Ativo',
-    Validators.required,
-  ],
-});
+    this.animalForm = this.fb.group({
+      nome_animal: [
+        this.animal?.nome_animal || '',
+        [Validators.required, Validators.minLength(2), Validators.maxLength(30)],
+      ],
+      data_nascimento: [
+        this.animal?.data_nascimento || null,
+        [Validators.required],
+      ],
+      selectedPessoaId: [
+        this.animal?.pessoa?.id_pessoa || '',
+        Validators.required,
+      ],
+      selectedRacaId: [
+        this.animal?.raca?.id_raca || '',
+        Validators.required,
+      ],
+      status_animal: [
+        this.animal?.status_animal || 'Ativo',
+        Validators.required,
+      ],
+    });
 
-  
     if (this.modo === 'abrir') {
       this.animalForm.disable(); // Desabilita o formulário no modo "abrir"
     }
-  
+
     this.refreshPessoasList();
     this.refreshRacasList();
   }
@@ -104,7 +102,7 @@ export class AnimalFormComponent implements OnInit {
 
     const instance = modalRef.getContentComponent() as PessoaFormComponent;
 
-    instance.pessoaCadastrada.subscribe((novaPessoa: any) => {
+    instance.pessoaCadastrada.subscribe(() => {
       this.message.success('Pessoa cadastrada com sucesso!');
       modalRef.close();
       this.refreshPessoasList();
@@ -134,47 +132,36 @@ export class AnimalFormComponent implements OnInit {
 
     const instance = modalRef.getContentComponent() as RacaFormComponent;
 
-    instance.racaCadastrada.subscribe((novaRaca: any) => {
-      //this.message.success('Raça cadastrada com sucesso!');
-      modalRef.close();
-      this.refreshRacasList();
-    });
 
-    instance.cancelado.subscribe(() => {
-      this.message.info('Cadastro de raça cancelado.');
-      modalRef.close();
-    });
   }
 
   onSubmit(): void {
     if (this.animalForm.valid) {
       const animalData: Animal = {
-        id_animal: this.animal?.id_animal, // Inclui o ID do animal, se existir
+        id_animal: this.animal?.id_animal,
         nome_animal: this.animalForm.value.nome_animal,
-        idade_animal: this.animalForm.value.idade_animal,
+        data_nascimento: this.animalForm.value.data_nascimento,
         status_animal: this.animalForm.value.status_animal,
         pessoa: { id_pessoa: this.animalForm.value.selectedPessoaId },
         raca: { id_raca: this.animalForm.value.selectedRacaId },
       };
-  
+
       if (this.modo === 'editar' && this.animal?.id_animal) {
-        // Atualizar animal existente
         this.animalService.update(this.animal.id_animal, animalData).subscribe({
           next: () => {
             this.message.success('Animal atualizado com sucesso!');
-            this.modalRef.close(animalData); // Retorna o animal atualizado para o componente pai
+            this.modalRef.close(animalData);
           },
           error: () => {
             this.message.error('Erro ao atualizar o animal. Tente novamente.');
           },
         });
       } else if (this.modo === 'cadastrar') {
-        // Criar novo animal
         this.animalService.create(animalData).subscribe({
           next: (response) => {
             this.message.success('Animal cadastrado com sucesso!');
-            this.animalCadastrado.emit(response); // Emite o evento para o componente pai
-            this.modalRef.close(); // Fecha o modal
+            this.animalCadastrado.emit(response);
+            this.modalRef.close();
           },
           error: () => {
             this.message.error('Erro ao cadastrar o animal. Tente novamente.');
@@ -185,8 +172,7 @@ export class AnimalFormComponent implements OnInit {
       this.message.error('Por favor, preencha todos os campos obrigatórios.');
     }
   }
-  
-  
+
   cancel(): void {
     if (this.modo === ModoFormulario.CADASTRAR) {
       this.message.info(MensagensInfo.CADASTRO_CANCELADO);
@@ -195,6 +181,7 @@ export class AnimalFormComponent implements OnInit {
     }
     this.modalRef.close();
   }
+
   closeModal(resultado?: any): void {
     this.modalRef.destroy(resultado);
   }

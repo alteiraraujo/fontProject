@@ -1,49 +1,108 @@
-
 <form nz-form [formGroup]="pessoaForm" (ngSubmit)="submitForm()">
   <!-- Nome Pessoa -->
   <nz-form-item class="compact-form-item">
-    <nz-form-label [nzSm]="6" [nzXs]="24" [nzRequired]="true" nzFor="nome_pessoa">Nome</nz-form-label>
-    <nz-form-control [nzSm]="14" [nzXs]="24" nzErrorTip="Por favor, insira o nome">
-      <input nz-input formControlName="nome_pessoa" id="nome_pessoa" placeholder="Nome" class="custom-input-width" />
+    <nz-form-label
+      [nzSm]="6"
+      [nzXs]="24"
+      [nzRequired]="true"
+      nzFor="nome_pessoa"
+      >Nome</nz-form-label
+    >
+    <nz-form-control
+      [nzSm]="14"
+      [nzXs]="24"
+      nzErrorTip="Por favor, insira o nome"
+    >
+      <input
+        nz-input
+        formControlName="nome_pessoa"
+        id="nome_pessoa"
+        placeholder="Nome"
+        class="custom-input-width"
+      />
     </nz-form-control>
   </nz-form-item>
 
   <!-- CPF Pessoa -->
   <nz-form-item class="compact-form-item">
-    <nz-form-label [nzSm]="6" [nzXs]="24" [nzRequired]="true" nzFor="cpf_pessoa">CPF</nz-form-label>
+    <nz-form-label [nzSm]="6" [nzXs]="24" [nzRequired]="true" nzFor="cpf_pessoa"
+      >CPF</nz-form-label
+    >
     <nz-form-control [nzSm]="14" [nzXs]="24" nzErrorTip="CPF inválido">
-      <input nz-input formControlName="cpf_pessoa" id="cpf_pessoa" placeholder="CPF" />
+      <input
+        nz-input
+        formControlName="cpf_pessoa"
+        id="cpf_pessoa"
+        placeholder="CPF"
+      />
     </nz-form-control>
   </nz-form-item>
 
   <!-- Data de Nascimento Pessoa -->
   <nz-form-item class="compact-form-item">
-    <nz-form-label [nzSm]="6" [nzXs]="24" [nzRequired]="true" nzFor="data_nascimento_pessoa">Data de Nascimento</nz-form-label>
-    <nz-form-control [nzSm]="14" [nzXs]="24" nzErrorTip="A data de nascimento não pode ser posterior à data atual">
-      <nz-date-picker formControlName="data_nascimento_pessoa" id="data_nascimento_pessoa"></nz-date-picker>
+    <nz-form-label
+      [nzSm]="6"
+      [nzXs]="24"
+      [nzRequired]="true"
+      nzFor="data_nascimento_pessoa"
+      >Data de Nascimento</nz-form-label
+    >
+    <nz-form-control
+      [nzSm]="14"
+      [nzXs]="24"
+      nzErrorTip="A data de nascimento não pode ser posterior à data atual"
+    >
+      <nz-date-picker
+        formControlName="data_nascimento_pessoa"
+        id="data_nascimento_pessoa"
+      ></nz-date-picker>
     </nz-form-control>
   </nz-form-item>
 
   <!-- Telefone Pessoa -->
   <nz-form-item class="compact-form-item">
-    <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="telefone_pessoa" nzRequired>Telefone</nz-form-label>
-    <nz-form-control [nzSm]="14" [nzXs]="24" [nzValidateStatus]="pessoaForm.controls['telefone_pessoa']" nzErrorTip="Por favor, insira um telefone válido!">
+    <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="telefone_pessoa" nzRequired
+      >Telefone</nz-form-label
+    >
+    <nz-form-control
+      [nzSm]="14"
+      [nzXs]="24"
+      [nzValidateStatus]="pessoaForm.controls['telefone_pessoa']"
+      nzErrorTip="Por favor, insira um telefone válido!"
+    >
       <nz-input-group [nzAddOnBefore]="addOnBeforeTemplate">
         <ng-template #addOnBeforeTemplate>
           <nz-select formControlName="phoneNumberPrefix" class="phone-select">
             <nz-option nzLabel="+55" nzValue="+55"></nz-option>
           </nz-select>
         </ng-template>
-        <input formControlName="telefone_pessoa" id="telefone_pessoa" nz-input placeholder="Telefone" />
+        <input
+          formControlName="telefone_pessoa"
+          id="telefone_pessoa"
+          nz-input
+          placeholder="Telefone"
+        />
       </nz-input-group>
     </nz-form-control>
   </nz-form-item>
 
   <!-- CEP Pessoa -->
   <nz-form-item class="compact-form-item">
-    <nz-form-label [nzSm]="6" [nzXs]="24" [nzRequired]="true" nzFor="cep_pessoa">CEP</nz-form-label>
-    <nz-form-control [nzSm]="14" [nzXs]="24" nzErrorTip="Por favor, insira o CEP">
-      <input nz-input formControlName="cep_pessoa" id="cep_pessoa" placeholder="CEP" (blur)="buscarCEP()" />
+    <nz-form-label [nzSm]="6" [nzXs]="24" [nzRequired]="true" nzFor="cep_pessoa"
+      >CEP</nz-form-label
+    >
+    <nz-form-control
+      [nzSm]="14"
+      [nzXs]="24"
+      nzErrorTip="Por favor, insira o CEP"
+    >
+      <input
+        nz-input
+        formControlName="cep_pessoa"
+        id="cep_pessoa"
+        placeholder="CEP"
+        (blur)="buscarCEP()"
+      />
     </nz-form-control>
   </nz-form-item>
 
@@ -51,47 +110,92 @@
   <nz-form-item class="compact-form-item">
     <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="rua_pessoa">Rua</nz-form-label>
     <nz-form-control [nzSm]="14" [nzXs]="24">
-      <input nz-input formControlName="rua_pessoa" id="rua_pessoa" placeholder="Rua" class="custom-input-width" />
+      <input
+        nz-input
+        formControlName="rua_pessoa"
+        id="rua_pessoa"
+        placeholder="Rua"
+        class="custom-input-width"
+      />
     </nz-form-control>
   </nz-form-item>
 
   <!-- Complemento Pessoa -->
   <nz-form-item class="compact-form-item">
-    <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="complemento_pessoa">Complemento</nz-form-label>
+    <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="complemento_pessoa"
+      >Complemento</nz-form-label
+    >
     <nz-form-control [nzSm]="14" [nzXs]="24">
-      <input nz-input formControlName="complemento_pessoa" id="complemento_pessoa" placeholder="Complemento" class="custom-input-width" />
+      <input
+        nz-input
+        formControlName="complemento_pessoa"
+        id="complemento_pessoa"
+        placeholder="Complemento"
+        class="custom-input-width"
+      />
     </nz-form-control>
   </nz-form-item>
 
   <!-- Número Pessoa -->
   <nz-form-item class="compact-form-item">
-    <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="numero_pessoa">Número</nz-form-label>
+    <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="numero_pessoa"
+      >Número</nz-form-label
+    >
     <nz-form-control [nzSm]="14" [nzXs]="24">
-      <input nz-input formControlName="numero_pessoa" id="numero_pessoa" placeholder="Número" class="custom-input-width" />
+      <input
+        nz-input
+        formControlName="numero_pessoa"
+        id="numero_pessoa"
+        placeholder="Número"
+        class="custom-input-width"
+      />
     </nz-form-control>
   </nz-form-item>
 
   <!-- Bairro Pessoa -->
   <nz-form-item class="compact-form-item">
-    <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="bairro_pessoa">Bairro</nz-form-label>
+    <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="bairro_pessoa"
+      >Bairro</nz-form-label
+    >
     <nz-form-control [nzSm]="14" [nzXs]="24">
-      <input nz-input formControlName="bairro_pessoa" id="bairro_pessoa" placeholder="Bairro" />
+      <input
+        nz-input
+        formControlName="bairro_pessoa"
+        id="bairro_pessoa"
+        placeholder="Bairro"
+      />
     </nz-form-control>
   </nz-form-item>
 
   <!-- Cidade Pessoa -->
   <nz-form-item class="compact-form-item">
-    <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="cidade_pessoa">Cidade</nz-form-label>
+    <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="cidade_pessoa"
+      >Cidade</nz-form-label
+    >
     <nz-form-control [nzSm]="14" [nzXs]="24">
-      <input nz-input formControlName="cidade_pessoa" id="cidade_pessoa" placeholder="Cidade" class="custom-input-width" />
+      <input
+        nz-input
+        formControlName="cidade_pessoa"
+        id="cidade_pessoa"
+        placeholder="Cidade"
+        class="custom-input-width"
+      />
     </nz-form-control>
   </nz-form-item>
 
   <!-- Estado Pessoa -->
   <nz-form-item class="compact-form-item">
-    <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="estado_pessoa">Estado</nz-form-label>
+    <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="estado_pessoa"
+      >Estado</nz-form-label
+    >
     <nz-form-control [nzSm]="14" [nzXs]="24">
-      <input nz-input formControlName="estado_pessoa" id="estado_pessoa" placeholder="Estado" class="custom-input-width" />
+      <input
+        nz-input
+        formControlName="estado_pessoa"
+        id="estado_pessoa"
+        placeholder="Estado"
+        class="custom-input-width"
+      />
     </nz-form-control>
   </nz-form-item>
 
@@ -99,15 +203,27 @@
   <nz-form-item class="compact-form-item">
     <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="uf_pessoa">UF</nz-form-label>
     <nz-form-control [nzSm]="14" [nzXs]="24">
-      <input nz-input formControlName="uf_pessoa" id="uf_pessoa" placeholder="UF" class="custom-input-width" />
+      <input
+        nz-input
+        formControlName="uf_pessoa"
+        id="uf_pessoa"
+        placeholder="UF"
+        class="custom-input-width"
+      />
     </nz-form-control>
   </nz-form-item>
 
   <!-- Gênero Pessoa -->
   <nz-form-item class="compact-form-item">
-    <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="genero_pessoa">Gênero</nz-form-label>
+    <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="genero_pessoa"
+      >Gênero</nz-form-label
+    >
     <nz-form-control [nzSm]="14" [nzXs]="24">
-      <nz-select formControlName="genero_pessoa" id="genero_pessoa" placeholder="Selecione o gênero">
+      <nz-select
+        formControlName="genero_pessoa"
+        id="genero_pessoa"
+        placeholder="Selecione o gênero"
+      >
         <nz-option nzValue="Masculino" nzLabel="Masculino"></nz-option>
         <nz-option nzValue="Feminino" nzLabel="Feminino"></nz-option>
         <nz-option nzValue="Outro" nzLabel="Outro"></nz-option>
@@ -117,9 +233,21 @@
 
   <!-- Botão de Submit -->
   <nz-form-item class="compact-form-item">
-    <nz-form-control [nzSm]="14" [nzXs]="24" [nzOffset]="6">
-      <button nz-button [nzType]="'primary'" [disabled]="!pessoaForm.valid">Cadastrar</button>
-      <button nz-button nzType="default" (click)="cancelar()" style="margin-left: 8px">Cancelar</button>
-    </nz-form-control>
-  </nz-form-item>
+  <nz-form-control [nzSm]="14" [nzXs]="24" [nzOffset]="6">
+    <ng-container *ngIf="modo !== 'abrir'">
+      <button nz-button [nzType]="'primary'" [disabled]="!pessoaForm.valid">
+        {{ modo === "editar" ? "Salvar" : "Cadastrar" }}
+      </button>
+      <button
+        nz-button
+        nzType="default"
+        (click)="cancelar()"
+        style="margin-left: 8px"
+      >
+        Cancelar
+      </button>
+    </ng-container>
+  </nz-form-control>
+</nz-form-item>
+
 </form>

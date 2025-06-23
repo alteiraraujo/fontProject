@@ -1,4 +1,5 @@
 <form nz-form [formGroup]="animalForm" (ngSubmit)="onSubmit()">
+
   <!-- Campo Nome do Animal -->
   <nz-form-item>
     <nz-form-label [nzSm]="6" [nzXs]="24" [nzRequired]="true" nzFor="nome_animal">
@@ -14,6 +15,7 @@
       />
     </nz-form-control>
   </nz-form-item>
+
   <ng-template #nomeAnimalError>
     <span *ngIf="animalForm.get('nome_animal')?.hasError('required')">
       O nome do animal é obrigatório.
@@ -26,37 +28,25 @@
     </span>
   </ng-template>
 
-<!-- Campo Data de Nascimento do Animal -->
-<nz-form-item>
-  <nz-form-label [nzSm]="6" [nzXs]="24" [nzRequired]="true" nzFor="idade_animal">
-    Data de Nascimento
-  </nz-form-label>
-  <nz-form-control [nzErrorTip]="dataNascimentoError">
-    <nz-date-picker
-      formControlName="idade_animal"
-      id="idade_animal"
-      nzFormat="dd/MM/yyyy"
-      nzPlaceHolder="Selecione a data de nascimento"
-      [disabled]="modo === 'abrir'"
-    ></nz-date-picker>
-  </nz-form-control>
-</nz-form-item>
+  <!-- Campo Data de Nascimento do Animal -->
+  <nz-form-item>
+    <nz-form-label [nzSm]="6" [nzXs]="24" [nzRequired]="true" nzFor="data_nascimento">
+      Data de Nascimento
+    </nz-form-label>
+    <nz-form-control [nzErrorTip]="dataNascimentoError">
+      <nz-date-picker
+        formControlName="data_nascimento"
+        id="data_nascimento"
+        nzFormat="dd/MM/yyyy"
+        nzPlaceHolder="Selecione a data de nascimento"
+        [disabled]="modo === 'abrir'"
+      ></nz-date-picker>
+    </nz-form-control>
+  </nz-form-item>
 
-<ng-template #dataNascimentoError>
-  <span *ngIf="animalForm.get('idade_animal')?.hasError('required')">
-    A data de nascimento é obrigatória.
-  </span>
-</ng-template>
-
-  <ng-template #idadeAnimalError>
-    <span *ngIf="animalForm.get('idade_animal')?.hasError('required')">
-      A idade do animal é obrigatória.
-    </span>
-    <span *ngIf="animalForm.get('idade_animal')?.hasError('min')">
-      A idade do animal deve ser no mínimo 0.
-    </span>
-    <span *ngIf="animalForm.get('idade_animal')?.hasError('max')">
-      A idade do animal deve ser no máximo 40.
+  <ng-template #dataNascimentoError>
+    <span *ngIf="animalForm.get('data_nascimento')?.hasError('required')">
+      A data de nascimento é obrigatória.
     </span>
   </ng-template>
 
@@ -120,27 +110,18 @@
     </nz-form-control>
   </nz-form-item>
 
-  <!-- Botões de Ação -->
   <nz-form-item>
-    <nz-form-control [nzSm]="14" [nzXs]="24" [nzOffset]="6">
-      <button
-        *ngIf="modo !== 'abrir'"
-        nz-button
-        nzType="primary"
-        [disabled]="animalForm.invalid"
-        (click)="onSubmit()"
-      >
+  <nz-form-control [nzSm]="14" [nzXs]="24" [nzOffset]="6">
+    <!-- Cadastro e edição -->
+    <ng-container *ngIf="modo !== 'abrir'">
+      <button nz-button nzType="primary" [disabled]="animalForm.invalid" (click)="onSubmit()">
         Salvar
       </button>
-      <button
-        *ngIf="modo !== 'abrir'"
-        nz-button
-        nzType="default"
-        (click)="cancel()"
-      >
+      <button nz-button nzType="default" (click)="cancel()">
         Cancelar
       </button>
-      
-    </nz-form-control>
-  </nz-form-item>
+    </ng-container>
+  </nz-form-control>
+</nz-form-item>
+
 </form>

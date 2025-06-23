@@ -1,111 +1,128 @@
 <h3 nz-typography>Raças</h3>
-<div nz-row>
-  <div nz-col nzSpan="12"></div>
-  <div nz-col nzSpan="12">
-    <div style="display: flex; align-items: center; gap: 8px">
-      <!-- Campo de Busca -->
-      <nz-input-group nzSearch [nzAddOnAfter]="suffixIconButton">
-        <input
-          type="text"
-          nz-input
-          placeholder="Buscar Raças"
-          [(ngModel)]="searchValue"
-          (ngModelChange)="onSearchChange()"
-        />
-      </nz-input-group>
-      <ng-template #suffixIconButton>
-        <button nz-button nzType="primary" nzSearch>
-          <span nz-icon nzType="search"></span>
+<nz-spin [nzSpinning]="carregando" nzTip="Carregando...">
+  <div nz-row>
+    <div nz-col nzSpan="12"></div>
+    <div nz-col nzSpan="12">
+      <div style="display: flex; align-items: center; gap: 8px">
+        <!-- Campo de Busca -->
+        <nz-input-group nzSearch [nzAddOnAfter]="suffixIconButton">
+          <input
+            type="text"
+            nz-input
+            placeholder="Buscar Raças"
+            [(ngModel)]="searchValue"
+            (ngModelChange)="onSearchChange()"
+          />
+        </nz-input-group>
+        <ng-template #suffixIconButton>
+          <button nz-button nzType="primary" nzSearch>
+            <span nz-icon nzType="search"></span>
+          </button>
+        </ng-template>
+
+        <!-- Filtro por Espécie -->
+        <nz-select
+          [(ngModel)]="especieFilter"
+          (ngModelChange)="onEspecieChange($event)"
+          placeholder="Espécie"
+          style="width: 120px"
+        >
+          <nz-option nzValue="" nzLabel="Todas"></nz-option>
+          <nz-option nzValue="Cão" nzLabel="Cão"></nz-option>
+          <nz-option nzValue="Gato" nzLabel="Gato"></nz-option>
+          <nz-option nzValue="Roedor" nzLabel="Roedor"></nz-option>
+          <nz-option nzValue="Passaro" nzLabel="Pássaro"></nz-option>
+        </nz-select>
+
+        <!-- Filtro por Status -->
+        <nz-select
+          [(ngModel)]="statusFilter"
+          (ngModelChange)="onStatusChange($event)"
+          placeholder="Status"
+          style="width: 120px"
+        >
+          <nz-option nzValue="" nzLabel="Todos"></nz-option>
+          <nz-option nzValue="Ativo" nzLabel="Ativo"></nz-option>
+          <nz-option nzValue="Inativo" nzLabel="Inativo"></nz-option>
+        </nz-select>
+
+        <!-- Botão de Novo Cadastro -->
+        <button
+          nz-button
+          nzType="primary"
+          nzShape="circle"
+          (click)="abrirModal('cadastrar')"
+        >
+          +
         </button>
-      </ng-template>
-
-      <!-- Filtro por Espécie -->
-      <nz-select
-        [(ngModel)]="especieFilter"
-        (ngModelChange)="onEspecieChange($event)"
-        placeholder="Espécie"
-        style="width: 120px"
-      >
-        <nz-option nzValue="" nzLabel="Todas"></nz-option>
-        <nz-option nzValue="Cão" nzLabel="Cão"></nz-option>
-        <nz-option nzValue="Gato" nzLabel="Gato"></nz-option>
-        <nz-option nzValue="Roedor" nzLabel="Roedor"></nz-option>
-        <nz-option nzValue="Passaro" nzLabel="Pássaro"></nz-option>
-      </nz-select>
-
-      <!-- Filtro por Status -->
-      <nz-select
-        [(ngModel)]="statusFilter"
-        (ngModelChange)="onStatusChange($event)"
-        placeholder="Status"
-        style="width: 120px"
-      >
-        <nz-option nzValue="" nzLabel="Todos"></nz-option>
-        <nz-option nzValue="Ativo" nzLabel="Ativo"></nz-option>
-        <nz-option nzValue="Inativo" nzLabel="Inativo"></nz-option>
-      </nz-select>
-
-      <!-- Botão de Novo Cadastro -->
-      <button
-        nz-button
-        nzType="primary"
-        nzShape="circle"
-        (click)="abrirModal()"
-      >
-        +
-      </button>
+      </div>
     </div>
   </div>
-</div>
-<br />
+  <br />
 
-<!-- Tabela de Raças -->
-<nz-table
-  #basicTable
-  [nzData]="racasFiltradas$ | async"
-  [nzFrontPagination]="false"
-  [nzPageIndex]="pageIndex"
-  [nzPageSize]="pageSize"
-  [nzTotal]="(racas$ | async)?.length"
-  (nzPageIndexChange)="onPageIndexChange($event)"
->
-  <thead>
-    <tr>
-      <th>Nome</th>
-      <th>Espécie</th>
-      <th>Status</th>
-      <th>Ações</th>
-      <th>Ativo</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr *ngFor="let raca of racasFiltradas$ | async">
-      <td>{{ raca.nome_raca }}</td>
-      <td>{{ raca.especie_raca }}</td>
-      <td>
-        <span
-          nz-typography
-          [ngClass]="{
-            'status-ativo': raca.status_raca === 'Ativo',
-            'status-inativo': raca.status_raca === 'Inativo'
-          }"
-        >
-          {{ raca.status_raca }}
-        </span>
-      </td>
-      <td>
-        <button nz-button [nzSize]="'small'" nzType="default">Abrir</button>
-        <nz-divider nzType="vertical"></nz-divider>
-        <button nz-button [nzSize]="'small'" nzType="primary">Editar</button>
-        <nz-divider nzType="vertical"></nz-divider>
+  <!-- Tabela de Raças -->
+  <nz-table
+    #basicTable
+    [nzData]="racasFiltradas$ | async"
+    [nzFrontPagination]="false"
+    [nzPageIndex]="pageIndex"
+    [nzPageSize]="pageSize"
+    [nzTotal]="(racas$ | async)?.length"
+    (nzPageIndexChange)="onPageIndexChange($event)"
+  >
+    <thead>
+      <tr>
+        <th>Nome</th>
+        <th>Espécie</th>
+        <th>Status</th>
+        <th>Ações</th>
+        <th>Ativo</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let raca of racasFiltradas$ | async">
+        <td>{{ raca.nome_raca }}</td>
+        <td>{{ raca.especie_raca }}</td>
+        <td>
+          <span
+            nz-typography
+            [ngClass]="{
+              'status-ativo': raca.status_raca === 'Ativo',
+              'status-inativo': raca.status_raca === 'Inativo'
+            }"
+          >
+            {{ raca.status_raca }}
+          </span>
         </td>
         <td>
-        <nz-switch
-          nzSize="small"
-          [(ngModel)]="raca.status_raca"
-          (ngModelChange)="toggleStatus(raca)"
-        ></nz-switch>
-      </td>
-    </tr>
-  </tbody>
-</nz-table>
+          <button
+            nz-button
+            [nzSize]="'small'"
+            nzType="default"
+            (click)="abrirModal('abrir', raca)"
+          >
+            Abrir
+          </button>
+          <nz-divider nzType="vertical"></nz-divider>
+          <button
+            nz-button
+            [nzSize]="'small'"
+            nzType="primary"
+            (click)="abrirModal('editar', raca)"
+          >
+            Editar
+          </button>
+
+          <nz-divider nzType="vertical"></nz-divider>
+        </td>
+        <td>
+          <nz-switch
+            nzSize="small"
+            [ngModel]="raca.status_raca === 'Ativo'"
+            (ngModelChange)="toggleStatus(raca, $event)"
+          ></nz-switch>
+        </td>
+      </tr>
+    </tbody>
+  </nz-table>
+</nz-spin>

@@ -1,0 +1,149 @@
+<div *ngIf="carregando" style="text-align: center; padding: 30px">
+  <nz-spin nzSimple [nzSpinning]="carregando"></nz-spin>
+  <p>Carregando dados...</p>
+</div>
+
+<ng-container *ngIf="!carregando">
+  <form nz-form [formGroup]="form" (ngSubmit)="submitForm()">
+
+    <!-- Animal -->
+    <nz-form-item>
+      <nz-form-label [nzSpan]="6" nzRequired nzFor="id_animal">Animal</nz-form-label>
+      <nz-form-control [nzSpan]="12">
+        <nz-select
+          formControlName="id_animal"
+          nzPlaceHolder="Selecione o animal"
+          [disabled]="modo === 'abrir'"
+        >
+          <nz-option
+            *ngFor="let animal of animais$ | async"
+            [nzValue]="animal.id_animal"
+            [nzLabel]="animal.nome_animal"
+          ></nz-option>
+        </nz-select>
+      </nz-form-control>
+    </nz-form-item>
+
+    <!-- Observações -->
+    <nz-form-item>
+      <nz-form-label [nzSpan]="6" nzFor="obs_servico">Observações</nz-form-label>
+      <nz-form-control [nzSpan]="12">
+        <input
+          nz-input
+          formControlName="obs_servico"
+          id="obs_servico"
+          nzPlaceHolder="Observações"
+          [disabled]="modo === 'abrir'"
+        />
+      </nz-form-control>
+    </nz-form-item>
+
+    <!-- Data do Serviço (desabilitado) -->
+    <nz-form-item>
+      <nz-form-label [nzSpan]="6" nzFor="data_servico">Data do Serviço</nz-form-label>
+      <nz-form-control [nzSpan]="12">
+        <nz-date-picker
+          formControlName="data_servico"
+          id="data_servico"
+          nzFormat="dd/MM/yyyy"
+          nzPlaceHolder="Data do serviço"
+          [disabled]="true"
+        ></nz-date-picker>
+      </nz-form-control>
+    </nz-form-item>
+
+    <!-- Itens do Serviço -->
+    <nz-form-item>
+      <nz-form-label [nzSpan]="6">Itens do Serviço</nz-form-label>
+      <nz-form-control [nzSpan]="18">
+        <div
+          *ngFor="let item of itens.controls; let i = index"
+          [formGroupName]="i"
+          style="display: flex; gap: 8px; align-items: center; margin-bottom: 8px;"
+        >
+          <input
+            nz-input
+            formControlName="produtoSearch"
+            [nzAutocomplete]="autoProdutos"
+            (input)="onProdutoSearch(i, item.get('produtoSearch')?.value)"
+            (blur)="onProdutoBlur(i)"
+            [disabled]="modo === 'abrir'"
+            placeholder="Digite para buscar produto"
+            style="width: 180px"
+            autocomplete="off"
+          />
+          <nz-autocomplete #autoProdutos>
+            <nz-auto-option
+              *ngFor="let produto of filteredProdutos[i]"
+              [nzValue]="produto.desc_produto"
+              (click)="onProdutoSelect(i, produto.id_produto)"
+            >
+              {{ produto.desc_produto }} - {{ produto.cod_produto }}
+            </nz-auto-option>
+          </nz-autocomplete>
+
+          <input
+            nz-input
+            formControlName="qtd"
+            type="number"
+            min="1"
+            style="width: 70px"
+            placeholder="Qtd"
+            [disabled]="modo === 'abrir'"
+            (input)="atualizarValorTotal()"
+          />
+
+          <input
+            nz-input
+            formControlName="valor"
+            type="number"
+            style="width: 100px"
+            placeholder="Valor"
+            [disabled]="true"
+          />
+          <button
+            *ngIf="modo !== 'abrir'"
+            nz-button
+            nzType="default"
+            nzShape="circle"
+            (click)="removerItem(i)"
+            type="button"
+          >
+            <span nz-icon nzType="delete"></span>
+          </button>
+        </div>
+        <button
+          *ngIf="modo !== 'abrir'"
+          nz-button
+          nzType="dashed"
+          type="button"
+          (click)="adicionarItem()"
+        >
+          <span nz-icon nzType="plus"></span> Adicionar Item
+        </button>
+      </nz-form-control>
+    </nz-form-item>
+
+    <!-- Valor Total -->
+    <nz-form-item>
+      <nz-form-label [nzSpan]="6">Valor Total</nz-form-label>
+      <nz-form-control [nzSpan]="12">
+        <input nz-input [value]="calcularTotal() | number : '1.2-2'" disabled />
+      </nz-form-control>
+    </nz-form-item>
+
+    <!-- Botões -->
+    <nz-form-item>
+      <nz-form-control [nzSpan]="14" [nzOffset]="6">
+        <ng-container *ngIf="modo !== 'abrir'">
+          <button nz-button nzType="primary" [disabled]="form.invalid">
+            {{ modo === "editar" ? "Salvar" : "Cadastrar" }}
+          </button>
+          <button nz-button nzType="default" (click)="cancelar()">
+            Cancelar
+          </button>
+        </ng-container>
+      </nz-form-control>
+    </nz-form-item>
+  </form>
+</ng-container>

@@ -18,6 +18,7 @@ import { NzDividerModule } from 'ng-zorro-antd/divider';
 import { NzSwitchModule } from 'ng-zorro-antd/switch';
 import { RacaComponent } from './raca.component';
 import { NzModalModule } from 'ng-zorro-antd/modal';
+import { NzSpinModule } from 'ng-zorro-antd/spin';
 
 
 @NgModule({
@@ -40,7 +41,8 @@ import { NzModalModule } from 'ng-zorro-antd/modal';
     NzTableModule,
     NzDividerModule,
     NzSwitchModule,
-    NzModalModule
+    NzModalModule,
+    NzSpinModule
     
   ]
 })

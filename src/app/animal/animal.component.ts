@@ -21,18 +21,32 @@ export class AnimalComponent implements OnInit {
   pageSize = 8;
   searchValue: string = '';
   statusFilter: string = 'Ativo';
+  carregando = false;
 
-  constructor(private service: AnimalService, private modal: NzModalService,  private message: NzMessageService,) {}
+  constructor(
+    private service: AnimalService,
+    private modal: NzModalService,
+    private message: NzMessageService
+  ) {}
 
   ngOnInit() {
     this.carregarAnimais();
   }
 
   carregarAnimais(): void {
-    this.service.list().subscribe((animais) => {
-      this.animaisSubject.next(animais);
-      this.AtualizarAnimaisFiltrados();
+    this.carregando = true; // Ativa o spin
+
+    this.service.list().subscribe({
+      next: (animais) => {
+        this.animaisSubject.next(animais);
+        this.AtualizarAnimaisFiltrados();
+        this.carregando = false; // Desativa só depois de carregar!
+      },
+      error: () => {
+        this.carregando = false; // Desativa mesmo se der erro!
+      },
     });
+
     this.animais$ = this.animaisSubject.asObservable();
   }
 
@@ -74,10 +88,12 @@ export class AnimalComponent implements OnInit {
 
   toggleStatus(animal: Animal): void {
     const novoStatus = animal.status_animal === 'Ativo' ? 'Inativo' : 'Ativo';
-  
+
     this.modal.confirm({
       nzTitle: 'Confirmação',
-      nzContent: `Deseja realmente ${novoStatus === 'Ativo' ? 'ativar' : 'desativar'} este animal?`,
+      nzContent: `Deseja realmente ${
+        novoStatus === 'Ativo' ? 'ativar' : 'desativar'
+      } este animal?`,
       nzOkText: 'Sim',
       nzOkType: 'primary',
       nzOnOk: () =>
@@ -99,8 +115,6 @@ export class AnimalComponent implements OnInit {
       },
     });
   }
-  
-  
 
   fecharModal(): void {
     this.modal.closeAll(); // Fecha o modal
@@ -119,8 +133,11 @@ export class AnimalComponent implements OnInit {
       this.abrirFormularioModal(modo, animal);
     }
   }
-  
-  private abrirFormularioModal(modo: 'cadastrar' | 'editar' | 'abrir', animal?: Animal): void {
+
+  private abrirFormularioModal(
+    modo: 'cadastrar' | 'editar' | 'abrir',
+    animal?: Animal
+  ): void {
     const modalRef = this.modal.create({
       nzTitle:
         modo === 'cadastrar'
@@ -133,10 +150,13 @@ export class AnimalComponent implements OnInit {
         animal: animal ? { ...animal } : undefined, // Garante que os dados do animal sejam passados
         modo: modo,
       },
-      nzFooter: modo === 'abrir' ? [{ label: 'Ok', onClick: () => modalRef.close() }] : null,
+      nzFooter:
+        modo === 'abrir'
+          ? [{ label: 'Ok', onClick: () => modalRef.close() }]
+          : null,
       nzWidth: '600px',
     });
-  
+
     modalRef.afterClose.subscribe((resultado?: Animal) => {
       if (resultado) {
         if (modo === 'editar') {
@@ -155,8 +175,7 @@ export class AnimalComponent implements OnInit {
       }
     });
   }
-  
-  
+
   onNovoAnimal(novoAnimal: Animal): void {
     novoAnimal.status_animal = 'Ativo';
     this.service.create(novoAnimal).subscribe({
@@ -169,6 +188,5 @@ export class AnimalComponent implements OnInit {
         alert('Erro ao cadastrar o animal.');
       },
     });
-  }  
-  
+  }
 }

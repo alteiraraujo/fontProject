@@ -1,4 +1,12 @@
-import { Component, Output, EventEmitter, Input, OnInit } from '@angular/core';
+import {
+  Component,
+  Input,
+  Output,
+  EventEmitter,
+  OnInit,
+  OnChanges,
+  SimpleChanges,
+} from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
@@ -9,18 +17,19 @@ import { PessoaService } from '../pessoa.service';
 import { Router } from '@angular/router';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { Pessoa } from '../pessoa';
+import { NzModalRef } from 'ng-zorro-antd/modal';
 
 @Component({
   selector: 'app-pessoa-form',
   templateUrl: './pessoa-form.component.html',
   styleUrls: ['./pessoa-form.component.css'],
 })
-export class PessoaFormComponent implements OnInit {
+export class PessoaFormComponent implements OnInit, OnChanges {
   @Output() pessoaCadastrada = new EventEmitter<any>();
   @Output() cancelado = new EventEmitter<void>();
 
-  @Input() pessoa?: any; // Pessoa recebida para edição ou visualização
-  @Input() modo!: 'cadastrar' | 'editar' | 'abrir'; // Modo atual do formulário
+  @Input() pessoa?: Pessoa;
+  @Input() modo!: 'cadastrar' | 'editar' | 'abrir';
 
   pessoaForm: FormGroup;
 
@@ -28,10 +37,34 @@ export class PessoaFormComponent implements OnInit {
     private fb: FormBuilder,
     private pessoaService: PessoaService,
     private router: Router,
-    private message: NzMessageService // Injetar o serviço de mensagens
+    private message: NzMessageService,
+    private modalRef: NzModalRef
   ) {}
 
   ngOnInit(): void {
+    this.criarFormulario();
+
+    if (this.pessoa) {
+      this.preencherFormulario(this.pessoa);
+    }
+    if (this.modo === 'abrir') {
+      this.pessoaForm.disable();
+    }
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['pessoa'] && changes['pessoa'].currentValue) {
+      this.preencherFormulario(changes['pessoa'].currentValue);
+    }
+    if (changes['modo'] && changes['modo'].currentValue === 'abrir') {
+      this.pessoaForm?.disable();
+    }
+    if (changes['modo'] && changes['modo'].currentValue !== 'abrir') {
+      this.pessoaForm?.enable();
+    }
+  }
+
+  criarFormulario() {
     this.pessoaForm = this.fb.group({
       nome_pessoa: ['', [Validators.required]],
       cpf_pessoa: ['', [Validators.required, this.validarCPF]],
@@ -46,14 +79,34 @@ export class PessoaFormComponent implements OnInit {
       phoneNumberPrefix: ['+55'],
       complemento_pessoa: [''],
       cep_pessoa: ['', [Validators.required]],
-      cidade_pessoa: [{ value: '', disabled: true }],
-      estado_pessoa: [{ value: '', disabled: true }],
-      uf_pessoa: [{ value: '', disabled: true }],
-      rua_pessoa: [{ value: '', disabled: true }],
-      bairro_pessoa: [{ value: '', disabled: true }],
+      cidade_pessoa: [''],
+      estado_pessoa: [''],
+      uf_pessoa: [''],
+      rua_pessoa: [''],
+      bairro_pessoa: [''],
       numero_pessoa: ['', Validators.required],
       genero_pessoa: [''],
     });
+  }
+
+  preencherFormulario(pessoa: Pessoa) {
+    if (this.pessoaForm) {
+      this.pessoaForm.patchValue({
+        nome_pessoa: pessoa.nome_pessoa || '',
+        cpf_pessoa: pessoa.cpf_pessoa || '',
+        data_nascimento_pessoa: pessoa.data_nascimento_pessoa || '',
+        telefone_pessoa: pessoa.telefone_pessoa || '',
+        phoneNumberPrefix: '+55',
+        cep_pessoa: pessoa.cep_pessoa || '',
+        cidade_pessoa: pessoa.cidade_pessoa || '',
+        estado_pessoa: pessoa.estado_pessoa || '',
+        uf_pessoa: pessoa.uf_pessoa || '',
+        rua_pessoa: pessoa.rua_pessoa || '',
+        bairro_pessoa: pessoa.bairro_pessoa || '',
+        numero_pessoa: pessoa.numero_pessoa || '',
+        genero_pessoa: pessoa.genero_pessoa || '',
+      });
+    }
   }
 
   submitForm(): void {
@@ -63,22 +116,35 @@ export class PessoaFormComponent implements OnInit {
         status_pessoa: 'Ativo',
       };
 
-      this.pessoaService.cadastrarPessoa(pessoaData).subscribe({
-        next: (response) => {
-          console.log('Pessoa cadastrada com sucesso:', response);
-          this.message.success('Pessoa cadastrada com sucesso!'); // Mensagem de sucesso
-          this.pessoaCadastrada.emit(response);
-          this.router.navigate(['pessoas']);
-        },
-        error: (error) => {
-          console.error('Erro ao cadastrar pessoa:', error);
-          this.message.error('Erro ao cadastrar pessoa. Tente novamente.'); // Mensagem de erro
-        },
-      });
+      // Aqui diferenciamos Cadastro e Edição!
+      if (this.modo === 'editar' && this.pessoa && this.pessoa.id_pessoa) {
+        this.pessoaService.update(this.pessoa.id_pessoa, pessoaData).subscribe({
+          next: (response) => {
+            this.message.success('Pessoa atualizada com sucesso!');
+            this.modalRef.close(response);
+          },
+          error: () => {
+            this.message.error('Erro ao atualizar pessoa. Tente novamente.');
+          },
+        });
+      } else if (this.modo === 'cadastrar') {
+        this.pessoaService.cadastrarPessoa(pessoaData).subscribe({
+          next: (response) => {
+            this.message.success('Pessoa cadastrada com sucesso!');
+            this.modalRef.close(response);
+          },
+          error: () => {
+            this.message.error('Erro ao cadastrar pessoa. Tente novamente.');
+          },
+        });
+      }
     } else {
       this.validarFormulario();
-      this.message.error('Por favor, preencha todos os campos obrigatórios.'); // Mensagem de erro para formulário inválido
+      this.message.error('Por favor, preencha todos os campos obrigatórios.');
     }
+  }
+  cancelar(): void {
+    this.modalRef.close(); // cancela e fecha o modal
   }
 
   buscarCEP(): void {
@@ -96,7 +162,7 @@ export class PessoaFormComponent implements OnInit {
         } else {
           this.message.warning(
             'CEP não encontrado. Verifique o valor e tente novamente.'
-          ); // Mensagem de aviso
+          );
         }
       });
     }
@@ -117,10 +183,6 @@ export class PessoaFormComponent implements OnInit {
       return { dataInvalida: true };
     }
     return null;
-  }
-
-  cancelar(): void {
-    this.cancelado.emit();
   }
 
   private validarFormulario(): void {

@@ -17,6 +17,7 @@ import { FormsModule } from '@angular/forms';
 import { NzTableModule } from 'ng-zorro-antd/table';
 import { NzDividerModule } from 'ng-zorro-antd/divider';
 import { NzSwitchModule } from 'ng-zorro-antd/switch';
+import { NzSpinModule } from 'ng-zorro-antd/spin';
 
 
 @NgModule({
@@ -39,7 +40,8 @@ import { NzSwitchModule } from 'ng-zorro-antd/switch';
     FormsModule,
     NzTableModule,
     NzDividerModule,
-    NzSwitchModule
+    NzSwitchModule,
+    NzSpinModule
     
 
   ]

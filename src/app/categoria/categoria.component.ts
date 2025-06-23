@@ -1,10 +1,11 @@
 import { Component, OnInit } from '@angular/core';
-import { Observable, map, catchError, of } from 'rxjs';
+import { Observable, map, catchError, of, finalize } from 'rxjs';
 import { Categoria } from './categoria';
 import { CategoriaService } from './categoria.service';
 import { NzModalService } from 'ng-zorro-antd/modal';
 import { CategoriaFormComponent } from './categoria-form/categoria-form.component';
 import { NzNotificationService } from 'ng-zorro-antd/notification';
+import { NzMessageService } from 'ng-zorro-antd/message';
 
 
 @Component({
@@ -19,11 +20,13 @@ export class CategoriaComponent implements OnInit {
   pageSize = 8;
   searchValue: string = '';
   statusFilter: string = 'Ativo';
+  carregando = false;
+
 
   constructor(
     private service: CategoriaService,
     private modal: NzModalService,
-    private notification: NzNotificationService
+    private message: NzMessageService
   ) {}
 
   ngOnInit(): void {
@@ -31,10 +34,13 @@ export class CategoriaComponent implements OnInit {
   }
 
   carregarCategorias(): void {
+    this.carregando = true;
     this.categorias$ = this.service.list().pipe(
+      finalize(() => this.carregando = false),
       catchError((error) => {
+        this.carregando = false;
         console.error('Erro ao carregar categorias:', error);
-        this.notification.error('Erro', 'Falha ao carregar categorias.');
+        this.message.error('Falha ao carregar categorias.');
         return of([]); // Retorna um array vazio em caso de erro
       })
     );
@@ -84,20 +90,19 @@ export class CategoriaComponent implements OnInit {
         this.service.updateStatus(categoria.id_categoria!, novoStatus).subscribe({
           next: () => {
             categoria.status_categoria = novoStatus; // Atualiza o status localmente
-            this.notification.success(
-              'Sucesso',
+            this.message.success(
               `Status da categoria atualizado para ${novoStatus}.`
             );
             this.atualizarCategoriasFiltradas(); // Atualiza a lista filtrada
           },
           error: (error) => {
             console.error('Erro ao atualizar status no backend:', error);
-            this.notification.error('Erro', "Erro ao tentar atualizar");
+            this.message.error( "Erro ao tentar atualizar");
           }
         }),
       nzCancelText: 'Não',
       nzOnCancel: () => {
-        this.notification.info('Cancelado', 'Ação de alteração de status foi cancelada.');
+        this.message.info('Ação de alteração de status foi cancelada.');
       }
     });
 
@@ -133,12 +138,12 @@ export class CategoriaComponent implements OnInit {
       if (resultado && modo === 'editar') {
         this.service.update(resultado.id_categoria!, resultado).subscribe({
           next: () => {
-            this.notification.success('Sucesso', 'Categoria atualizada com sucesso!');
+            this.message.success('Categoria atualizada com sucesso!');
             this.carregarCategorias();
           },
           error: (error) => {
             console.error('Erro ao atualizar categoria:', error);
-            this.notification.error('Erro', 'Falha ao atualizar categoria.');
+            this.message.error('Falha ao atualizar categoria.');
           },
         });
       } else if (resultado && modo === 'cadastrar') {
@@ -152,12 +157,12 @@ export class CategoriaComponent implements OnInit {
     novaCategoria.status_categoria = 'Ativo'; // Define o status como "Ativo"
     this.service.create(novaCategoria).subscribe({
       next: () => {
-        this.notification.success('Sucesso', 'Categoria cadastrada com sucesso!');
+        this.message.success( 'Categoria cadastrada com sucesso!');
         this.carregarCategorias(); // Atualiza a lista após o cadastro
       },
       error: (error) => {
         console.error('Erro ao cadastrar categoria:', error);
-        this.notification.error('Erro', 'Falha ao cadastrar categoria.');
+        this.message.error('Falha ao cadastrar categoria.');
       }
     });
   }

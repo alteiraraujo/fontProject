@@ -1,85 +1,106 @@
 <h3 nz-typography>Colaboradores</h3>
-<div nz-row>
-  <div nz-col nzSpan="12"></div>
-  <div nz-col nzSpan="12">
-    <div style="display: flex; align-items: center">
-      <nz-input-group nzSearch [nzAddOnAfter]="suffixIconButton">
-        <input
-          type="text"
-          nz-input
-          placeholder="Buscar Colaboradores"
-          [(ngModel)]="searchValue"
-          (ngModelChange)="onSearchChange()"
-        />
-      </nz-input-group>
-      <ng-template #suffixIconButton>
-        <button nz-button nzType="primary" nzSearch>
-          <span nz-icon nzType="search"></span>
+<nz-spin [nzSpinning]="carregando" nzTip="Carregando...">
+  <div nz-row>
+    <div nz-col nzSpan="12"></div>
+    <div nz-col nzSpan="12">
+      <div style="display: flex; align-items: center">
+        <nz-input-group nzSearch [nzAddOnAfter]="suffixIconButton">
+          <input
+            type="text"
+            nz-input
+            placeholder="Buscar Colaboradores"
+            [(ngModel)]="searchValue"
+            (ngModelChange)="onSearchChange()"
+          />
+        </nz-input-group>
+        <ng-template #suffixIconButton>
+          <button nz-button nzType="primary" nzSearch>
+            <span nz-icon nzType="search"></span>
+          </button>
+        </ng-template>
+
+        <nz-select
+          style="margin-left: 8px"
+          [(ngModel)]="statusFilter"
+          (ngModelChange)="onStatusChange($event)"
+        >
+          <nz-option nzValue="" nzLabel="Todos"></nz-option>
+          <nz-option nzValue="Ativo" nzLabel="Ativo"></nz-option>
+          <nz-option nzValue="Inativo" nzLabel="Inativo"></nz-option>
+        </nz-select>
+
+        <button
+          nz-button
+          nzType="primary"
+          nzShape="circle"
+          (click)="abrirModal('cadastrar')"
+        >
+          +
         </button>
-      </ng-template>
-
-      <nz-select
-        style="margin-left: 8px"
-        [(ngModel)]="statusFilter"
-        (ngModelChange)="onStatusChange($event)"
-      >
-        <nz-option nzValue="" nzLabel="Todos"></nz-option>
-        <nz-option nzValue="Ativo" nzLabel="Ativo"></nz-option>
-        <nz-option nzValue="Inativo" nzLabel="Inativo"></nz-option>
-      </nz-select>
-
-      <button nz-button nzType="primary" nzShape="circle" routerLink="novo">+</button>
+      </div>
     </div>
   </div>
-</div>
-<br />
-<nz-table
-  #basicTable
-  [nzData]="colaboradoresFiltrados$ | async"
-  [nzFrontPagination]="false"
-  [nzPageIndex]="pageIndex"
-  [nzPageSize]="pageSize"
-  [nzTotal]="(colaboradores$ | async)?.length"
-  (nzPageIndexChange)="onPageIndexChange($event)"
->
-  <thead>
-    <tr>
-      <th>{{ "Código" }}</th>
-      <th>{{ "Nome" }}</th>
-      <th>{{ "Cargo" }}</th>
-      <th>{{ "Status" }}</th>
-      <th>{{ "Ações" }}</th>
-      <th>{{ "Ativo" }}</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr *ngFor="let colaborador of colaboradoresFiltrados$ | async">
-      <td>{{ colaborador.id_colaborador }}</td>
-      <td>{{ colaborador.pessoa.nome_pessoa }}</td>
-      <td>{{ colaborador.cargo_colaborador }}</td>
-      <td>
-        <span
-          nz-typography
-          [ngClass]="{
-            'status-ativo': colaborador.status_colaborador === 'Ativo',
-            'status-inativo': colaborador.status_colaborador === 'Inativo'
-          }"
-        >
-          {{ colaborador.status_colaborador }}
-        </span>
-      </td>
-      <td>
-        <button nz-button [nzSize]="'small'" nzType="default">Abrir</button>
-        <nz-divider nzType="vertical"></nz-divider>
-        <button nz-button [nzSize]="'small'" nzType="primary">Editar</button>
-      </td>
-      <td>
-        <nz-switch
-          nzSize="small"
-          [ngModel]="colaborador.status_colaborador === 'Ativo'"
-          (ngModelChange)="toggleStatus(colaborador)"
-        ></nz-switch>
-      </td>
-    </tr>
-  </tbody>
-</nz-table>
+  <br />
+  <nz-table
+    #basicTable
+    [nzData]="colaboradoresFiltrados$ | async"
+    [nzFrontPagination]="false"
+    [nzPageIndex]="pageIndex"
+    [nzPageSize]="pageSize"
+    [nzTotal]="(colaboradores$ | async)?.length"
+    (nzPageIndexChange)="onPageIndexChange($event)"
+  >
+    <thead>
+      <tr>
+        <th>{{ "Nome" }}</th>
+        <th>{{ "Cargo" }}</th>
+        <th>{{ "Status" }}</th>
+        <th>{{ "Ações" }}</th>
+        <th>{{ "Ativo" }}</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let colaborador of colaboradoresFiltrados$ | async">
+        <td>{{ colaborador.pessoa.nome_pessoa }}</td>
+        <td>{{ colaborador.cargo_colaborador }}</td>
+        <td>
+          <span
+            nz-typography
+            [ngClass]="{
+              'status-ativo': colaborador.status_colaborador === 'Ativo',
+              'status-inativo': colaborador.status_colaborador === 'Inativo'
+            }"
+          >
+            {{ colaborador.status_colaborador }}
+          </span>
+        </td>
+        <td>
+          <button
+            nz-button
+            [nzSize]="'small'"
+            nzType="default"
+            (click)="abrirModal('abrir', colaborador)"
+          >
+            Abrir
+          </button>
+          <nz-divider nzType="vertical"></nz-divider>
+          <button
+            nz-button
+            [nzSize]="'small'"
+            nzType="primary"
+            (click)="abrirModal('editar', colaborador)"
+          >
+            Editar
+          </button>
+        </td>
+        <td>
+          <nz-switch
+            nzSize="small"
+            [ngModel]="colaborador.status_colaborador === 'Ativo'"
+            (ngModelChange)="toggleStatus(colaborador, $event)"
+          ></nz-switch>
+        </td>
+      </tr>
+    </tbody>
+  </nz-table>
+</nz-spin>

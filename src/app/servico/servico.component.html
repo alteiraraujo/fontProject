@@ -1,1 +1,112 @@
-<p>servico works!</p>
+<h3 nz-typography>Serviços</h3>
+<nz-spin [nzSpinning]="carregando" nzTip="Carregando...">
+  <div nz-row>
+    <div nz-col nzSpan="12"></div>
+    <div nz-col nzSpan="12">
+      <div style="display: flex; align-items: center; gap: 8px">
+        <!-- Campo de Busca -->
+        <nz-input-group nzSearch [nzAddOnAfter]="suffixIconButton">
+          <input
+            type="text"
+            nz-input
+            placeholder="Buscar Serviços"
+            [(ngModel)]="searchValue"
+            (ngModelChange)="onSearchChange()"
+          />
+        </nz-input-group>
+        <ng-template #suffixIconButton>
+          <button nz-button nzType="primary" nzSearch>
+            <span nz-icon nzType="search"></span>
+          </button>
+        </ng-template>
+
+        <!-- Filtro por Status -->
+        <nz-select
+          [(ngModel)]="statusFilter"
+          (ngModelChange)="onStatusChange($event)"
+          placeholder="Status"
+          style="width: 120px"
+        >
+          <nz-option nzValue="" nzLabel="Todos"></nz-option>
+          <nz-option nzValue="Ativo" nzLabel="Ativo"></nz-option>
+          <nz-option nzValue="Inativo" nzLabel="Inativo"></nz-option>
+          <!-- Adicione mais status conforme sua regra -->
+        </nz-select>
+
+        <!-- Botão de Novo Cadastro -->
+        <button
+          nz-button
+          nzType="primary"
+          nzShape="circle"
+          (click)="abrirModal('cadastrar')"
+        >
+          +
+        </button>
+      </div>
+    </div>
+  </div>
+  <br />
+
+  <!-- Tabela de Serviços -->
+  <nz-table
+    [nzData]="servicosFiltrados$ | async"
+    [nzFrontPagination]="false"
+    [nzPageIndex]="pageIndex"
+    [nzPageSize]="pageSize"
+    [nzTotal]="(servicos$ | async)?.length"
+    (nzPageIndexChange)="onPageIndexChange($event)"
+  >
+    <thead>
+      <tr>
+        <th>Data</th>
+        <th>Status</th>
+        <th>Animal</th>
+        <th>Valor Total</th>
+        <th>Observações</th>
+        <th>Ações</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let servico of servicosFiltrados$ | async">
+        <td>{{ servico.data_servico | date : "dd/MM/yyyy" }}</td>
+        <td>
+          <span
+            nz-typography
+            [ngClass]="{
+              'status-ativo': servico.status_servico === 'Ativo',
+              'status-inativo': servico.status_servico === 'Inativo'
+            }"
+          >
+            {{ servico.status_servico }}
+          </span>
+        </td>
+        <td>{{ getNomeAnimalPorId(servico.animal?.id_animal) }}</td>
+        <td>
+          {{
+            servico.valor_servico | currency : "BRL" : "symbol-narrow" : "1.2-2"
+          }}
+        </td>
+        <td>{{ servico.obs_servico }}</td>
+        <td>
+          <button
+            nz-button
+            [nzSize]="'small'"
+            nzType="default"
+            (click)="abrirModal('abrir', servico)"
+          >
+            Abrir
+          </button>
+          <nz-divider nzType="vertical"></nz-divider>
+          <button
+            nz-button
+            [nzSize]="'small'"
+            nzType="primary"
+            (click)="abrirModal('editar', servico)"
+          >
+            Editar
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </nz-table>
+</nz-spin>

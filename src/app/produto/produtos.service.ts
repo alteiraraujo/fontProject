@@ -41,7 +41,7 @@ export class ProdutosService {
   // Atualizar status de um produto
   updateStatus(id_produto: number, status: string): Observable<any> {
     return this.http
-      .put(`${this.API}/${id_produto}/status`, { status_produto: status })
+      .put(`${this.API}/${id_produto}`, { status_produto: status })
       .pipe(
         tap(() =>
           console.log(`Status do produto com ID ${id_produto} atualizado para ${status}`)

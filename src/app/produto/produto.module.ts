@@ -15,6 +15,7 @@ import { NzFormModule } from 'ng-zorro-antd/form';
 import { NzImageModule } from 'ng-zorro-antd/image';
 import { NzDividerModule } from 'ng-zorro-antd/divider';
 import { ProdutoFormComponent } from './produto-form/produto-form.component';
+import { NzSpinModule } from 'ng-zorro-antd/spin';
 
 
 
@@ -43,7 +44,8 @@ import { ProdutoFormComponent } from './produto-form/produto-form.component';
     ReactiveFormsModule,
     NzFormModule,
     NzImageModule,
-    NzDividerModule
+    NzDividerModule,
+    NzSpinModule
   
   ]
 })

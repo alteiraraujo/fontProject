@@ -15,6 +15,7 @@ import { NzTableModule } from 'ng-zorro-antd/table';
 import { NzDividerModule } from 'ng-zorro-antd/divider';
 import { NzSwitchModule } from 'ng-zorro-antd/switch';
 import { NzCheckboxModule } from 'ng-zorro-antd/checkbox';
+import { NzSpinModule } from 'ng-zorro-antd/spin';
 
 
 
@@ -40,6 +41,7 @@ import { NzCheckboxModule } from 'ng-zorro-antd/checkbox';
     NzDividerModule,
     NzSwitchModule,
     NzCheckboxModule,
+    NzSpinModule
     
   ]
 })

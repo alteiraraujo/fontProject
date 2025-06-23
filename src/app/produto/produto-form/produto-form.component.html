@@ -43,7 +43,9 @@
 
   <!-- Campo Valor de Compra -->
   <nz-form-item>
-    <nz-form-label [nzSpan]="6" nzFor="valor_compra_produto">Valor de Compra</nz-form-label>
+    <nz-form-label [nzSpan]="6" nzFor="valor_compra_produto"
+      >Valor de Compra</nz-form-label
+    >
     <nz-form-control [nzSpan]="14">
       <input
         nz-input
@@ -57,7 +59,9 @@
 
   <!-- Campo Valor de Venda -->
   <nz-form-item>
-    <nz-form-label [nzSpan]="6" nzFor="valor_venda_produto">Valor de Venda</nz-form-label>
+    <nz-form-label [nzSpan]="6" nzFor="valor_venda_produto"
+      >Valor de Venda</nz-form-label
+    >
     <nz-form-control [nzSpan]="14">
       <input
         nz-input
@@ -71,7 +75,9 @@
 
   <!-- Campo Categoria -->
   <nz-form-item>
-    <nz-form-label [nzSpan]="6" nzFor="categoria_produto">Categoria</nz-form-label>
+    <nz-form-label [nzSpan]="6" nzFor="categoria_produto"
+      >Categoria</nz-form-label
+    >
     <nz-form-control [nzSpan]="14">
       <nz-select
         nzShowSearch
@@ -89,7 +95,9 @@
         </nz-option>
       </nz-select>
       <ng-template #categoriaDropdownRender>
-        <div style="display: flex; justify-content: space-between; padding: 8px;">
+        <div
+          style="display: flex; justify-content: space-between; padding: 8px"
+        >
           <button
             nz-button
             nzType="link"
@@ -103,47 +111,16 @@
     </nz-form-control>
   </nz-form-item>
 
-  <!-- Campo Fornecedor -->
-  <nz-form-item>
-    <nz-form-label [nzSpan]="6" nzFor="fornecedor_produto">Fornecedor</nz-form-label>
-    <nz-form-control [nzSpan]="14">
-      <nz-select
-        nzShowSearch
-        nzPlaceHolder="Selecione um fornecedor"
-        formControlName="selectedFornecedorId"
-        (ngModelChange)="onFornecedorChange($event)"
-        [nzDropdownRender]="fornecedorDropdownRender"
-        required
-      >
-        <nz-option
-          *ngFor="let fornecedor of fornecedores$ | async"
-          [nzValue]="fornecedor.id_fornecedor"
-          [nzLabel]="fornecedor.nome_fornecedor"
-        >
-        </nz-option>
-      </nz-select>
-      <ng-template #fornecedorDropdownRender>
-        <div style="display: flex; justify-content: space-between; padding: 8px;">
-          <button
-            nz-button
-            nzType="link"
-            (click)="openFornecedorModal()"
-            type="button"
-          >
-            <span nz-icon nzType="plus"></span> Adicionar Fornecedor
-          </button>
-        </div>
-      </ng-template>
-    </nz-form-control>
-  </nz-form-item>
-
-  <!-- Botão de Submissão -->
   <nz-form-item>
     <nz-form-control [nzSpan]="14" [nzOffset]="6">
-      <button nz-button nzType="primary" [disabled]="!produtoForm.valid">
-        Salvar
-      </button>
-      <button nz-button nzType="default" >Cancelar</button>
+      <ng-container *ngIf="modo !== 'abrir'">
+        <button nz-button nzType="primary" [disabled]="!produtoForm.valid">
+          {{ modo === "editar" ? "Salvar" : "Cadastrar" }}
+        </button>
+        <button nz-button nzType="default" (click)="cancelar()">
+          Cancelar
+        </button>
+      </ng-container>
     </nz-form-control>
   </nz-form-item>
 </form>

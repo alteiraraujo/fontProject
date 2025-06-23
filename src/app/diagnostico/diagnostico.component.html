@@ -1,1 +1,113 @@
-<p>diagnostico works!</p>
+<h3 nz-typography>Diagnósticos</h3>
+<nz-spin [nzSpinning]="carregando" nzTip="Carregando...">
+  <div nz-row>
+    <div nz-col nzSpan="12"></div>
+    <div nz-col nzSpan="12">
+      <div style="display: flex; align-items: center">
+        <!-- Busca por animal -->
+        <nz-input-group nzSearch [nzAddOnAfter]="suffixIconButton">
+          <input
+            type="text"
+            nz-input
+            placeholder="Buscar por Animal"
+            [(ngModel)]="searchValue"
+            (ngModelChange)="onSearchChange()"
+          />
+        </nz-input-group>
+        <ng-template #suffixIconButton>
+          <button nz-button nzType="primary" nzSearch>
+            <span nz-icon nzType="search"></span>
+          </button>
+        </ng-template>
+
+        <nz-select
+          style="margin-left: 8px"
+          [(ngModel)]="statusFilter"
+          (ngModelChange)="onStatusChange($event)"
+        >
+          <nz-option nzValue="" nzLabel="Todos"></nz-option>
+          <nz-option nzValue="Ativo" nzLabel="Ativo"></nz-option>
+          <nz-option nzValue="Inativo" nzLabel="Inativo"></nz-option>
+        </nz-select>
+
+        <!-- Botão de Novo Diagnóstico -->
+        <button
+          nz-button
+          nzType="primary"
+          nzShape="circle"
+          (click)="abrirModal('cadastrar')"
+        >
+          +
+        </button>
+      </div>
+    </div>
+  </div>
+  <br />
+
+  <nz-table
+    [nzData]="diagnosticosFiltrados$ | async"
+    [nzFrontPagination]="false"
+    [nzPageIndex]="pageIndex"
+    [nzPageSize]="pageSize"
+    [nzTotal]="(diagnosticos$ | async)?.length"
+    (nzPageIndexChange)="onPageIndexChange($event)"
+  >
+    <thead>
+      <tr>
+        <th>Data</th>
+        <th>Animal</th>
+        <th>Descrição</th>
+        <th>Status</th>
+        <th>Ações</th>
+        <th>Ativo</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let diagnostico of diagnosticosFiltrados$ | async">
+        <td>{{ diagnostico.data_diagnostico | date : "shortDate" }}</td>
+        <td>
+          {{
+            diagnostico.animal?.nome_animal ||
+              getNomeAnimalPorId(diagnostico.animal?.id_animal)
+          }}
+        </td>
+        <td>{{ diagnostico.descricao_diagnostico }}</td>
+        <td>
+          <span
+            nz-typography
+            [ngClass]="{
+              'status-ativo': diagnostico.status_diagnostico === 'Ativo',
+              'status-inativo': diagnostico.status_diagnostico === 'Inativo'
+            }"
+          >
+            {{ diagnostico.status_diagnostico }}
+          </span>
+        </td>
+        <td>
+          <button
+            nz-button
+            nzType="default"
+            nzSize="small"
+            (click)="abrirModal('abrir', diagnostico)"
+          >
+            Abrir
+          </button>
+          <nz-divider nzType="vertical"></nz-divider>
+          <button
+            nz-button
+            nzType="primary"
+            nzSize="small"
+            (click)="abrirModal('editar', diagnostico)"
+          >
+            Editar
+          </button>
+        </td>
+        <nz-switch
+            nzSize="small"
+            [ngModel]="diagnostico.status_diagnostico === 'Ativo'"
+            (ngModelChange)="toggleStatus(diagnostico)"
+          ></nz-switch>
+      </tr>
+    </tbody>
+  </nz-table>
+</nz-spin>

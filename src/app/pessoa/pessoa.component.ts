@@ -1,10 +1,11 @@
 import { Component, OnInit } from '@angular/core';
-import { Observable, map, catchError, of } from 'rxjs';
+import { Observable, map, catchError, of, finalize } from 'rxjs';
 import { Pessoa } from './pessoa';
 import { PessoaService } from './pessoa.service';
 import { NzModalService } from 'ng-zorro-antd/modal';
 import { NzNotificationService } from 'ng-zorro-antd/notification';
 import { PessoaFormComponent } from './pessoa-form/pessoa-form.component';
+import { NzMessageService } from 'ng-zorro-antd/message';
 
 @Component({
   selector: 'app-pessoa',
@@ -18,27 +19,32 @@ export class PessoaComponent implements OnInit {
   pageSize = 8;
   searchValue: string = '';
   statusFilter: string = 'Ativo';
+  carregando = false;
 
   constructor(
     private service: PessoaService,
     private modal: NzModalService,
-    private notification: NzNotificationService
+    private message: NzMessageService
   ) {}
 
   ngOnInit(): void {
     this.carregarPessoas();
   }
 
-  carregarPessoas(): void {
-    this.pessoas$ = this.service.list().pipe(
-      catchError((error) => {
-        console.error('Erro ao carregar pessoas:', error);
-        this.notification.error('Erro', 'Falha ao carregar pessoas.');
-        return of([]);
-      })
-    );
-    this.atualizarPessoasFiltradas();
-  }
+carregarPessoas(): void {
+  this.carregando = true;
+
+  this.pessoas$ = this.service.list().pipe(
+    finalize(() => this.carregando = false), // desliga o loading sempre (sucesso ou erro)
+    catchError((error) => {
+      console.error('Erro ao carregar pessoas:', error);
+      this.message.error('Falha ao carregar pessoas.');
+      return of([]);
+    })
+  );
+
+  this.atualizarPessoasFiltradas();
+}
 
   atualizarPessoasFiltradas(): void {
     this.pessoasFiltradas$ = this.pessoas$.pipe(
@@ -46,10 +52,16 @@ export class PessoaComponent implements OnInit {
         pessoas
           .filter(
             (pessoa) =>
-              (this.statusFilter === '' || pessoa.status_pessoa === this.statusFilter) &&
-              pessoa.nome_pessoa.toLowerCase().includes(this.searchValue.toLowerCase())
+              (this.statusFilter === '' ||
+                pessoa.status_pessoa === this.statusFilter) &&
+              pessoa.nome_pessoa
+                .toLowerCase()
+                .includes(this.searchValue.toLowerCase())
           )
-          .slice((this.pageIndex - 1) * this.pageSize, this.pageIndex * this.pageSize)
+          .slice(
+            (this.pageIndex - 1) * this.pageSize,
+            this.pageIndex * this.pageSize
+          )
       )
     );
   }
@@ -75,19 +87,25 @@ export class PessoaComponent implements OnInit {
 
     this.modal.confirm({
       nzTitle: 'Confirmação',
-      nzContent: `Deseja realmente ${novoStatus === 'Ativo' ? 'ativar' : 'desativar'} esta pessoa?`,
+      nzContent: `Deseja realmente ${
+        novoStatus === 'Ativo' ? 'ativar' : 'desativar'
+      } esta pessoa?`,
       nzOkText: 'Sim',
       nzOkType: 'primary',
       nzOnOk: () =>
         this.service.updateStatus(pessoa.id_pessoa!, novoStatus).subscribe({
           next: () => {
             pessoa.status_pessoa = novoStatus; // Atualiza o status localmente
-            this.notification.success('Sucesso', `Status da pessoa atualizado para ${novoStatus}.`);
+            this.message.success(
+              `Status da pessoa atualizado para ${novoStatus}.`
+            );
             this.atualizarPessoasFiltradas();
           },
           error: (error) => {
             console.error('Erro ao atualizar status no backend:', error);
-            this.notification.error('Erro', 'Falha ao tentar atualizar o status.');
+            this.message.error(
+              'Falha ao tentar atualizar o status.'
+            );
           },
         }),
       nzCancelText: 'Não',
@@ -108,7 +126,10 @@ export class PessoaComponent implements OnInit {
     }
   }
 
-  private abrirFormularioModal(modo: 'cadastrar' | 'editar' | 'abrir', pessoa?: Pessoa): void {
+  private abrirFormularioModal(
+    modo: 'cadastrar' | 'editar' | 'abrir',
+    pessoa?: Pessoa
+  ): void {
     const modalRef = this.modal.create({
       nzTitle:
         modo === 'cadastrar'
@@ -121,7 +142,10 @@ export class PessoaComponent implements OnInit {
         pessoa: pessoa ? { ...pessoa } : undefined,
         modo: modo,
       },
-      nzFooter: modo === 'abrir' ? [{ label: 'Ok', onClick: () => modalRef.close() }] : null,
+      nzFooter:
+        modo === 'abrir'
+          ? [{ label: 'Ok', onClick: () => modalRef.close() }]
+          : null,
       nzWidth: '600px',
     });
 
@@ -137,12 +161,12 @@ export class PessoaComponent implements OnInit {
   onNovaPessoa(novaPessoa: Pessoa): void {
     this.service.create(novaPessoa).subscribe({
       next: () => {
-        this.notification.success('Sucesso', 'Pessoa cadastrada com sucesso!');
+        this.message.success('Pessoa cadastrada com sucesso!');
         this.carregarPessoas();
       },
       error: (error) => {
         console.error('Erro ao cadastrar pessoa:', error);
-        this.notification.error('Erro', 'Falha ao cadastrar pessoa.');
+        this.message.error('Falha ao cadastrar pessoa.');
       },
     });
   }
