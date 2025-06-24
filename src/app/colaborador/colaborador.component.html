@@ -92,6 +92,17 @@
           >
             Editar
           </button>
+          <nz-divider nzType="vertical"></nz-divider>
+          <button
+            nz-button
+            [nzSize]="'small'"
+            nzType="dashed"
+            nzTooltipTitle="Enviar senha para o e-mail"
+            (click)="enviarSenha(colaborador)"
+          >
+          Enviar Senha
+            <span nz-icon nzType="mail"></span>
+          </button>
         </td>
         <td>
           <nz-switch

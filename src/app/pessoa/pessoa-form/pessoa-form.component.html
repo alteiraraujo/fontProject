@@ -34,6 +34,7 @@
         formControlName="cpf_pessoa"
         id="cpf_pessoa"
         placeholder="CPF"
+        mask="000.000.000-00"
       />
     </nz-form-control>
   </nz-form-item>
@@ -233,21 +234,20 @@
 
   <!-- Botão de Submit -->
   <nz-form-item class="compact-form-item">
-  <nz-form-control [nzSm]="14" [nzXs]="24" [nzOffset]="6">
-    <ng-container *ngIf="modo !== 'abrir'">
-      <button nz-button [nzType]="'primary'" [disabled]="!pessoaForm.valid">
-        {{ modo === "editar" ? "Salvar" : "Cadastrar" }}
-      </button>
-      <button
-        nz-button
-        nzType="default"
-        (click)="cancelar()"
-        style="margin-left: 8px"
-      >
-        Cancelar
-      </button>
-    </ng-container>
-  </nz-form-control>
-</nz-form-item>
-
+    <nz-form-control [nzSm]="14" [nzXs]="24" [nzOffset]="6">
+      <ng-container *ngIf="modo !== 'abrir'">
+        <button nz-button [nzType]="'primary'" [disabled]="!pessoaForm.valid">
+          {{ modo === "editar" ? "Salvar" : "Cadastrar" }}
+        </button>
+        <button
+          nz-button
+          nzType="default"
+          (click)="cancelar()"
+          style="margin-left: 8px"
+        >
+          Cancelar
+        </button>
+      </ng-container>
+    </nz-form-control>
+  </nz-form-item>
 </form>

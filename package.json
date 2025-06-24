@@ -25,6 +25,7 @@
     "dagre-compound": "^0.0.13",
     "monaco-editor": "^0.52.0",
     "ng-zorro-antd": "^15.1.1",
+    "ngx-mask": "^15.2.1",
     "pet-care": "file:",
     "rxjs": "~7.5.0",
     "tslib": "^2.3.0",

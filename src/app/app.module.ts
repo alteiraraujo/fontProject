@@ -91,6 +91,8 @@ import { AnimalComponent } from './animal/animal.component';
 import { CategoriaComponent } from './categoria/categoria.component';
 import { LoginComponent } from './login/login.component';
 import { ColaboradorComponent } from './colaborador/colaborador.component';
+import { MainLayoutComponent } from './layouts/main-layout/main-layout.component';
+import { AuthLayoutComponent } from './layouts/auth-layout/auth-layout.component';
 
 
 
@@ -109,7 +111,7 @@ const icons: IconDefinition[] = Object.keys(antDesignIcons).map(
 
 @NgModule({
   declarations: [AppComponent,   AnimalComponent, ColaboradorComponent, 
-    CategoriaComponent,   LoginComponent ],
+    CategoriaComponent,   LoginComponent, MainLayoutComponent, AuthLayoutComponent ],
   imports: [
    
     BrowserModule,

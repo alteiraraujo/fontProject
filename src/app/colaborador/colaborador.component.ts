@@ -127,6 +127,22 @@ export class ColaboradorComponent implements OnInit {
     });
   }
 
+  enviarSenha(colaborador: any): void {
+  this.modalService.confirm({
+    nzTitle: 'Enviar senha',
+    nzContent: `Deseja gerar uma nova senha para o colaborador <b>${colaborador.pessoa.nome_pessoa}</b> e enviá-la por e-mail?`,
+    nzOkText: 'Sim',
+    nzCancelText: 'Não',
+    nzOnOk: () => {
+      this.service.enviarSenha(colaborador.id_colaborador).subscribe({
+        next: () => this.message.success('Senha enviada para o e-mail do colaborador!'),
+        error: () => this.message.error('Erro ao enviar senha.')
+      });
+    }
+  });
+}
+
+
   toggleStatus(colaborador: Colaborador, checked: boolean): void {
     const novoStatus = checked ? 'Ativo' : 'Inativo';
 

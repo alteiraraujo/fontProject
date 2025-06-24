@@ -64,7 +64,7 @@
     </thead>
     <tbody>
       <tr *ngFor="let diagnostico of diagnosticosFiltrados$ | async">
-        <td>{{ diagnostico.data_diagnostico | date : "shortDate" }}</td>
+        <td>{{ diagnostico.data_diagnostico | date : "dd/MM/yyyy" }}</td>
         <td>
           {{
             diagnostico.animal?.nome_animal ||

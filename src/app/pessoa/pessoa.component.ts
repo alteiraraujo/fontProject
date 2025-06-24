@@ -3,9 +3,9 @@ import { Observable, map, catchError, of, finalize } from 'rxjs';
 import { Pessoa } from './pessoa';
 import { PessoaService } from './pessoa.service';
 import { NzModalService } from 'ng-zorro-antd/modal';
-import { NzNotificationService } from 'ng-zorro-antd/notification';
 import { PessoaFormComponent } from './pessoa-form/pessoa-form.component';
 import { NzMessageService } from 'ng-zorro-antd/message';
+
 
 @Component({
   selector: 'app-pessoa',

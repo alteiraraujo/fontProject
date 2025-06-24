@@ -18,13 +18,12 @@ import { NzTableModule } from 'ng-zorro-antd/table';
 import { NzDividerModule } from 'ng-zorro-antd/divider';
 import { NzSwitchModule } from 'ng-zorro-antd/switch';
 import { NzSpinModule } from 'ng-zorro-antd/spin';
-
+import { NgxMaskDirective, provideNgxMask } from 'ngx-mask';
+import { TelefoneFormatadoPipe } from '../pipe/telefone-formatado.pipe';
+import { CpfFormatadoPipe } from '../pipe/cpf-formatado.pipe';
 
 @NgModule({
-  declarations: [
-    PessoaComponent,
-    PessoaFormComponent
-  ],
+  declarations: [PessoaComponent, PessoaFormComponent, TelefoneFormatadoPipe,  CpfFormatadoPipe],
   imports: [
     CommonModule,
     PessoaRoutingModule,
@@ -41,9 +40,8 @@ import { NzSpinModule } from 'ng-zorro-antd/spin';
     NzTableModule,
     NzDividerModule,
     NzSwitchModule,
-    NzSpinModule
-    
-
-  ]
+    NzSpinModule,
+  ],
+  providers: [provideNgxMask()],
 })
-export class PessoaModule { }
+export class PessoaModule {}
