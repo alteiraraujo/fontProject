@@ -1,4 +1,6 @@
 export enum MensagensSucesso {
-    REGISTRO_ATUALIZADO = 'Registro atualizado com sucesso!',
-    REGISTRO_CRIADO = 'Registro criado com sucesso!',
+    MSGS01 = 'Cadastro realizado!',
+    MSGS02 = 'Sucesso ao atualizar!',
+    MSGS03 = 'Status Atualizado!',
+    msgs04 = 'Criado com sucesso!',
   } 

@@ -49,7 +49,7 @@ export class CategoriaFormComponent implements OnInit {
       this.modalRef.close(this.form.value);
     } else {
       this.form.markAllAsTouched();
-      this.message.error(MensagensErro.FORM_INVALIDO);
+      this.message.error(MensagensErro.MSGE01);
     }
   }
 

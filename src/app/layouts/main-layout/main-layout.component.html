@@ -1,9 +1,124 @@
-<nz-layout>
-  <nz-sider><!-- MENU LATERAL --></nz-sider>
+<nz-layout class="app-layout">
+  <nz-sider
+    class="menu-sidebar"
+    nzCollapsible
+    nzWidth="256px"
+    nzBreakpoint="md"
+    [(nzCollapsed)]="isCollapsed"
+    [nzTrigger]="null"
+  >
+    <div class="sidebar-logo">
+      <img nz-image nzSrc="https://i.postimg.cc/sgvHYmVP/logo.png" alt="logo" />
+    </div>
+    <ul
+      nz-menu
+      nzTheme="dark"
+      nzMode="inline"
+      [nzInlineCollapsed]="isCollapsed"
+    >
+      <li nz-submenu nzOpen nzTitle="Painel de Controle" nzIcon="dashboard">
+        <ul>
+          <li nz-menu-item nzMatchRouter>
+            <a routerLink="animais">
+              <span nz-icon nzType="github"></span>
+              <span style="margin-left: 8px">Animais</span>
+            </a>
+          </li>
+          <li nz-menu-item nzMatchRouter>
+            <a routerLink="pessoas">
+              <span nz-icon nzType="user"></span>
+              <span style="margin-left: 8px">Pessoas</span>
+            </a>
+          </li>
+          <li nz-menu-item nzMatchRouter>
+            <a routerLink="colaboradores">
+              <span nz-icon nzType="team"></span>
+              <span style="margin-left: 8px">Colaboradores</span>
+            </a>
+          </li>
+          <li nz-menu-item nzMatchRouter>
+            <a routerLink="produtos">
+              <span nz-icon nzType="shop"></span>
+              <span style="margin-left: 8px">Produtos</span>
+            </a>
+          </li>
+          <li nz-menu-item nzMatchRouter>
+            <a routerLink="categorias">
+              <span nz-icon nzType="tags"></span>
+              <span style="margin-left: 8px">Categorias</span>
+            </a>
+          </li>
+          <li nz-menu-item nzMatchRouter>
+            <a routerLink="racas">
+              <span nz-icon nzType="appstore"></span>
+              <span style="margin-left: 8px">Raças</span>
+            </a>
+          </li>
+          <li nz-menu-item nzMatchRouter>
+            <a routerLink="agendamentos">
+              <span nz-icon nzType="calendar"></span>
+              <span style="margin-left: 8px">Agendamentos</span>
+            </a>
+          </li>
+          <li nz-menu-item nzMatchRouter>
+            <a routerLink="servicos">
+              <span nz-icon nzType="tool"></span>
+              <span style="margin-left: 8px">Serviços</span>
+            </a>
+          </li>
+          <li nz-menu-item nzMatchRouter>
+            <a routerLink="diagnosticos">
+              <span nz-icon nzType="file-search"></span>
+              <span style="margin-left: 8px">Diagnósticos</span>
+            </a>
+          </li>
+          <li nz-menu-item nzMatchRouter>
+            <a (click)="logout()">
+              <span nz-icon nzType="logout"></span>
+              <span style="margin-left: 8px">Desconectar</span>
+            </a>
+          </li>
+        </ul>
+      </li>
+      <li nz-submenu nzOpen nzTitle="Relatórios" nzIcon="form">
+        <ul>
+          <li nz-menu-item nzMatchRouter>
+            <a>Relatório de Diagnósticos</a>
+          </li>
+        </ul>
+      </li>
+    </ul>
+  </nz-sider>
   <nz-layout>
-    <nz-header><!-- CABEÇALHO --></nz-header>
+    <nz-header>
+      <div class="app-header">
+        <span class="header-trigger" (click)="isCollapsed = !isCollapsed">
+          <span
+            class="trigger"
+            nz-icon
+            [nzType]="isCollapsed ? 'menu-unfold' : 'menu-fold'"
+          ></span>
+        </span>
+        <div class="header-user-info">
+          <nz-avatar
+            [nzText]="avatarInicial(usuarioLogado)"
+            [nzSize]="36"
+            nzStyle="background-color:#7265e6; color:#fff; font-weight:600; margin-right:10px;"
+          ></nz-avatar>
+          <span class="user-name">
+            {{
+              usuarioLogado?.pessoa?.nome_pessoa ||
+                usuarioLogado?.login_colaborador
+            }}
+          </span>
+        </div>
+      </div>
+    </nz-header>
+
     <nz-content>
-      <router-outlet></router-outlet>
+      <div class="inner-content">
+        <router-outlet></router-outlet>
+      </div>
     </nz-content>
   </nz-layout>
 </nz-layout>
