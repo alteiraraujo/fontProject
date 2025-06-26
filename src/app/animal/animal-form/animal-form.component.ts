@@ -153,7 +153,7 @@ export class AnimalFormComponent implements OnInit {
             this.modalRef.close(animalData);
           },
           error: () => {
-            this.message.error('Erro ao atualizar o animal. Tente novamente.');
+           // this.message.error('Erro ao atualizar o animal. Tente novamente.');
           },
         });
       } else if (this.modo === 'cadastrar') {
@@ -193,4 +193,10 @@ export class AnimalFormComponent implements OnInit {
       ? 'Editar Animal'
       : 'Detalhes do Animal';
   }
+
+  desabilitarDataFutura = (current: Date): boolean => {
+  // Bloqueia datas após hoje
+  return current && current > new Date();
+};
+
 }

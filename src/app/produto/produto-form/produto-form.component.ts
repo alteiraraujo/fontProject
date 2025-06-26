@@ -12,6 +12,7 @@ import { CategoriaService } from 'src/app/categoria/categoria.service'; // ajust
 import { NzModalRef, NzModalService } from 'ng-zorro-antd/modal';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { Observable } from 'rxjs';
+import { CategoriaFormComponent } from 'src/app/categoria/categoria-form/categoria-form.component';
 
 @Component({
   selector: 'app-produto-form',
@@ -82,13 +83,32 @@ export class ProdutoFormComponent implements OnInit, OnChanges {
     }
   }
 
+  carregarCategorias() {
+    this.categorias$ = this.categoriaService.list();
+  }
+
   onCategoriaChange(id: number) {
     // Se quiser tratar algo ao mudar categoria, faça aqui
   }
 
   openCategoriaModal(): void {
-    // Implemente se quiser abrir modal de categoria
-    // this.modalService.create({...})
+    const modal = this.modalService.create({
+      nzTitle: 'Nova Categoria',
+      nzContent: CategoriaFormComponent,
+      nzComponentParams: {
+        modo: 'cadastrar',
+      },
+      nzFooter: null,
+    });
+
+    modal.afterClose.subscribe((novaCategoria) => {
+      if (novaCategoria) {
+        this.carregarCategorias();
+        this.produtoForm
+          .get('selectedCategoriaId')
+          ?.setValue(novaCategoria.id_categoria);
+      }
+    });
   }
 
   onSubmit(): void {
@@ -101,9 +121,11 @@ export class ProdutoFormComponent implements OnInit, OnChanges {
         qtd_produto: formValue.qtd_produto,
         valor_compra_produto: formValue.valor_compra_produto,
         valor_venda_produto: formValue.valor_venda_produto,
-        tbl_categoria_id: formValue.selectedCategoriaId, // <- Envie exatamente como backend espera
+        tbl_categoria_id: formValue.selectedCategoriaId,
         status_produto: 'Ativo',
       };
+
+      console.log('Payload enviado para o backend:', produtoData);
 
       if (this.modo === 'editar' && this.produto && this.produto.id_produto) {
         this.produtosService

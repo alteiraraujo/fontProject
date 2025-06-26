@@ -7,6 +7,7 @@ import { PessoaService } from '../pessoa/pessoa.service';
 import { AnimalService } from '../animal/animal.service';
 import { AgendamentoDetalhesComponent } from './agendamento-detalhes/agendamento-detalhes.component';
 import { DatePipe } from '@angular/common';
+import { BehaviorSubject } from 'rxjs';
 
 @Component({
   selector: 'app-agendamento',
@@ -21,6 +22,11 @@ export class AgendamentoComponent implements OnInit {
   tutores: { label: string; value: string }[] = [];
   animais: { label: string; value: number }[] = [];
 
+  statusFilter: string = '';
+  agendamentosDiaSubject: BehaviorSubject<Agendamento[]> = new BehaviorSubject<
+    Agendamento[]
+  >([]);
+
   constructor(
     private modal: NzModalService,
     private agendamentoService: AgendamentoService,
@@ -33,11 +39,8 @@ export class AgendamentoComponent implements OnInit {
     this.loadAgendamentos();
   }
 
-  loadAgendamentos(): void {
+  loadAgendamentos(callback?: () => void): void {
     this.agendamentoService.list().subscribe((data) => {
-      console.log('Agendamentos carregados:', data);
-
-      // Transformar `data_hora_agendamento` para Date
       this.agendamentos = data.map((agendamento) => ({
         ...agendamento,
         data_hora_agendamento: new Date(
@@ -50,15 +53,55 @@ export class AgendamentoComponent implements OnInit {
       }));
 
       this.agendamentosFiltrados = [...this.agendamentos];
+
+      if (callback) callback();
+    });
+  }
+
+  onStatusChange(status: string): void {
+    this.statusFilter = status;
+    this.filtrarAgendamentos();
+  }
+
+  filtrarAgendamentos(): void {
+    const search = this.searchValue.trim().toLowerCase();
+    this.agendamentosFiltrados = this.agendamentos.filter((agendamento) => {
+      const matchTexto =
+        (agendamento.animal?.pessoa?.nome_pessoa || '')
+          .toLowerCase()
+          .includes(search) ||
+        (agendamento.animal?.nome_animal || '')
+          .toLowerCase()
+          .includes(search) ||
+        (agendamento.procedimento_agendamento || '')
+          .toLowerCase()
+          .includes(search);
+
+      const matchStatus = this.statusFilter
+        ? agendamento.status_agendamento === this.statusFilter
+        : true;
+
+      return matchTexto && matchStatus;
     });
   }
 
   onSearchChange(): void {
-    this.agendamentosFiltrados = this.agendamentos.filter((agendamento) =>
-      (agendamento.animal.pessoa.nome_pessoa || '')
-        .toLowerCase()
-        .includes(this.searchValue.toLowerCase())
+    const value = this.searchValue.toLowerCase();
+    this.agendamentosFiltrados = this.agendamentos.filter(
+      (agendamento) =>
+        (agendamento.animal.pessoa.nome_pessoa || '')
+          .toLowerCase()
+          .includes(value) ||
+        (agendamento.animal.nome_animal || '').toLowerCase().includes(value) ||
+        (agendamento.procedimento_agendamento || '')
+          .toLowerCase()
+          .includes(value)
     );
+    if (this.statusFilter) {
+      this.agendamentosFiltrados = this.agendamentosFiltrados.filter(
+        (a) => a.status_agendamento === this.statusFilter
+      );
+    }
   }
 
   getAgendamentosByDate(date: Date): Agendamento[] {
@@ -85,85 +128,90 @@ export class AgendamentoComponent implements OnInit {
     }
   }
 
-  // Adicione o método onDateSelect
+  // Ajuste: onDateSelect agora usa o date nos handlers
   onDateSelect(date: Date): void {
     const agendamentosDoDia = this.getAgendamentosByDate(date);
-    console.log(`Agendamentos para ${date.toDateString()}:`, agendamentosDoDia);
-  
-    const formattedDate = this.datePipe.transform(date, 'dd/MM/yyyy'); // Formata a data
-  
+    this.agendamentosDiaSubject = new BehaviorSubject<Agendamento[]>(
+      agendamentosDoDia
+    );
+
+    const formattedDate = this.datePipe.transform(date, 'dd/MM/yyyy');
+
     if (agendamentosDoDia.length) {
       const modalRef = this.modal.create({
         nzTitle: `Agendamentos em ${formattedDate}`,
         nzContent: AgendamentoDetalhesComponent,
         nzComponentParams: {
-          agendamentos: agendamentosDoDia,
+          agendamentos$: this.agendamentosDiaSubject.asObservable(),
         },
+
         nzFooter: null,
       });
-  
-      // Tratar os eventos emitidos pelo componente filho
+
       const instance = modalRef.getContentComponent();
       if (instance) {
         instance.editar.subscribe((agendamento: Agendamento) => {
-          this.openModal(agendamento); // Abre o modal para edição
+          this.openModal(agendamento, date);
+          modalRef.close();
         });
         instance.confirmar.subscribe((agendamento: Agendamento) => {
-          this.confirmarAgendamento(agendamento);
-          modalRef.close(); // Opcional: fecha o modal após a ação
+          this.confirmarAgendamento(agendamento, date);
+          modalRef.close();
         });
         instance.cancelar.subscribe((agendamento: Agendamento) => {
-          this.cancelarAgendamento(agendamento);
-          modalRef.close(); // Opcional: fecha o modal após a ação
+          this.cancelarAgendamento(agendamento, date);
+          modalRef.close();
         });
       }
     }
   }
 
-  confirmarAgendamento(agendamento: Agendamento): void {
+  // Aceita date opcional
+  confirmarAgendamento(agendamento: Agendamento, date?: Date): void {
     this.agendamentoService
-      .update(agendamento.id_agenda!, { status_agendamento: 'Confirmado' }) // Envia apenas o campo status
+      .update(agendamento.id_agenda!, { status_agendamento: 'Confirmado' })
       .subscribe({
         next: () => {
-          this.loadAgendamentos(); // Recarrega os agendamentos para refletir a alteração
-          console.log(`Agendamento ${agendamento.id_agenda} confirmado.`);
+          this.loadAgendamentos(() => {
+            if (date) this.atualizarAgendamentosDia(date);
+          });
         },
         error: (err) => console.error('Erro ao confirmar agendamento:', err),
       });
   }
-  
-  cancelarAgendamento(agendamento: Agendamento): void {
+
+  cancelarAgendamento(agendamento: Agendamento, date?: Date): void {
     this.agendamentoService
-      .update(agendamento.id_agenda!, { status_agendamento: 'Cancelado' }) // Envia apenas o campo status
+      .update(agendamento.id_agenda!, { status_agendamento: 'Cancelado' })
       .subscribe({
         next: () => {
-          this.loadAgendamentos(); // Recarrega os agendamentos para refletir a alteração
-          console.log(`Agendamento ${agendamento.id_agenda} cancelado.`);
+          this.loadAgendamentos(() => {
+            if (date) this.atualizarAgendamentosDia(date);
+          });
         },
         error: (err) => console.error('Erro ao cancelar agendamento:', err),
       });
   }
-  
-  
 
-  openModal(agendamento?: Agendamento): void {
+  // Aceita date opcional
+  openModal(agendamento?: Agendamento, date?: Date): void {
     if (agendamento) {
-      // Carregar tutores e animais antes de abrir o modal
       this.pessoaService.list().subscribe((pessoas) => {
         this.tutores = pessoas.map((pessoa) => ({
           label: pessoa.nome_pessoa,
           value: pessoa.id_pessoa.toString(),
         }));
-  
+
         this.animalService.list().subscribe((animais) => {
           this.animais = animais
-            .filter((animal) => animal.pessoa.id_pessoa === animal.pessoa?.id_pessoa)
+            .filter(
+              (animal) => animal.pessoa.id_pessoa === animal.pessoa?.id_pessoa
+            )
             .map((animal) => ({
               label: animal.nome_animal,
               value: animal.id_animal,
             }));
-  
-          // Abrir o modal após carregar os dados necessários
+
           const modalRef = this.modal.create({
             nzTitle: 'Editar Agendamento',
             nzContent: AgendamentoFormComponent,
@@ -173,18 +221,21 @@ export class AgendamentoComponent implements OnInit {
               agendamento: agendamento,
             },
           });
-  
+
           modalRef.afterClose.subscribe((result) => {
             if (result) {
-              this.agendamentoService.update(agendamento.id_agenda!, result).subscribe(() => {
-                this.loadAgendamentos();
-              });
+              this.agendamentoService
+                .update(agendamento.id_agenda!, result)
+                .subscribe(() => {
+                  this.loadAgendamentos(() => {
+                    if (date) this.atualizarAgendamentosDia(date);
+                  });
+                });
             }
           });
         });
       });
     } else {
-      // Abrir o modal para novo agendamento
       const modalRef = this.modal.create({
         nzTitle: 'Novo Agendamento',
         nzContent: AgendamentoFormComponent,
@@ -194,7 +245,7 @@ export class AgendamentoComponent implements OnInit {
           agendamento: null,
         },
       });
-  
+
       modalRef.afterClose.subscribe((result) => {
         if (result) {
           this.agendamentoService.add(result).subscribe(() => {
@@ -204,7 +255,10 @@ export class AgendamentoComponent implements OnInit {
       });
     }
   }
-  
-  
-  
+
+  // Método para atualizar o subject após alteração
+  atualizarAgendamentosDia(date: Date) {
+    const agendamentosAtualizados = this.getAgendamentosByDate(date);
+    this.agendamentosDiaSubject.next(agendamentosAtualizados);
+  }
 }

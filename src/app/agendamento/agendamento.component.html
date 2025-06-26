@@ -4,24 +4,35 @@
   <div nz-col nzSpan="12"></div>
   <div nz-col nzSpan="12">
     <div
-      style="margin-bottom: 16px; display: flex; justify-content: space-between"
+      class="agendamento-header"
+      style="display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 16px; justify-content: flex-end;"
     >
-      <div style="flex: 1; margin-right: 8px">
-        <nz-input-group nzSearch [nzAddOnAfter]="suffixIconButton">
-          <input
-            type="text"
-            nz-input
-            placeholder="Buscar pelo nome do tutor"
-            [(ngModel)]="searchValue"
-            (ngModelChange)="onSearchChange()"
-          />
-        </nz-input-group>
-        <ng-template #suffixIconButton>
-          <button nz-button nzType="primary" nzSearch>
-            <span nz-icon nzType="search"></span>
-          </button>
-        </ng-template>
-      </div>
+      <nz-input-group nzSearch [nzAddOnAfter]="suffixIconButton" style="min-width: 200px; max-width: 340px; flex: 1 1 200px;">
+        <input
+          type="text"
+          nz-input
+          placeholder="Buscar tutor, animal ou procedimento..."
+          [(ngModel)]="searchValue"
+          (ngModelChange)="onSearchChange()"
+        />
+      </nz-input-group>
+      <ng-template #suffixIconButton>
+        <button nz-button nzType="primary" nzSearch>
+          <span nz-icon nzType="search"></span>
+        </button>
+      </ng-template>
+
+      <nz-select
+        style="width: 110px"
+        [(ngModel)]="statusFilter"
+        (ngModelChange)="onStatusChange($event)"
+      >
+        <nz-option nzValue="" nzLabel="Todos"></nz-option>
+        <nz-option nzValue="Confirmado" nzLabel="Confirmado"></nz-option>
+        <nz-option nzValue="Pendente" nzLabel="Pendente"></nz-option>
+        <nz-option nzValue="Cancelado" nzLabel="Cancelado"></nz-option>
+      </nz-select>
+
       <button nz-button nzType="primary" (click)="openModal()">
         Novo Agendamento
       </button>
@@ -29,12 +40,13 @@
   </div>
 </div>
 
-<nz-calendar
-  [nzMode]="'month'"
-  (nzSelectChange)="onDateSelect($event)"
-  [nzDateCell]="dateCell"
->
-</nz-calendar>
+<div class="calendar-container">
+  <nz-calendar
+    [nzMode]="'month'"
+    (nzSelectChange)="onDateSelect($event)"
+    [nzDateCell]="dateCell"
+  ></nz-calendar>
+</div>
 
 <ng-template #dateCell let-date>
   <ul class="events">

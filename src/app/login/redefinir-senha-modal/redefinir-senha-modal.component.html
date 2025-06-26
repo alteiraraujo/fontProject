@@ -1,0 +1,71 @@
+<form nz-form>
+  <nz-form-item>
+    <nz-form-label [nzSm]="8" [nzXs]="24" nzRequired>Senha atual</nz-form-label>
+    <nz-form-control [nzSm]="16" [nzXs]="24">
+      <input
+        nz-input
+        type="password"
+        [(ngModel)]="senhaAtual"
+        name="senhaAtual"
+        required
+        minlength="8"
+        (ngModelChange)="validate()"
+        autocomplete="current-password"
+      />
+      <div *ngIf="erroSenhaAtual" style="color: red; font-size: 12px">
+        {{ erroSenhaAtual }}
+      </div>
+    </nz-form-control>
+  </nz-form-item>
+  <nz-form-item>
+    <nz-form-label [nzSm]="8" [nzXs]="24" nzRequired>Nova senha</nz-form-label>
+    <nz-form-control [nzSm]="16" [nzXs]="24">
+      <input
+        nz-input
+        type="password"
+        [(ngModel)]="novaSenha"
+        name="novaSenha"
+        required
+        minlength="8"
+        (ngModelChange)="validate()"
+        autocomplete="new-password"
+      />
+      <div *ngIf="erroNovaSenha" style="color: red; font-size: 12px">
+        {{ erroNovaSenha }}
+      </div>
+    </nz-form-control>
+  </nz-form-item>
+  <nz-form-item>
+    <nz-form-label [nzSm]="8" [nzXs]="24" nzRequired
+      >Confirmar senha</nz-form-label
+    >
+    <nz-form-control [nzSm]="16" [nzXs]="24">
+      <input
+        nz-input
+        type="password"
+        [(ngModel)]="confirmarSenha"
+        name="confirmarSenha"
+        required
+        minlength="8"
+        (ngModelChange)="validate()"
+        autocomplete="new-password"
+      />
+      <div *ngIf="erroConfirmarSenha" style="color: red; font-size: 12px">
+        {{ erroConfirmarSenha }}
+      </div>
+    </nz-form-control>
+  </nz-form-item>
+</form>
+<div style="text-align: right; margin-top: 16px">
+  <button nz-button nzType="default" (click)="fechar()">Cancelar</button>
+  <button
+    nz-button
+    nzType="primary"
+    [disabled]="redefinirSenhaInvalida()"
+    (click)="confirmar()"
+    [nzLoading]="redefinirSenhaLoading"
+    style="margin-left: 8px"
+  >
+    Redefinir
+  </button>
+</div>

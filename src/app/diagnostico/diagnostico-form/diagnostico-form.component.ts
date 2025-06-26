@@ -15,6 +15,7 @@ import { Observable } from 'rxjs';
 export class DiagnosticoFormComponent implements OnInit, OnChanges {
   @Input() diagnostico?: Diagnostico;
   @Input() modo!: 'cadastrar' | 'editar' | 'abrir';
+  
 
   form: FormGroup;
   animais$: Observable<any[]>;

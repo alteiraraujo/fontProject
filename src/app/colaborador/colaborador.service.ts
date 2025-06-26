@@ -72,8 +72,22 @@ export class ColaboradorService {
       .post(`${this.API}/${id_colaborador}/enviar-senha`, {})
       .pipe(
         tap(() =>
-          console.log(`Senha enviada por e-mail para colaborador ID ${id_colaborador}.`)
+          console.log(
+            `Senha enviada por e-mail para colaborador ID ${id_colaborador}.`
+          )
         )
       );
   }
+
+  // Redefinir senha do colaborador
+ redefinirSenha(id_colaborador: number, senhaAtual: string, novaSenha: string): Observable<any> {
+  return this.http
+    .put(`${this.API}/${id_colaborador}/senha`, { senhaAtual, novaSenha })
+    .pipe(
+      tap(() =>
+        console.log(`Senha redefinida para o colaborador com ID ${id_colaborador}.`)
+      )
+    );
+}
+
 }

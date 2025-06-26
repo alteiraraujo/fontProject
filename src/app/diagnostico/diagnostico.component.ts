@@ -80,33 +80,41 @@ export class DiagnosticoComponent implements OnInit {
     );
   }
 
-toggleStatus(diagnostico: Diagnostico): void {
-  const novoStatus = diagnostico.status_diagnostico === 'Ativo' ? 'Inativo' : 'Ativo';
+  toggleStatus(diagnostico: Diagnostico): void {
+    const novoStatus =
+      diagnostico.status_diagnostico === 'Ativo' ? 'Inativo' : 'Ativo';
 
-  this.modalService.confirm({
-    nzTitle: 'Confirmação',
-    nzContent: `Deseja realmente ${novoStatus === 'Ativo' ? 'ativar' : 'inativar'} este diagnóstico?`,
-    nzOkText: 'Sim',
-    nzOkType: 'primary',
-    nzOnOk: () =>
-      this.service.updateStatus(diagnostico.id_diagnostico, novoStatus).subscribe({
-        next: () => {
-          this.diagnosticos$ = this.service.list();
-          this.atualizarDiagnosticosFiltrados();
-          this.message.success(`Status do diagnóstico atualizado para ${novoStatus}.`);
-        },
-        error: (error) => {
-          this.message.error('Erro ao tentar atualizar o status do diagnóstico.');
-          console.error('Erro ao atualizar status:', error);
-        },
-      }),
-    nzCancelText: 'Não',
-    nzOnCancel: () => {
-      this.message.info('Ação de alteração de status cancelada.');
-    },
-  });
-}
-
+    this.modalService.confirm({
+      nzTitle: 'Confirmação',
+      nzContent: `Deseja realmente ${
+        novoStatus === 'Ativo' ? 'ativar' : 'inativar'
+      } este diagnóstico?`,
+      nzOkText: 'Sim',
+      nzOkType: 'primary',
+      nzOnOk: () =>
+        this.service
+          .updateStatus(diagnostico.id_diagnostico, novoStatus)
+          .subscribe({
+            next: () => {
+              this.diagnosticos$ = this.service.list();
+              this.atualizarDiagnosticosFiltrados();
+              this.message.success(
+                `Status do diagnóstico atualizado para ${novoStatus}.`
+              );
+            },
+            error: (error) => {
+              this.message.error(
+                'Erro ao tentar atualizar o status do diagnóstico.'
+              );
+              console.error('Erro ao atualizar status:', error);
+            },
+          }),
+      nzCancelText: 'Não',
+      nzOnCancel: () => {
+        this.message.info('Ação de alteração de status cancelada.');
+      },
+    });
+  }
 
   onStatusChange(status: string): void {
     this.statusFilter = status;
@@ -125,8 +133,6 @@ toggleStatus(diagnostico: Diagnostico): void {
   }
 
   getNomeAnimalPorId(id: number): string {
-    // Exemplo para fallback, mas não é mais usado diretamente na tabela
-    // porque agora usamos combineLatest para obter o nome já no filtro
     let nome = '';
     this.animais$
       .subscribe((animais) => {

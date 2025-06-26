@@ -24,7 +24,7 @@
       O nome do animal deve ter pelo menos 2 caracteres.
     </span>
     <span *ngIf="animalForm.get('nome_animal')?.hasError('maxlength')">
-      O nome do animal não pode ter mais de 100 caracteres.
+      O nome do animal não pode ter mais de 30 caracteres.
     </span>
   </ng-template>
 
@@ -39,6 +39,7 @@
         id="data_nascimento"
         nzFormat="dd/MM/yyyy"
         nzPlaceHolder="Selecione a data de nascimento"
+        [nzDisabledDate]="desabilitarDataFutura"
         [disabled]="modo === 'abrir'"
       ></nz-date-picker>
     </nz-form-control>

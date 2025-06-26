@@ -1,4 +1,4 @@
-<div *ngFor="let agendamento of agendamentos" class="agendamento-detalhes">
+<div *ngFor="let agendamento of (agendamentos$ | async)" class="agendamento-detalhes">
   <p><strong>Procedimento:</strong> {{ agendamento.procedimento_agendamento }}</p>
   <p><strong>Animal:</strong> {{ agendamento.animal?.nome_animal || 'Não definido' }}</p>
   <p><strong>Tutor:</strong> {{ agendamento.animal?.pessoa?.nome_pessoa || 'Não definido' }}</p>

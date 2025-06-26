@@ -46,7 +46,7 @@
         <button nz-button nzType="primary" [disabled]="form.invalid">
           {{ modo === 'editar' ? 'Salvar' : 'Cadastrar' }}
         </button>
-        <button nz-button nzType="default" (click)="cancel()">
+        <button nz-button nzType="default" (click)="cancel()" type="button">
           Cancelar
         </button>
       </ng-container>

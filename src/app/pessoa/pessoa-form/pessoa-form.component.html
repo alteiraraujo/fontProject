@@ -25,18 +25,29 @@
 
   <!-- CPF Pessoa -->
   <nz-form-item class="compact-form-item">
-    <nz-form-label [nzSm]="6" [nzXs]="24" [nzRequired]="true" nzFor="cpf_pessoa"
+    <nz-form-label [nzSm]="6" [nzXs]="24" [nzRequired]="true" nzFor="cpfPessoa"
       >CPF</nz-form-label
     >
-    <nz-form-control [nzSm]="14" [nzXs]="24" nzErrorTip="CPF inválido">
+    <nz-form-control
+      [nzSm]="14"
+      [nzXs]="24"
+      [nzValidateStatus]="pessoaForm.get('cpfPessoa')"
+      [nzErrorTip]="cpfErrorTpl"
+    >
       <input
         nz-input
-        formControlName="cpf_pessoa"
-        id="cpf_pessoa"
+        formControlName="cpfPessoa"
+        id="cpfPessoa"
         placeholder="CPF"
-        mask="000.000.000-00"
+        (input)="formatarCPF($event)"
       />
     </nz-form-control>
+
+    <ng-template #cpfErrorTpl let-control>
+      <span *ngIf="control.hasError('required')">Campo obrigatório</span>
+      <span *ngIf="control.hasError('cpfInvalido')">CPF inválido</span>
+      <span *ngIf="control.hasError('cpfExistente')">CPF já cadastrado</span>
+    </ng-template>
   </nz-form-item>
 
   <!-- Data de Nascimento Pessoa -->
@@ -82,6 +93,8 @@
           id="telefone_pessoa"
           nz-input
           placeholder="Telefone"
+          maxlength="15"
+          (input)="formatarTelefone($event)"
         />
       </nz-input-group>
     </nz-form-control>
@@ -102,6 +115,8 @@
         formControlName="cep_pessoa"
         id="cep_pessoa"
         placeholder="CEP"
+        maxlength="9"
+        (input)="formatarCEP($event)"
         (blur)="buscarCEP()"
       />
     </nz-form-control>
@@ -228,6 +243,10 @@
         <nz-option nzValue="Masculino" nzLabel="Masculino"></nz-option>
         <nz-option nzValue="Feminino" nzLabel="Feminino"></nz-option>
         <nz-option nzValue="Outro" nzLabel="Outro"></nz-option>
+        <nz-option
+          nzValue="Não Especificar"
+          nzLabel="Não Especificar"
+        ></nz-option>
       </nz-select>
     </nz-form-control>
   </nz-form-item>
@@ -243,6 +262,7 @@
           nz-button
           nzType="default"
           (click)="cancelar()"
+          type="button"
           style="margin-left: 8px"
         >
           Cancelar

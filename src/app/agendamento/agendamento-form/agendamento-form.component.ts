@@ -33,15 +33,23 @@ export class AgendamentoFormComponent implements OnInit {
       animal: [null, Validators.required],
       status_agendamento: ['Pendente', Validators.required],
     });
-  
+
     this.carregarTutores();
-  
+
     if (this.agendamento) {
       this.form.patchValue(this.agendamento);
       this.preencherCamposEditar();
     }
   }
-  
+
+  // Função para bloquear datas/horas passadas
+  disabledDate = (current: Date): boolean => {
+    // Só permite datas a partir de agora (ignora segundos/milisegundos)
+    const now = new Date();
+    now.setSeconds(0, 0);
+    return current < now;
+  };
+
   carregarTutores(): void {
     this.pessoaService.list().subscribe({
       next: (pessoas) => {
@@ -49,11 +57,15 @@ export class AgendamentoFormComponent implements OnInit {
           label: pessoa.nome_pessoa,
           value: pessoa.id_pessoa.toString(),
         }));
-  
+
         // Seleciona o tutor caso esteja editando
         if (this.agendamento?.animal?.pessoa) {
-          this.form.get('tutor_animal')?.setValue(this.agendamento.animal.pessoa.id_pessoa.toString());
-          this.onTutorChange(this.agendamento.animal.pessoa.id_pessoa.toString());
+          this.form
+            .get('tutor_animal')
+            ?.setValue(this.agendamento.animal.pessoa.id_pessoa.toString());
+          this.onTutorChange(
+            this.agendamento.animal.pessoa.id_pessoa.toString()
+          );
         }
       },
       error: () => {
@@ -61,19 +73,19 @@ export class AgendamentoFormComponent implements OnInit {
       },
     });
   }
-  
+
   onTutorChange(tutorId: string): void {
     this.animalService.list().subscribe({
       next: (animais) => {
         const animaisDoTutor = animais.filter(
           (animal) => animal.pessoa.id_pessoa.toString() === tutorId
         );
-  
+
         this.animais = animaisDoTutor.map((animal) => ({
           label: animal.nome_animal,
           value: animal.id_animal,
         }));
-  
+
         // Seleciona o animal caso esteja editando
         if (this.agendamento?.animal) {
           this.form.get('animal')?.setValue(this.agendamento.animal.id_animal);
@@ -84,47 +96,60 @@ export class AgendamentoFormComponent implements OnInit {
       },
     });
   }
-  
+
   preencherCamposEditar(): void {
     if (this.agendamento?.animal?.pessoa) {
-      this.form.get('tutor_animal')?.setValue(this.agendamento.animal.pessoa.id_pessoa.toString());
+      this.form
+        .get('tutor_animal')
+        ?.setValue(this.agendamento.animal.pessoa.id_pessoa.toString());
       this.onTutorChange(this.agendamento.animal.pessoa.id_pessoa.toString());
     }
   }
-  
-  
 
   submitForm(): void {
-    if (this.form.valid) {
-      const formData = this.form.value;
-  
-      const agendamento: Agendamento = {
-        data_hora_agendamento: formData.data_hora_agendamento,
-        animal: {
-          id_animal: formData.animal,
-          nome_animal: this.animais.find((a) => a.value === formData.animal)?.label || '',
-          pessoa: {
-            id_pessoa: formData.tutor_animal,
-            nome_pessoa: this.tutores.find((t) => t.value === formData.tutor_animal)?.label || '',
-          },
-        },
-        procedimento_agendamento: formData.procedimento_agendamento,
-        status_agendamento: 'Pendente',
-      };
-  
-      console.log('Dados para o POST:', agendamento);
-  
-      this.modalRef.close(agendamento);
-    } else {
-      this.form.markAllAsTouched();
+  if (this.form.valid) {
+    const formData = this.form.value;
+
+    const now = new Date();
+    now.setSeconds(0, 0);
+    if (new Date(formData.data_hora_agendamento) < now) {
+      this.form.get('data_hora_agendamento')?.setErrors({ pastDate: true });
+      return;
     }
+
+    let dataHoraFormatada = formData.data_hora_agendamento;
+    if (dataHoraFormatada instanceof Date) {
+      // Formata para "YYYY-MM-DDTHH:mm:ss"
+      dataHoraFormatada = dataHoraFormatada.toISOString().slice(0, 19);
+    }
+
+    const agendamento: Agendamento = {
+      data_hora_agendamento: dataHoraFormatada,
+      animal: {
+        id_animal: formData.animal,
+        nome_animal:
+          this.animais.find((a) => a.value === formData.animal)?.label || '',
+        pessoa: {
+          id_pessoa: formData.tutor_animal,
+          nome_pessoa:
+            this.tutores.find((t) => t.value === formData.tutor_animal)
+              ?.label || '',
+        },
+      },
+      procedimento_agendamento: formData.procedimento_agendamento,
+      status_agendamento: 'Pendente',
+    };
+
+    console.log('Dados para o POST:', agendamento);
+
+    this.modalRef.close(agendamento);
+  } else {
+    this.form.markAllAsTouched();
   }
-  
-  
-  
-  
+}
+
+
   cancel(): void {
     this.modalRef.close();
   }
-  
 }

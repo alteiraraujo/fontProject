@@ -36,7 +36,6 @@ import { NzDatePickerModule } from 'ng-zorro-antd/date-picker';
 import { NzDescriptionsModule } from 'ng-zorro-antd/descriptions';
 import { NzDividerModule } from 'ng-zorro-antd/divider';
 import { NzDrawerModule } from 'ng-zorro-antd/drawer';
-import { NzDropDownModule } from 'ng-zorro-antd/dropdown';
 import { NzEmptyModule } from 'ng-zorro-antd/empty';
 import { NzFormModule } from 'ng-zorro-antd/form';
 import { NzGridModule } from 'ng-zorro-antd/grid';
@@ -93,10 +92,7 @@ import { LoginComponent } from './login/login.component';
 import { ColaboradorComponent } from './colaborador/colaborador.component';
 import { MainLayoutComponent } from './layouts/main-layout/main-layout.component';
 import { AuthLayoutComponent } from './layouts/auth-layout/auth-layout.component';
-
-
-
-
+import { RedefinirSenhaModalComponent } from './login/redefinir-senha-modal/redefinir-senha-modal.component';
 
 
 
@@ -111,7 +107,7 @@ const icons: IconDefinition[] = Object.keys(antDesignIcons).map(
 
 @NgModule({
   declarations: [AppComponent,   AnimalComponent, ColaboradorComponent, 
-    CategoriaComponent,   LoginComponent, MainLayoutComponent, AuthLayoutComponent ],
+    CategoriaComponent,   LoginComponent, MainLayoutComponent, AuthLayoutComponent, RedefinirSenhaModalComponent ],
   imports: [
    
     BrowserModule,
@@ -152,7 +148,6 @@ const icons: IconDefinition[] = Object.keys(antDesignIcons).map(
     NzDatePickerModule,
     NzDescriptionsModule,
     NzDrawerModule,
-    NzDropDownModule,
     NzEmptyModule,
     NzGridModule,
     NzI18nModule,
@@ -197,6 +192,7 @@ const icons: IconDefinition[] = Object.keys(antDesignIcons).map(
     NzWaterMarkModule,
     NzStepsModule,
    ReactiveFormsModule
+ 
   ],
   providers: [
     { provide: NZ_I18N, useValue: pt_BR },

@@ -7,6 +7,7 @@ import { Pessoa } from 'src/app/pessoa/pessoa';
 import { NzModalRef, NzModalService } from 'ng-zorro-antd/modal';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { Observable } from 'rxjs';
+import { PessoaFormComponent } from 'src/app/pessoa/pessoa-form/pessoa-form.component';
 
 @Component({
   selector: 'app-colaborador-form',
@@ -22,7 +23,6 @@ export class ColaboradorFormComponent implements OnInit, OnChanges {
   colaboradorForm: FormGroup;
   pessoas$: Observable<Pessoa[]>;
 
-
   constructor(
     private fb: FormBuilder,
     private colaboradorService: ColaboradorService,
@@ -33,7 +33,7 @@ export class ColaboradorFormComponent implements OnInit, OnChanges {
   ) {}
 
   ngOnInit(): void {
-    this.pessoas$ = this.pessoaService.list(); // ajuste se necessário
+    this.refreshPessoasList();
     this.criarFormulario();
 
     if (this.colaborador) {
@@ -56,12 +56,17 @@ export class ColaboradorFormComponent implements OnInit, OnChanges {
     }
   }
 
+  refreshPessoasList(): void {
+  // Força o observable a buscar novamente do serviço
+  this.pessoas$ = this.pessoaService.list();
+}
+
+
   criarFormulario() {
     this.colaboradorForm = this.fb.group({
       selectedPessoaId: [null, Validators.required],
       cargo_colaborador: [null, Validators.required],
       login_colaborador: [null, Validators.required],
-      senha_colaborador: [null, Validators.required],
       email_colaborador: [null, [Validators.required, Validators.email]],
     });
   }
@@ -83,9 +88,30 @@ export class ColaboradorFormComponent implements OnInit, OnChanges {
   }
 
   openPessoaModal(): void {
-    // Implemente caso deseje abrir modal de cadastro de pessoa
-    // Exemplo: this.modalService.create({ ... });
-  }
+  const modalRef = this.modalService.create({
+    nzTitle: 'Cadastrar Pessoa',
+    nzContent: PessoaFormComponent,
+    nzFooter: null,
+    nzWidth: '600px',
+    nzComponentParams: {
+      modo: 'cadastrar'
+    }
+  });
+
+  const instance = modalRef.getContentComponent() as PessoaFormComponent;
+
+  instance.pessoaCadastrada.subscribe(() => {
+    this.message.success('Pessoa cadastrada com sucesso!');
+    modalRef.close();
+    this.refreshPessoasList(); // RECARREGA A LISTA APÓS O CADASTRO
+  });
+
+  instance.cancelado.subscribe(() => {
+    this.message.info('Cadastro de pessoa cancelado.');
+    modalRef.close();
+  });
+}
+
 
   onSubmit(): void {
     if (this.colaboradorForm.valid) {
@@ -104,7 +130,7 @@ export class ColaboradorFormComponent implements OnInit, OnChanges {
         this.colaboradorService.update(this.colaborador.id_colaborador, colaboradorData).subscribe({
           next: (response) => {
             this.message.success('Colaborador atualizado com sucesso!');
-            this.modalRef.close(response); // Fecha modal e atualiza pai
+            this.modalRef.close(response);
           },
           error: () => {
             this.message.error('Erro ao atualizar colaborador. Tente novamente.');
@@ -114,7 +140,7 @@ export class ColaboradorFormComponent implements OnInit, OnChanges {
         this.colaboradorService.add(colaboradorData).subscribe({
           next: (response) => {
             this.message.success('Colaborador cadastrado com sucesso!');
-            this.modalRef.close(response); // Fecha modal e atualiza pai
+            this.modalRef.close(response);
           },
           error: () => {
             this.message.error('Erro ao cadastrar colaborador. Tente novamente.');

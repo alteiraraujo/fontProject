@@ -1,5 +1,6 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { Agendamento } from '../agendamento';
+import { Observable, of } from 'rxjs';
 
 @Component({
   selector: 'app-agendamento-detalhes',
@@ -7,7 +8,7 @@ import { Agendamento } from '../agendamento';
   styleUrls: ['./agendamento-detalhes.component.css'],
 })
 export class AgendamentoDetalhesComponent {
-  @Input() agendamentos: Agendamento[] = [];
+  @Input() agendamentos$: Observable<Agendamento[]> = of([]);
   @Output() editar = new EventEmitter<Agendamento>();
   @Output() confirmar = new EventEmitter<Agendamento>();
   @Output() cancelar = new EventEmitter<Agendamento>();

@@ -1,6 +1,6 @@
 export interface Colaborador {
   id_colaborador?: number;
-  cargo_colaborador: "Administrador" | "Recepcionista" | "Veterinario";
+  cargo_colaborador: "Administrador" | "Recepcionista" | "Veterinario" | "Banhista e Tosador";
   tipo_colaborador: string;
   senha_colaborador: string;
   login_colaborador: string;

@@ -22,8 +22,52 @@
   color: red;
 }
 
+[nz-button] {
+  margin-right: 8px;
+  margin-bottom: 12px;
+}
+
 @media (max-width: 768px) {
-  nz-calendar {
-    width: 100%;
+  .agendamento-header {
+    flex-direction: column !important;
+    align-items: stretch !important;
+    gap: 12px !important;
   }
+}
+
+nz-calendar {
+  width: 100% !important;
+  min-width: 320px;
+}
+@media (max-width: 768px) {
+  .calendar-container {
+    max-width: 100vw;
+    padding: 0 4px;
+  }
+  nz-calendar {
+    font-size: 12px;
+    min-width: 250px;
+  }
+}
+
+:host ::ng-deep .ant-picker-calendar-date {
+  min-height: 16px !important;
+  padding: 2px 0 !important;
+}
+:host ::ng-deep .ant-picker-cell-inner {
+  min-height: 16px !important;
+  padding: 0 2px !important;
+  font-size: 11px !important;
+}
+:host ::ng-deep .ant-picker-calendar-header,
+:host ::ng-deep .ant-picker-calendar-mode-switch {
+  min-height: 24px !important;
+  padding: 0 2px !important;
+  font-size: 11px !important;
+}
+:host ::ng-deep .ant-picker-content {
+  margin: 0 !important;
+}
+:host ::ng-deep .ant-picker-body {
+  padding: 0 !important;
 }

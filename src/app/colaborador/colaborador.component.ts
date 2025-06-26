@@ -27,17 +27,17 @@ export class ColaboradorComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-  this.carregando = true;
-  this.colaboradores$ = this.service.list().pipe(
-    finalize(() => this.carregando = false),
-    catchError((error) => {
-      this.carregando = false;
-      this.message.error('Falha ao carregar colaboradores.');
-      return of([]);
-    })
-  );
-  this.atualizarColaboradoresFiltrados();
-}
+    this.carregando = true;
+    this.colaboradores$ = this.service.list().pipe(
+      finalize(() => (this.carregando = false)),
+      catchError((error) => {
+        this.carregando = false;
+        this.message.error('Falha ao carregar colaboradores.');
+        return of([]);
+      })
+    );
+    this.atualizarColaboradoresFiltrados();
+  }
 
   atualizarColaboradoresFiltrados() {
     this.colaboradoresFiltrados$ = this.colaboradores$.pipe(
@@ -128,20 +128,25 @@ export class ColaboradorComponent implements OnInit {
   }
 
   enviarSenha(colaborador: any): void {
-  this.modalService.confirm({
-    nzTitle: 'Enviar senha',
-    nzContent: `Deseja gerar uma nova senha para o colaborador <b>${colaborador.pessoa.nome_pessoa}</b> e enviá-la por e-mail?`,
-    nzOkText: 'Sim',
-    nzCancelText: 'Não',
-    nzOnOk: () => {
-      this.service.enviarSenha(colaborador.id_colaborador).subscribe({
-        next: () => this.message.success('Senha enviada para o e-mail do colaborador!'),
-        error: () => this.message.error('Erro ao enviar senha.')
-      });
-    }
-  });
-}
-
+    this.modalService.confirm({
+      nzTitle: 'Enviar senha',
+      nzContent: `Deseja gerar uma nova senha para o colaborador <b>${colaborador.pessoa.nome_pessoa}</b> e enviá-la por e-mail?`,
+      nzOkText: 'Sim',
+      nzCancelText: 'Não',
+      nzOnOk: () => {
+        this.service.enviarSenha(colaborador.id_colaborador).subscribe({
+          next: (res) => {
+            console.log('Resposta do backend:', res);
+            this.message.success('Senha enviada para o e-mail do colaborador!');
+          },
+          error: (err) => {
+            console.error('Erro ao enviar senha:', err);
+            this.message.error('Erro ao enviar senha.');
+          },
+        });
+      },
+    });
+  }
 
   toggleStatus(colaborador: Colaborador, checked: boolean): void {
     const novoStatus = checked ? 'Ativo' : 'Inativo';
