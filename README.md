@@ -1,27 +1,36 @@
 # PetCare
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 15.0.4.
+PetCare é um sistema web desenvolvido como Trabalho de Conclusão de Curso (TCC) para o curso de Sistemas de Informação da Universidade Estadual de Goiás (UEG). O objetivo do projeto é otimizar a gestão comercial de lojas de animais de estimação, oferecendo uma solução integrada para o gerenciamento de clientes, animais, serviços, produtos e agendamentos.
 
-## Development server
+## Tecnologias Utilizadas
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
+- **Frontend:** Angular (versão 15.0.4)
+- **Backend:** Java Spring Boot
+- **Banco de Dados:** PostgreSQL
+- **Interface:** Bootstrap
 
-## Code scaffolding
+## Funcionalidades
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+- Cadastro e gerenciamento de clientes, animais, produtos e serviços
+- Agendamento de serviços
+- Controle de vendas e estoque
+- Geração de relatórios
+- Interface responsiva e amigável
 
-## Build
+## Como executar o projeto
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
+### Frontend
 
-## Running unit tests
+1. **Pré-requisitos:**  
+   - Node.js (versão recomendada: 16.x ou superior)
+   - Angular CLI
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+2. **Instalação das dependências:**
+   ```bash
+   npm install
 
-## Running end-to-end tests
+Executando o servidor de desenvolvimento:
+ng serve
 
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
-
-## Further help
-
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
+Licença
+Este projeto é de uso acadêmico e sem fins lucrativos.
